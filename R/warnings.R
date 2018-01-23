@@ -2,8 +2,11 @@
 #'
 #' Clears warnings for production code
 #' while keeping the last warning on base environment
+#'
 #' @return  Does not return anything.
+#'
 #' @seealso \code{\link{warning}}
+#'
 #' @export
 clear_warnings <- function() {
 
