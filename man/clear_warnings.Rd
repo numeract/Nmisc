@@ -11,7 +11,6 @@ Does not return anything.
 }
 \description{
 Clears warnings for production code
-while keeping the last warning on base environment
 }
 \seealso{
 \code{\link{warning}}

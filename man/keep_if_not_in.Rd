@@ -17,4 +17,5 @@ Unlike setdiff does not remove duplicates in x and keeps its order
 }
 \examples{
 keep_if_not_in(1:5, 3:6)
+
 }
