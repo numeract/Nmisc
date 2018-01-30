@@ -7,7 +7,8 @@
 style_script(file_path)
 }
 \arguments{
-\item{file_path}{}
+\item{file_path}{the path or the name of the file
+you want to style}
 }
 \value{
 Invisibly returns a data frame that indicates for

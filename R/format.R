@@ -2,7 +2,8 @@
 #'
 #' Pretty-prints R code without changing the user's formatting intent
 #'
-#' @param  file_path
+#' @param  file_path the path or the name of the file
+#' you want to style
 #'
 #' @return Invisibly returns a data frame that indicates for
 #' each file considered for styling whether or not it was
@@ -19,7 +20,6 @@
 #'
 #' @export
 style_script <- function(file_path) {
-
   tidy_style <- styler::tidyverse_style(
     scope = "indention",
     strict = TRUE, indent_by = 2,
@@ -33,3 +33,19 @@ style_script <- function(file_path) {
   )
 }
 
+
+#' Checks R code styling
+#'
+#' Checks adherence to a given style, syntax errors and possible
+#' semantic issues
+#'
+#' @param  file_name The name of the file you want to check
+#' @examples
+#' check_style("file_name.R")
+#'
+#' @export
+check_style <- function(file_name) {
+    # lintr::with_defaults(camel_case_linter = NULL,
+    #                     snake_case_linter = NULL)
+    lintr::lint(file_name)
+}
