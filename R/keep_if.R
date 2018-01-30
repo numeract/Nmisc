@@ -31,3 +31,19 @@ keep_if_not_in <- function(x, y) {
 
     x[!(x %in% y)]
 }
+
+
+#' Performs Set Intersection
+#'
+#' Unlike intersect does not remove duplicates in x and keeps its order
+#'
+#' @export
+`%if_in%` <- keep_if_in
+
+
+#' Discards The Elements Present In A Set And Not Present In The Other
+#'
+#' Unlike setdiff does not remove duplicates in x and keeps its order
+#'
+#' @export
+`%if_not_in%` <- keep_if_not_in
