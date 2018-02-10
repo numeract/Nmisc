@@ -1,4 +1,4 @@
 library(testthat)
-library(NumeractUtils)
+library(Nmisc)
 
-test_check("NumeractUtils")
+test_check("Nmisc")

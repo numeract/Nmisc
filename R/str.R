@@ -38,4 +38,3 @@ str1 <- function(x) str(x,  max.level = 1)
 #'
 #' @export
 str2 <- function(x) str(x,  max.level = 2)
-

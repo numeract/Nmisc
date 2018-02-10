@@ -1,2 +1,3 @@
-# numeract-utils
-R tools used at Numeract
+# Nmisc
+
+Miscellaneous R tools used at Numeract
