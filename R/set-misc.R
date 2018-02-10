@@ -38,7 +38,7 @@ keep_if_not_in <- function(x, y) {
 #' Unlike intersect does not remove duplicates in x and keeps its order
 #'
 #' @export
-`%if_in%` <- keep_if_in
+`%if_in%` <- keep_if_in;
 
 
 #' Discards The Elements Present In A Set And Not Present In The Other
@@ -46,4 +46,16 @@ keep_if_not_in <- function(x, y) {
 #' Unlike setdiff does not remove duplicates in x and keeps its order
 #'
 #' @export
-`%if_not_in%` <- keep_if_not_in
+`%if_not_in%` <- keep_if_not_in;
+
+
+#' @export
+setequal_na <- function(x, y, na.rm = FALSE) {
+    
+    if (na.rm) {
+        x <- na.omit(x)
+        y <- na.omit(y)
+    }
+    
+    base::setequal(x, y)
+}
