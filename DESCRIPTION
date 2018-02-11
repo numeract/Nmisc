@@ -8,7 +8,7 @@ Author: c(
     person("Numeract LLC", role = "cph")
     )
 Maintainer: Ana-Maria Niculescu<anamaria.niculescu@cmfconsulting.ro>
-Description: A package containing helper functions 
+Description: Miscellaneous R functions / tools used at Numeract.
 URL: https://github.com/numeract/Nmisc
 BugReports: https://github.com/numeract/Nmisc/issues
 License: MIT + file LICENSE

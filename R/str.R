@@ -23,7 +23,7 @@ catn <- function(...) cat(..., '\n')
 #' @seealso \code{\link{str}}
 #'
 #' @export
-str1 <- function(x) str(x,  max.level = 1)
+str1 <- function(x) utils::str(x,  max.level = 1)
 
 #' Compactly Display The Structure Of An Arbitrary R Object
 #'
@@ -37,4 +37,4 @@ str1 <- function(x) str(x,  max.level = 1)
 #' @seealso \code{\link{str}}
 #'
 #' @export
-str2 <- function(x) str(x,  max.level = 2)
+str2 <- function(x) utils::str(x,  max.level = 2)

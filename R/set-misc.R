@@ -53,8 +53,8 @@ keep_if_not_in <- function(x, y) {
 setequal_na <- function(x, y, na.rm = FALSE) {
     
     if (na.rm) {
-        x <- na.omit(x)
-        y <- na.omit(y)
+        x <- stats::na.omit(x)
+        y <- stats::na.omit(y)
     }
     
     base::setequal(x, y)
