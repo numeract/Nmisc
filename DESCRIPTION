@@ -3,11 +3,11 @@ Type: Package
 Title: Miscellaneous R Tools Used at Numeract
 Version: 0.1.0
 Author: c(
-    person("Mike", "Badescu", email = "mike.badescu@numeract.com", role = "aut"),
-    person("Ana-Maria", "Niculescu", email = "anamaria.niculescu@cmfconsulting.ro", role = "cre"),
+    person("Mike", "Badescu", email = "mike.badescu@numeract.com", role = c("aut", "cre")),
+    person("Ana-Maria", "Niculescu", role = "aut"),
     person("Numeract LLC", role = "cph")
     )
-Maintainer: Ana-Maria Niculescu<anamaria.niculescu@cmfconsulting.ro>
+Maintainer: Mike Badescu <mike.badescu@numeract.com>
 Description: Miscellaneous R functions / tools used at Numeract.
 URL: https://github.com/numeract/Nmisc
 BugReports: https://github.com/numeract/Nmisc/issues
