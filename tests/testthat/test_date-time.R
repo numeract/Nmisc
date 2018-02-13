@@ -35,5 +35,3 @@ test_that("format_utc() works for Date, with format, with tz", {
 
     expect_match(result, "2018/02/13 18-55-51 UTC")
 })
-
-
