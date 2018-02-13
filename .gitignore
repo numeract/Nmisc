@@ -35,3 +35,7 @@ vignettes/*.pdf
 # Added by RStudio
 .Rproj.user
 .Ruserdata
+
+# macOS generated files
+.DS_Store
+.DS_Store?
