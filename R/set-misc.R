@@ -49,6 +49,15 @@ keep_if_not_in <- function(x, y) {
 `%if_not_in%` <- keep_if_not_in;
 
 
+#' Checks if two sets are equal
+#' 
+#' Determines if two sets are equal and gives the posibility to choose
+#' whether or not to omit NA elements
+#' 
+#' @param x,y Vectors (of the same mode) containing a sequence of items
+#' @param na.rm logical 
+#' 
+#' @return A logical scalar
 #' @export
 setequal_na <- function(x, y, na.rm = FALSE) {
     
