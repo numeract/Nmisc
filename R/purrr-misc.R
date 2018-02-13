@@ -1,5 +1,10 @@
-#' Keep or discard elements using their names
+#' Keep elements using their names
 #'
+#' @param .x a table of data
+#' @param .at character (names) or a numeric (positions)
+#' 
+#' @return a table of data 
+#' 
 #' @export
 keep_at <- function(.x, .at) {
     
@@ -15,6 +20,13 @@ keep_at <- function(.x, .at) {
 }
 
 
+#' Discard elements using their names
+#'
+#' @param .x a table of data
+#' @param .at character (names) or a numeric (positions)
+#' 
+#' @return a table of data
+#' 
 #' @export
 discard_at <- function(.x, .at) {
     
