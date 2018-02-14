@@ -7,15 +7,15 @@
 is_POSIXct(x)
 }
 \arguments{
-\item{x}{A R object.}
+\item{x}{An R object.}
 }
 \value{
 Logical. \code{TRUE} if the object is of class POSIXct
- and FALSE otherwise.
+  and FALSE otherwise.
 }
 \description{
 Checks if the input of the function is a POXIXct object.
- It is a wrapper around inherits() function.
+  It is a wrapper around inherits() function.
 }
 \examples{
 is_POSIXct(lubridate::ymd_hms("2018/02/13 12-55-51"))

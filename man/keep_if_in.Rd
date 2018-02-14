@@ -18,12 +18,15 @@ x \%if_in\% y
 A filtered version of x.
 }
 \description{
-Unlike \code{\link[base]{intersect}}, it does not remove duplicates in 
+Unlike \code{\link[base:sets]{intersect}}, it does not remove duplicates in 
   x and keeps its order.
 }
 \examples{
-keep_if_in(1:5, 3:6) # [3, 4, 5]
-keep_if_in(c(4, 3, 4, 3, 1), 3:6) # [4 3 4 3]
+keep_if_in(1:5, 3:6) 
+# returns [3, 4, 5]
+
+keep_if_in(c(4, 3, 4, 3, 1), 3:6) 
+# returns [4 3 4 3]
 
 }
 \seealso{

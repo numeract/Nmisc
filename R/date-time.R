@@ -1,12 +1,12 @@
 #' Check if an object is POSIXct
 #' 
 #' Checks if the input of the function is a POXIXct object.
-#'  It is a wrapper around inherits() function.
+#'   It is a wrapper around inherits() function.
 #'
-#' @param x A R object.
+#' @param x An R object.
 #'
 #' @return Logical. \code{TRUE} if the object is of class POSIXct
-#'  and FALSE otherwise.
+#'   and FALSE otherwise.
 #' 
 #' @examples 
 #' is_POSIXct(lubridate::ymd_hms("2018/02/13 12-55-51"))
@@ -24,10 +24,10 @@ is_POSIXct <- function(x) inherits(x, "POSIXct")
 #' @param x A Date or POSIXct object to be converted.
 #' 
 #' @param format A character string. The default format is 
-#'   \"\%Y-\%m-\%d\" for Date and \"\%Y-\%m-\%d \%H:\%M:\%S\" for POSIXct.
+#'   "\%Y-\%m-\%d" for Date and "\%Y-\%m-\%d \%H:\%M:\%S" for POSIXct.
 #' 
 #' @param usetz Logical. If TRUE, the time zone abbreviation is
-#'  appended to the output.
+#'   appended to the output. Applicable only if an POSIXct object.
 #' 
 #' @return A character string representing the formatted date.
 #' 

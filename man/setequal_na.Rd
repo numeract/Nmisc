@@ -2,7 +2,7 @@
 % Please edit documentation in R/set-misc.R
 \name{setequal_na}
 \alias{setequal_na}
-\title{Check if two vectors are equal}
+\title{Check if two vectors have the same elements}
 \usage{
 setequal_na(x, y, na.rm = FALSE)
 }
@@ -15,14 +15,23 @@ setequal_na(x, y, na.rm = FALSE)
 A logical scalar that states the result.
 }
 \description{
-Wrapper over \code{\link[base]{setequal}} that adds extra parameter
+Wrapper around \code{\link[base:sets]{setequal}} that adds extra parameter
   \code{na.rm}.
 }
 \examples{
-setequal_na(c(2, 1, 3), c(1, 2, 3)) # TRUE
-setequal_na(c(1, NA, 3), c(3, NA, 1), na.rm = TRUE) # TRUE
-setequal_na(c(NA, NA), c(NA), na.rm = TRUE) # TRUE
-setequal_na(c(NA, NA), c(NA)) # TRUE
-setequal_na(c(1, 2, 3), c(1, 2, 3, NA)) # FALSE
+setequal_na(c(2, 1, 3), c(1, 2, 3))
+# returns TRUE
+
+setequal_na(c(1, NA, 3), c(3, NA, 1), na.rm = TRUE)
+# returns TRUE
+
+setequal_na(c(NA, NA), c(NA), na.rm = TRUE)
+# returns TRUE
+
+setequal_na(c(NA, NA), c(NA))
+# returns TRUE
+
+setequal_na(c(1, 2, 3), c(1, 2, 3, NA))
+# returns FALSE
 
 }

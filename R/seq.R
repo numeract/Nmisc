@@ -1,31 +1,17 @@
-#' Creates A Sequence Based On Data Frame Number Of Rows
+#' Creates a sequence based on the number of rows or columns
 #'
-#' Creates a sequence that starts at 1 and with steps of 1
-#' which finishes at the number value corresponding to the
-#' number of rows in a data frame given as input.
+#' Creates a sequence from 1 to the number of row or columns, respectively.
 #'
-#' @param df a data frame
+#' @param x a data frame or a matrix
 #'
 #' @return a vector of integers
 #'
 #' @seealso \code{\link{seq}}
-#' @seealso \code{\link{seq_len}}
-#'
+#' 
 #' @export
-seq_nrow <- function(df) seq_len(nrow(df))
+seq_nrow <- function(x) seq_len(nrow(x))
 
-#' Creates A Sequence Based On Data Frame Number Of Columns
-#'
-#' Creates a sequence that starts at 1 and with steps of 1
-#' which finishes at the number value corresponding to the
-#' number of columns in a data frame given as input.
-#'
-#' @param df a data frame
-#'
-#' @return a vector of integers
-#'
-#' @seealso \code{\link{seq}}
-#' @seealso \code{\link{seq_along}}
-#'
+
 #' @export
-seq_ncol <- function(df) seq_along(df)
+#' @rdname seq_nrow
+seq_ncol <- function(x) seq_along(x)

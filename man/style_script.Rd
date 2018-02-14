@@ -12,18 +12,18 @@ you want to style.}
 }
 \value{
 Invisibly returns a data frame that indicates for
-each file considered for styling whether or not it was
-actually changed.
+  each file considered for styling whether or not it was
+  actually changed.
 }
 \description{
 Pretty-print R code without changing the user's formatting intent.
 }
 \section{Warning}{
 
-This function overwrites files
-(if styling results in a change of the code to be formatted).
-It is strongly suggested to only style files that are under
-version control or to create a backup copy.
+  This function overwrites files
+  (if styling results in a change of the code to be formatted).
+  It is strongly suggested to only style files that are under
+  version control or to create a backup copy.
 }
 
 \examples{

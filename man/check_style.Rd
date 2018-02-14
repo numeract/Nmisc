@@ -11,7 +11,7 @@ check_style(file_name)
 }
 \description{
 Check adherence to a given style, syntax errors and possible
-semantic issues.
+  semantic issues.
 }
 \examples{
 \donttest{check_style("file_name.R")}

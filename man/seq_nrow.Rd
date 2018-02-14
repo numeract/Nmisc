@@ -2,23 +2,22 @@
 % Please edit documentation in R/seq.R
 \name{seq_nrow}
 \alias{seq_nrow}
-\title{Creates A Sequence Based On Data Frame Number Of Rows}
+\alias{seq_ncol}
+\title{Creates a sequence based on the number of rows or columns}
 \usage{
-seq_nrow(df)
+seq_nrow(x)
+
+seq_ncol(x)
 }
 \arguments{
-\item{df}{a data frame}
+\item{x}{a data frame or a matrix}
 }
 \value{
 a vector of integers
 }
 \description{
-Creates a sequence that starts at 1 and with steps of 1
-which finishes at the number value corresponding to the
-number of rows in a data frame given as input.
+Creates a sequence from 1 to the number of row or columns, respectively.
 }
 \seealso{
 \code{\link{seq}}
-
-\code{\link{seq_len}}
 }

@@ -2,18 +2,18 @@
 % Please edit documentation in R/str.R
 \name{catn}
 \alias{catn}
-\title{Concatenate with Newline}
+\title{Concatenate with new line}
 \usage{
 catn(...)
 }
 \arguments{
-\item{...}{Arguments to be passed to `\code{\link[base]{cat}} function.}
+\item{...}{Arguments to be passed to \code{\link[base]{cat}} function.}
 }
 \value{
 None
 }
 \description{
-Wrapper to cat which appends new line to output.
+Wrapper around cat which appends new line to output.
 }
 \seealso{
 \code{\link{cat}}

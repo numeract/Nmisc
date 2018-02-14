@@ -3,22 +3,21 @@
 \name{str1}
 \alias{str1}
 \alias{str2}
-\title{Compactly display the structure of an arbitrary R object}
+\title{High level overview of the structure of an R object}
 \usage{
 str1(x)
 
 str2(x)
 }
 \arguments{
-\item{x}{Any R object about which you want to have some information.}
+\item{x}{An R object}
 }
 \value{
 Does not return anything.
-The obvious side effect is output to the terminal.
 }
 \description{
-\code{str1()} is a  wrapper for \code{\link{str}} which sets maximal level of 
-  nesting to 1, while \code{str2()} sets maximal level of nesting to 2.
+\code{str1()} is a wrapper around \code{\link{str}} which sets maximal level 
+  of nesting to 1, while \code{str2()} sets maximal level of nesting to 2.
 }
 \seealso{
 \code{\link{str}}

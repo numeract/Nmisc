@@ -20,8 +20,8 @@ A table of data.
 \description{
 \code{keep_at()} keeps only the elements from specific positions or
   columns, while \code{discard_at()} does the opposite.
-  The functions are wrappers for \code{\link{keep}} and  \code{\link{discard}}
-  respectively.
+  The functions are wrappers around \code{\link{keep}} and 
+  \code{\link{discard}}, respectively.
 }
 \examples{
 x <- c(1, 2, 3)
