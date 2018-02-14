@@ -16,6 +16,7 @@
 #' @export
 is_POSIXct <- function(x) inherits(x, "POSIXct")
 
+
 #' Format Date and POSIXct
 #' 
 #' Converts Date and POSIXct objects to the format given as input.

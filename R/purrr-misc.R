@@ -4,7 +4,7 @@
 #' 
 #'  \code{keep_at()} keeps only the elements from specific positions or
 #'   columns, while \code{discard_at()} does the opposite.
-#'   The functions are wrappers for \code{\link{keep}} and  \code{\link{discard}}.
+#'   The functions are wrappers for \code{\link{keep}} and  \code{\link{discard}}
 #'   respectively.
 #' 
 #' @param .x A table of data.
@@ -15,8 +15,8 @@
 #' @examples 
 #' x <- c(1, 2, 3)
 #' names(x) <- c("First", "Second", "Last")
-#' # returns 2
 #' keep_at(x, "Second")
+#' # returns 2
 #' 
 #' x <- c(1, 2, 3)
 #' discard_at(x, 1)
