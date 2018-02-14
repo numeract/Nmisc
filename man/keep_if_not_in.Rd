@@ -32,5 +32,5 @@ keep_if_not_in(c(4,3,4,3,1), 3:6) # [1]
 
 }
 \seealso{
-\code{\link{keep_if_in()}}
+\code{\link{keep_if_in}}
 }

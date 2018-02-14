@@ -2,18 +2,40 @@
 % Please edit documentation in R/purrr-misc.R
 \name{keep_at}
 \alias{keep_at}
-\title{Keep elements using their names}
+\alias{discard_at}
+\title{Keep or discard elements}
 \usage{
 keep_at(.x, .at)
+
+discard_at(.x, .at)
 }
 \arguments{
-\item{.x}{a table of data}
+\item{.x}{A table of data.}
 
-\item{.at}{character (names) or a numeric (positions)}
+\item{.at}{Character (column names) or a numeric (positions).}
 }
 \value{
-a table of data
+A table of data.
 }
 \description{
-Keep elements using their names
+\code{keep_at()} keeps only the elements from specific positions or
+  columns, while \code{keep_at()} does the opposite.
+  The functions are wrappers for \code{\link{keep}} and  \code{\link{discard}}.
+  respectively.
+}
+\examples{
+x <- c(1, 2, 3)
+names(x) <- c("First", "Second", "Last")
+keep_at(x, "Second")
+# returns 2
+
+x <- c(1, 2, 3)
+discard_at(x, 1)
+# returns (2, 3)
+
+}
+\seealso{
+\code{\link{keep}}
+
+\code{\link{discard}}
 }

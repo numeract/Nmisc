@@ -33,7 +33,7 @@ keep_if_in <- function(x, y) {
 #' keep_if_not_in(1:5, 3:6) # [1 2]
 #' keep_if_not_in(c(4,3,4,3,1), 3:6) # [1]
 #' 
-#' @seealso \code{\link{keep_if_in()}} 
+#' @seealso \code{\link{keep_if_in}} 
 #'
 #' @export
 keep_if_not_in <- function(x, y) {
