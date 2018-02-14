@@ -2,17 +2,25 @@
 % Please edit documentation in R/date-time.R
 \name{is_POSIXct}
 \alias{is_POSIXct}
-\title{Date / Time functions}
+\title{Check if an object is POSIXct}
 \usage{
 is_POSIXct(x)
 }
 \arguments{
-\item{x}{an R object.}
+\item{x}{A R object.}
 }
 \value{
-TRUE if the object is of class POSIXct
-and FALSE otherwise.
+Logical. TRUE if the object is of class POSIXct
+ and FALSE otherwise.
 }
 \description{
 Checks if the input of the function is a POXIXct object.
+ It is a wrapper around inherits() function.
+}
+\examples{
+is_POSIXct(lubridate::ymd_hms("2018/02/13 12-55-51"))
+
+}
+\seealso{
+\code{\link{inherits}}
 }

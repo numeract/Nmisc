@@ -1,14 +1,18 @@
-#' Pull out a single column using another column for names
+#' Pull out a single column
 #'
-#' First version, var must be character or numeric
+#' Pull out a single column by using its name or its position
+#'  and name the obtained vector using values from another column.
 #' 
 #' @param .data	 A table of data
-#' @param var 	A variable specified as: a literal variable name, 
-#' a positive integer, giving the position counting from the left, 
-#' a negative integer, giving the position counting from the right.
-#' @param name_col The name of the newly obtained column
+#' @param var 	The name of the column of interest, 
+#'  or a positive integer, giving the position counting from the left, 
+#'  or a negative integer, giving the position counting from the right.
+#' @param name_col the column whose values will be used to
+#'  name the pulled column.
 #' 
-#' @return the new table of data
+#' @return A named vector.
+#' 
+#' @examples pull_with_names(iris, 4, "Species")
 #' 
 #' @export
 pull_with_names <- function(.data, var = -1, name_col) {

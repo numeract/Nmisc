@@ -7,20 +7,22 @@
 format_utc(x, format = NULL, usetz = TRUE)
 }
 \arguments{
-\item{x}{An object to be converted.}
+\item{x}{A Date or POSIXct object to be converted.}
 
-\item{format}{A character string. The default for the  format methods is 
-\"\%Y-\%m-\%d \%H:\%M:\%S\" for POSIXct and \"\%Y-\%m-\%d\" for Date.}
+\item{format}{A character string. The default format is 
+\"\%Y-\%m-\%d\" for Date and \"\%Y-\%m-\%d \%H:\%M:\%S\" for POSIXct.}
 
-\item{usetz}{logical. Should the time zone abbreviation 
-be appended to the output?}
+\item{usetz}{Logical. If TRUE, the time zone abbreviation is
+appended to the output.}
 }
 \value{
-character vectors representing the time.
+A character string representing the formatted date.
 }
 \description{
-Converts Date and POSIXct objects to a given format.
+Converts Date and POSIXct objects to the format given as input.
 }
 \seealso{
+\code{\link{format.Date}}
+
 \code{\link{format.POSIXct}}
 }

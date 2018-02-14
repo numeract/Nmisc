@@ -1,29 +1,36 @@
-#' Date / Time functions
+#' Check if an object is POSIXct
 #' 
 #' Checks if the input of the function is a POXIXct object.
+#'  It is a wrapper around inherits() function.
 #'
-#' @param x an R object.
+#' @param x A R object.
 #'
-#' @return TRUE if the object is of class POSIXct
-#' and FALSE otherwise.
+#' @return Logical. TRUE if the object is of class POSIXct
+#'  and FALSE otherwise.
+#' 
+#' @examples 
+#' is_POSIXct(lubridate::ymd_hms("2018/02/13 12-55-51"))
+#' 
+#' @seealso \code{\link{inherits}}
 #'
 #' @export
 is_POSIXct <- function(x) inherits(x, "POSIXct")
 
 #' Format Date and POSIXct
 #' 
-#' Converts Date and POSIXct objects to a given format.
+#' Converts Date and POSIXct objects to the format given as input.
 #' 
-#' @param x An object to be converted.
+#' @param x A Date or POSIXct object to be converted.
 #' 
-#' @param format A character string. The default for the  format methods is 
-#'   \"\%Y-\%m-\%d \%H:\%M:\%S\" for POSIXct and \"\%Y-\%m-\%d\" for Date.
+#' @param format A character string. The default format is 
+#'   \"\%Y-\%m-\%d\" for Date and \"\%Y-\%m-\%d \%H:\%M:\%S\" for POSIXct.
 #' 
-#' @param usetz logical. Should the time zone abbreviation 
-#'   be appended to the output?
+#' @param usetz Logical. If TRUE, the time zone abbreviation is
+#'  appended to the output.
 #' 
-#' @return character vectors representing the time.
+#' @return A character string representing the formatted date.
 #' 
+#' @seealso \code{\link{format.Date}}
 #' @seealso \code{\link{format.POSIXct}}
 #' 
 #' @export

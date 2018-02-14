@@ -2,19 +2,19 @@
 % Please edit documentation in R/set-misc.R
 \name{setequal_na}
 \alias{setequal_na}
-\title{Checks if two sets are equal}
+\title{Checks if two vectors are equal}
 \usage{
 setequal_na(x, y, na.rm = FALSE)
 }
 \arguments{
 \item{x, y}{Vectors (of the same mode) containing a sequence of items}
 
-\item{na.rm}{logical}
+\item{na.rm}{logical, gives the posibility to choose
+whether or not to omit NA elements}
 }
 \value{
 A logical scalar
 }
 \description{
-Determines if two sets are equal and gives the posibility to choose
-whether or not to omit NA elements
+Determines if two vectors have the same elements
 }

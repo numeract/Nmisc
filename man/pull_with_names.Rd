@@ -2,22 +2,28 @@
 % Please edit documentation in R/dplyr-misc.R
 \name{pull_with_names}
 \alias{pull_with_names}
-\title{Pull out a single column using another column for names}
+\title{Pull out a single column}
 \usage{
 pull_with_names(.data, var = -1, name_col)
 }
 \arguments{
 \item{.data}{A table of data}
 
-\item{var}{A variable specified as: a literal variable name, 
+\item{var}{The name of the column of interest, 
 a positive integer, giving the position counting from the left, 
 a negative integer, giving the position counting from the right.}
 
-\item{name_col}{The name of the newly obtained column}
+\item{name_col}{the column whose values will be used to
+name the pulled column.}
 }
 \value{
-the new table of data
+A named vector.
 }
 \description{
-First version, var must be character or numeric
+Pull out a single column by using its name or its position
+ and name the obtained vector using values from another column.
+}
+\examples{
+pull_with_names(iris, 4, "Species")
+
 }
