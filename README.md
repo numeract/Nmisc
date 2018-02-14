@@ -1,5 +1,11 @@
-# numeract-utils
-R tools used at Numeract
+# Nmisc
+
+Miscellaneous R functions used at Numeract. 
+
+The functions are expected to be used in other packages and projects.
+
+The functions mostly extend base and tidyverse packages.
+
 
 ## Installation
 
@@ -7,3 +13,21 @@ R tools used at Numeract
 # install.packages("devtools")
 devtools::install_github("numeract/Nmisc")
 ```
+
+## Functions
+
+The package is still in development, functions will be updated.
+
+- related to `base` package
+    + `catn`, `str1`, `str2`, `clear_warnings`
+    + `keep_if_in` (`%if_in%`),  `keep_if_not_in` (`%if_not_in%`)
+    + `seq_ncol`, `seq_nrow` 
+    + `setequal_na`
+- date & time:
+    + `is_POSIXct`, `format_utc`
+- code style:
+    + `style_script` and `check_style`
+- extending `purrr`:
+    + `keep_at` and `discard_at`
+- extending `dplyr`:
+    + `pull_with_names`
