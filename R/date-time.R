@@ -7,8 +7,6 @@
 #' @return TRUE if the object is of class POSIXct
 #' and FALSE otherwise.
 #'
-#' @seealso \code{\link{inherits}}
-#'
 #' @export
 is_POSIXct <- function(x) inherits(x, "POSIXct")
 
@@ -17,16 +15,16 @@ is_POSIXct <- function(x) inherits(x, "POSIXct")
 #' Converts Date and POSIXct objects to a given format.
 #' 
 #' @param x An object to be converted.
-#' @param format A character string. The default for the 
-#' format methods is "%Y-%m-%d %H:%M:%S" if any element has a time
-#' component which is not midnight, and "%Y-%m-%d" otherwise.
-#' If options("digits.secs") is set, up to the specified 
-#' number of digits will be printed for seconds.
-#' @param usetz ogical. Should the time zone abbreviation 
-#' be appended to the output? This is used in printing times,
-#' and more reliable than using "%Z".
+#' 
+#' @param format A character string. The default for the  format methods is 
+#'   \"\%Y-\%m-\%d \%H:\%M:\%S\" for POSIXct and \"\%Y-\%m-\%d\" for Date.
+#' 
+#' @param usetz logical. Should the time zone abbreviation 
+#'   be appended to the output?
 #' 
 #' @return character vectors representing the time.
+#' 
+#' @seealso \code{\link{format.POSIXct}}
 #' 
 #' @export
 format_utc <- function(x, format = NULL, usetz = TRUE) {

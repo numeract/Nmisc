@@ -6,6 +6,13 @@
 \usage{
 is_POSIXct(x)
 }
+\arguments{
+\item{x}{an R object.}
+}
+\value{
+TRUE if the object is of class POSIXct
+and FALSE otherwise.
+}
 \description{
-Date / Time functions
+Checks if the input of the function is a POXIXct object.
 }

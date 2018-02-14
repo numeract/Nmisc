@@ -6,6 +6,18 @@
 \usage{
 pull_with_names(.data, var = -1, name_col)
 }
+\arguments{
+\item{.data}{A table of data}
+
+\item{var}{A variable specified as: a literal variable name, 
+a positive integer, giving the position counting from the left, 
+a negative integer, giving the position counting from the right.}
+
+\item{name_col}{The name of the newly obtained column}
+}
+\value{
+the new table of data
+}
 \description{
-First verision, var must be character or numeric
+First version, var must be character or numeric
 }
