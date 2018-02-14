@@ -2,20 +2,35 @@
 % Please edit documentation in R/set-misc.R
 \name{keep_if_not_in}
 \alias{keep_if_not_in}
-\title{Discards The Elements Present In A Set And Not Present In The Other}
+\alias{\%if_not_in\%}
+\title{Discard elements present in x and not contained in y}
 \usage{
 keep_if_not_in(x, y)
+
+x \%if_not_in\% y
 }
 \arguments{
-\item{x, y}{Vectors (of the same mode) containing a sequence of items}
+\item{x}{Source vector.}
+
+\item{y}{Destination vector (of the same mode as x).}
 }
 \value{
-A vector of the same mode as x or y
+A filtered version of x.
 }
 \description{
-Unlike setdiff does not remove duplicates in x and keeps its order
+Unlike \code{\link[base]{base::setdiff()}}, it does not remove duplicates in x 
+  and keeps its order.
 }
-\examples{
-keep_if_not_in(1:5, 3:6)
+\section{Functions}{
+\itemize{
+\item \code{\%if_not_in\%}: Shorthand version of \code{keep_if_not_in()}.
+}}
 
+\examples{
+keep_if_not_in(1:5, 3:6) # [1 2]
+keep_if_not_in(c(4,3,4,3,1), 3:6) # [1]
+
+}
+\seealso{
+\code{\link{keep_if_in()}}
 }

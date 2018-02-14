@@ -2,20 +2,35 @@
 % Please edit documentation in R/set-misc.R
 \name{keep_if_in}
 \alias{keep_if_in}
-\title{Performs Set Intersection}
+\alias{\%if_in\%}
+\title{Keep elements present in x and not contained in y}
 \usage{
 keep_if_in(x, y)
+
+x \%if_in\% y
 }
 \arguments{
-\item{x, y}{Vectors (of the same mode) containing a sequence of items}
+\item{x}{Source vector.}
+
+\item{y}{Destination vector (of the same mode as x).}
 }
 \value{
-A vector of the same mode as x or y
+A filtered version of x.
 }
 \description{
-Unlike intersect does not remove duplicates in x and keeps its order
+Unlike \code{\link[base]{base::intersect()}}, it does not remove duplicates in 
+  x and keeps its order.
 }
-\examples{
-keep_if_in(1:5, 3:6)
+\section{Functions}{
+\itemize{
+\item \code{\%if_in\%}: Shorthand version of \code{keep_if_in()}.
+}}
 
+\examples{
+keep_if_in(1:5, 3:6) # [3, 4, 5]
+keep_if_in(c(4,3,4,3,1), 3:6) # [4 3 4 3]
+
+}
+\seealso{
+\code{\link{keep_if_not_in()}}
 }
