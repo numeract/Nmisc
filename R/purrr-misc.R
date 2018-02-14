@@ -1,9 +1,29 @@
-#' Keep elements using their names
-#'
-#' @param .x a table of data
-#' @param .at character (names) or a numeric (positions)
+#' Keep or discard elements
+#'  
+#' @description
 #' 
-#' @return a table of data 
+#' `keep_at()` keeps only the elements from specific positions or
+#'   columns, while `discard_at()` does the opposite.
+#'   The functions are wrappers for `purrr::keep()` and `purrr::discard()` 
+#'   respectively.
+#' 
+#' @param .x A table of data.
+#' @param .at Character (column names) or a numeric (positions).
+#' 
+#' @return A table of data.
+#' 
+#' @examples 
+#' x <- c(1, 2, 3)
+#' names(x) <- c("First", "Second", "Last")
+#' keep_at(x, "Second")
+#' # returns 2
+#' 
+#' x <- c(1, 2, 3)
+#' discard_at(x, 1)
+#' # returns (2, 3)
+#' 
+#' @seealso \code{\link{keep}}
+#' @seealso \code{\link{discard}}
 #' 
 #' @export
 keep_at <- function(.x, .at) {
@@ -20,14 +40,8 @@ keep_at <- function(.x, .at) {
 }
 
 
-#' Discard elements using their names
-#'
-#' @param .x a table of data
-#' @param .at character (names) or a numeric (positions)
-#' 
-#' @return a table of data
-#' 
 #' @export
+#' @rdname keep_at
 discard_at <- function(.x, .at) {
     
     .p <- if (is.character(.at)) {
