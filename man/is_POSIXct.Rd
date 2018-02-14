@@ -10,7 +10,7 @@ is_POSIXct(x)
 \item{x}{A R object.}
 }
 \value{
-Logical. TRUE if the object is of class POSIXct
+Logical. \code{TRUE} if the object is of class POSIXct
  and FALSE otherwise.
 }
 \description{

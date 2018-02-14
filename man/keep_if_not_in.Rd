@@ -18,17 +18,12 @@ x \%if_not_in\% y
 A filtered version of x.
 }
 \description{
-Unlike \code{\link[base]{base::setdiff()}}, it does not remove duplicates in x 
+Unlike \code{\link[base]{setdiff}}, it does not remove duplicates in x 
   and keeps its order.
 }
-\section{Functions}{
-\itemize{
-\item \code{\%if_not_in\%}: Shorthand version of \code{keep_if_not_in()}.
-}}
-
 \examples{
 keep_if_not_in(1:5, 3:6) # [1 2]
-keep_if_not_in(c(4,3,4,3,1), 3:6) # [1]
+keep_if_not_in(c(4, 3, 4, 3, 1), 3:6) # [1]
 
 }
 \seealso{

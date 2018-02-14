@@ -1,9 +1,9 @@
-#' Performs R code styling
+#' Perform R code styling
 #'
-#' Pretty-prints R code without changing the user's formatting intent
+#' Pretty-print R code without changing the user's formatting intent.
 #'
-#' @param  file_path the path or the name of the file
-#' you want to style
+#' @param  file_path The path or the name of the file
+#' you want to style.
 #'
 #' @return Invisibly returns a data frame that indicates for
 #' each file considered for styling whether or not it was
@@ -13,10 +13,10 @@
 #' This function overwrites files
 #' (if styling results in a change of the code to be formatted).
 #' It is strongly suggested to only style files that are under
-#' version control or to create a backup copy
+#' version control or to create a backup copy.
 #'
 #' @examples
-#' style_script("file_name.R")
+#' \donttest{style_script("file_name.R")}
 #'
 #' @export
 style_script <- function(file_path) {
@@ -34,14 +34,14 @@ style_script <- function(file_path) {
 }
 
 
-#' Checks R code styling
+#' Check R code styling
 #'
-#' Checks adherence to a given style, syntax errors and possible
-#' semantic issues
+#' Check adherence to a given style, syntax errors and possible
+#' semantic issues.
 #'
-#' @param  file_name The name of the file you want to check
+#' @param  file_name The name of the file you want to check.
 #' @examples
-#' check_style("file_name.R")
+#' \donttest{check_style("file_name.R")}
 #'
 #' @export
 check_style <- function(file_name) {

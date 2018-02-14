@@ -2,15 +2,12 @@
 % Please edit documentation in R/warnings.R
 \name{clear_warnings}
 \alias{clear_warnings}
-\title{Avoid R’s Warning Feature}
+\title{Avoid R’s warning feature}
 \usage{
 clear_warnings()
 }
-\value{
-Does not return anything.
-}
 \description{
-Clears warnings for production code
+Clear warnings for production code.
 }
 \seealso{
 \code{\link{warning}}

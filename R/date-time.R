@@ -5,7 +5,7 @@
 #'
 #' @param x A R object.
 #'
-#' @return Logical. TRUE if the object is of class POSIXct
+#' @return Logical. \code{TRUE} if the object is of class POSIXct
 #'  and FALSE otherwise.
 #' 
 #' @examples 

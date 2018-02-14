@@ -1,8 +1,8 @@
 #' Concatenate with Newline
 #'
-#' Wrapper to cat which appends new line to output
+#' Wrapper to cat which appends new line to output.
 #'
-#' @param ... arguments to be passed to cat function
+#' @param ... Arguments to be passed to `\code{\link[base]{cat}} function.
 #'
 #' @return None
 #'
@@ -11,11 +11,11 @@
 #' @export
 catn <- function(...) cat(..., '\n')
 
-#' Compactly Display The Structure Of An Arbitrary R Object
+#' Compactly display the structure of an arbitrary R object
 #'
 #' Wrapper to str which sets maximal level of nesting to 1.
 #'
-#' @param x any R object about which you want to have some information
+#' @param x Any R object about which you want to have some information.
 #'
 #' @return  Does not return anything.
 #' The obvious side effect is output to the terminal.

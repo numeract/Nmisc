@@ -7,13 +7,13 @@
 catn(...)
 }
 \arguments{
-\item{...}{arguments to be passed to cat function}
+\item{...}{Arguments to be passed to `\code{\link[base]{cat}} function.}
 }
 \value{
 None
 }
 \description{
-Wrapper to cat which appends new line to output
+Wrapper to cat which appends new line to output.
 }
 \seealso{
 \code{\link{cat}}

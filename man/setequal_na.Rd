@@ -15,7 +15,7 @@ setequal_na(x, y, na.rm = FALSE)
 A logical scalar that states the result.
 }
 \description{
-Wrapper over \code{\link{base::setequal()}} that adds extra parameter
+Wrapper over \code{\link[base]{setequal}} that adds extra parameter
   \code{na.rm}.
 }
 \examples{

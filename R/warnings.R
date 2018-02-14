@@ -1,8 +1,6 @@
-#' Avoid R’s Warning Feature
+#' Avoid R’s warning feature
 #'
-#' Clears warnings for production code
-#'
-#' @return  Does not return anything.
+#' Clear warnings for production code.
 #'
 #' @seealso \code{\link{warning}}
 #'

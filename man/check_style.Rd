@@ -2,18 +2,18 @@
 % Please edit documentation in R/style.R
 \name{check_style}
 \alias{check_style}
-\title{Checks R code styling}
+\title{Check R code styling}
 \usage{
 check_style(file_name)
 }
 \arguments{
-\item{file_name}{The name of the file you want to check}
+\item{file_name}{The name of the file you want to check.}
 }
 \description{
-Checks adherence to a given style, syntax errors and possible
-semantic issues
+Check adherence to a given style, syntax errors and possible
+semantic issues.
 }
 \examples{
-check_style("file_name.R")
+\donttest{check_style("file_name.R")}
 
 }

@@ -2,12 +2,12 @@
 % Please edit documentation in R/str.R
 \name{str1}
 \alias{str1}
-\title{Compactly Display The Structure Of An Arbitrary R Object}
+\title{Compactly display the structure of an arbitrary R object}
 \usage{
 str1(x)
 }
 \arguments{
-\item{x}{any R object about which you want to have some information}
+\item{x}{Any R object about which you want to have some information.}
 }
 \value{
 Does not return anything.

@@ -2,13 +2,13 @@
 % Please edit documentation in R/style.R
 \name{style_script}
 \alias{style_script}
-\title{Performs R code styling}
+\title{Perform R code styling}
 \usage{
 style_script(file_path)
 }
 \arguments{
-\item{file_path}{the path or the name of the file
-you want to style}
+\item{file_path}{The path or the name of the file
+you want to style.}
 }
 \value{
 Invisibly returns a data frame that indicates for
@@ -16,17 +16,17 @@ each file considered for styling whether or not it was
 actually changed.
 }
 \description{
-Pretty-prints R code without changing the user's formatting intent
+Pretty-print R code without changing the user's formatting intent.
 }
 \section{Warning}{
 
 This function overwrites files
 (if styling results in a change of the code to be formatted).
 It is strongly suggested to only style files that are under
-version control or to create a backup copy
+version control or to create a backup copy.
 }
 
 \examples{
-style_script("file_name.R")
+\donttest{style_script("file_name.R")}
 
 }
