@@ -10,5 +10,5 @@ clear_warnings()
 Clear warnings for production code.
 }
 \seealso{
-\code{\link{warning}}
+\code{\link{warnings}}
 }

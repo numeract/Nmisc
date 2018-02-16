@@ -20,17 +20,18 @@
 #'
 #' @export
 style_script <- function(file_path) {
-  tidy_style <- styler::tidyverse_style(
-    scope = "indention",
-    strict = TRUE, indent_by = 2,
-    start_comments_with_one_space = TRUE,
-    reindention = styler::tidyverse_reindention(),
-    math_token_spacing = styler::tidyverse_math_token_spacing()
-  )
-  styler::style_file(
-    path = file_path,
-    transformers = tidy_style
-  )
+    
+    tidy_style <- styler::tidyverse_style(
+        scope = "indention",
+        strict = TRUE, indent_by = 2,
+        start_comments_with_one_space = TRUE,
+        reindention = styler::tidyverse_reindention(),
+        math_token_spacing = styler::tidyverse_math_token_spacing()
+    )
+    styler::style_file(
+        path = file_path,
+        transformers = tidy_style
+    )
 }
 
 

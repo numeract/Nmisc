@@ -1,20 +1,6 @@
-#' Check if an object is POSIXct
-#' 
-#' Checks if the input of the function is a POXIXct object.
-#'   It is a wrapper around inherits() function.
-#'
-#' @param x An R object.
-#'
-#' @return Logical. \code{TRUE} if the object is of class POSIXct
-#'   and FALSE otherwise.
-#' 
-#' @examples 
-#' is_POSIXct(lubridate::ymd_hms("2018/02/13 12-55-51"))
-#' 
-#' @seealso \code{\link{inherits}}
-#'
+#' @importFrom lubridate is.POSIXct
 #' @export
-is_POSIXct <- function(x) inherits(x, "POSIXct")
+lubridate::is.POSIXct
 
 
 #' Format Date and POSIXct
@@ -31,8 +17,7 @@ is_POSIXct <- function(x) inherits(x, "POSIXct")
 #' 
 #' @return A character string representing the formatted date.
 #' 
-#' @seealso \code{\link{format.Date}}
-#' @seealso \code{\link{format.POSIXct}}
+#' @seealso \code{\link{format.Date}}, \code{\link{format.POSIXct}}
 #' 
 #' @export
 format_utc <- function(x, format = NULL, usetz = TRUE) {
@@ -49,5 +34,35 @@ format_utc <- function(x, format = NULL, usetz = TRUE) {
         format.POSIXct(x, format = format, tz = 'UTC', usetz = usetz)
     } else {
         stop("not a Date/POSIXct")
+    }
+}
+
+
+#' Current time in UTC time zone
+#' 
+#' Returns a vector with the current date and time in the UTC time zone. It is 
+#'   a wrapper around \code{lubridate::now}.
+#' 
+#' @param length Positive integer (scalar) indicating the length of the vector.
+#' 
+#' @return A POSIXct vector of size \code{length} with the \code{tzone} 
+#'   atribute set to "UTC".
+#' 
+#' @seealso \code{\link{Sys.time}}, \code{\link[lubridate:now]{lubridate::now}}
+#' 
+#' @examples 
+#' now_utc(0)
+#' # returns "POSIXct of length 0"
+#' 
+#' @export
+now_utc <- function(length = 1L) {
+    
+    len <- as.integer(length[1L])
+    stopifnot(base::length(len) == 1L || len >= 0L)
+    
+    if (len == 0L) {
+        as.POSIXct(character(), tz = 'UTC')
+    } else {
+        rep(lubridate::now('UTC'), len)
     }
 }

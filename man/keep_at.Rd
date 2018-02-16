@@ -10,18 +10,18 @@ keep_at(.x, .at)
 discard_at(.x, .at)
 }
 \arguments{
-\item{.x}{A table of data.}
+\item{.x}{A list or vector.}
 
 \item{.at}{Character (column names) or a numeric (positions).}
 }
 \value{
-A table of data.
+A list or vector.
 }
 \description{
 \code{keep_at()} keeps only the elements from specific positions or
   columns, while \code{discard_at()} does the opposite.
-  The functions are wrappers around \code{\link{keep}} and 
-  \code{\link{discard}}, respectively.
+  The functions are wrappers around \code{purrr::keep} and 
+  \code{purrr::discard}, respectively.
 }
 \examples{
 x <- c(1, 2, 3)
@@ -35,7 +35,5 @@ discard_at(x, 1)
 
 }
 \seealso{
-\code{\link{keep}}
-
-\code{\link{discard}}
+\code{\link[purrr:keep]{purrr::keep}}
 }

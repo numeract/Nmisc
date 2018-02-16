@@ -7,7 +7,7 @@
 pull_with_names(.data, var = -1, name_col)
 }
 \arguments{
-\item{.data}{A table of data}
+\item{.data}{A data frame}
 
 \item{var}{The name of the column of interest, 
 or a positive integer, giving the position counting from the left, 

@@ -1,10 +1,5 @@
 context("Testing data-time.R")
 
-test_that("is_POSIXct() works", {
-    date <- lubridate::ymd_hms("2018/02/13 12-55-51")
-    expect_equal(is_POSIXct(date), TRUE)
-})
-
 test_that("format_utc() works for Date", {
     date <- lubridate::ymd(20101215)
     result <- format_utc(date)

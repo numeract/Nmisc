@@ -22,7 +22,5 @@ A character string representing the formatted date.
 Converts Date and POSIXct objects to the format given as input.
 }
 \seealso{
-\code{\link{format.Date}}
-
-\code{\link{format.POSIXct}}
+\code{\link{format.Date}}, \code{\link{format.POSIXct}}
 }

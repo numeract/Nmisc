@@ -2,7 +2,7 @@
 #'
 #' Clear warnings for production code.
 #'
-#' @seealso \code{\link{warning}}
+#' @seealso \code{\link{warnings}}
 #'
 #' @export
 clear_warnings <- function() {
