@@ -1,6 +1,13 @@
-#' @importFrom lubridate is.POSIXct
+#' Is it a POSIXct object?
+#' 
+#' Wrapper arround \code{lubridate::is.POSIXct}.
+#' 
+#' @param x An R object.
+#'
+#' @seealso \code{\link[lubridate:is.POSIXt]{lubridate::is.POSIXct}}
+#' 
 #' @export
-lubridate::is.POSIXct
+is.POSIXct <- lubridate::is.POSIXct
 
 
 #' Format Date and POSIXct
