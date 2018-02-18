@@ -14,4 +14,4 @@ seq_nrow <- function(x) seq_len(nrow(x))
 
 #' @export
 #' @rdname seq_nrow
-seq_ncol <- function(x) seq_along(x)
+seq_ncol <- function(x) seq_len(ncol(x))

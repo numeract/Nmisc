@@ -1,7 +1,8 @@
-# Nmisc 0.1.0.9002
+# Nmisc 0.1.0.9003
 
 - added `now_utc()`
-- reexport `is.POSIXct()`, `get_os()`
+- re-export `is.POSIXct()`, `get_os()`
+- fix `seq_ncol()`
 
 
 # Nmisc 0.1.0
