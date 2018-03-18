@@ -1,55 +1,81 @@
 context("Testing purrr-misc.R")
 
 # Keep --------------------------------------------------------------------
+test_that("keep_at(.x, .at) works zero length input", {
+    x <- c(1, 2, 3)
+    names(x) <- c("First", "Second", "Last")
+    l <- as.list(x)
+    
+    expect_equal(keep_at(x, NULL), x[0])
+    expect_equal(keep_at(x, character()), x[0])
+    expect_equal(keep_at(l, NULL), l[0])
+    expect_equal(keep_at(l, character()), l[0])
+})
 
 
 test_that("keep_at(.x, .at) works for numeric input", {
     x <- c(1, 2, 3)
     names(x) <- c("First", "Second", "Last")
-    result <- keep_at(x, 1)
-
-    expect_equal(result, x[1])
+    l <- as.list(x)
+    
+    expect_equal(keep_at(x, 1), x[1])
+    expect_equal(keep_at(l, 1), l[1])
 })
 
 test_that("keep_at(.x, .at) works for character input", {
     x <- c(1, 2, 3)
     names(x) <- c("First", "Second", "Last")
-    result <- keep_at(x, "Second")
-
-    expect_equal(result, x[2])
+    l <- as.list(x)
+    
+    expect_equal(keep_at(x, "Second"), x[2])
+    expect_equal(keep_at(l, "Second"), l[2])
 })
 
 test_that("keep_at(.x, .at) keeps multiple values", {
     x <- c(1, 2, 3)
     names(x) <- c("First", "Second", "Second")
-    result <- keep_at(x, "Second")
-
-    expect_equal(result, x[2:3])
+    l <- as.list(x)
+    
+    expect_equal(keep_at(x, "Second"), x[2:3])
+    expect_equal(keep_at(l, "Second"), l[2:3])
 })
 
-# Discard -----------------------------------------------------------------
 
+# Discard -----------------------------------------------------------------
+test_that("discard_at(.x, .at) works zero length input", {
+    x <- c(1, 2, 3)
+    names(x) <- c("First", "Second", "Last")
+    l <- as.list(x)
+    
+    expect_equal(discard_at(x, NULL), x)
+    expect_equal(discard_at(x, character()), x)
+    expect_equal(discard_at(l, NULL), l)
+    expect_equal(discard_at(l, character()), l)
+})
 
 test_that("discard_at(.x, .at) works for numeric input", {
     x <- c(1, 2, 3)
     names(x) <- c("First", "Second", "Last")
-    result <- discard_at(x, 1)
-
-    expect_equal(result, x[2:3])
+    l <- as.list(x)
+    
+    expect_equal(discard_at(x, 1), x[2:3])
+    expect_equal(discard_at(l, 1), l[2:3])
 })
 
 test_that("keep_at(.x, .at) works for character input", {
     x <- c(1, 2, 3)
     names(x) <- c("First", "Second", "Last")
-    result <- discard_at(x, "Last")
-
-    expect_equal(result, x[1:2])
+    l <- as.list(x)
+    
+    expect_equal(discard_at(x, "Last"), x[1:2])
+    expect_equal(discard_at(l, "Last"), l[1:2])
 })
 
 test_that("keep_at(.x, .at) discards multiple values", {
     x <- c(1, 2, 3)
     names(x) <- c("First", "Second", "Second")
-    result <- discard_at(x, "Second")
-
-    expect_equal(result, x[1])
+    l <- as.list(x)
+    
+    expect_equal(discard_at(x, "Second"), x[1])
+    expect_equal(discard_at(l, "Second"), l[1])
 })
