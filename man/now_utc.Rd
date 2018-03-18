@@ -14,8 +14,7 @@ A POSIXct vector of size \code{length} with the \code{tzone}
   atribute set to "UTC".
 }
 \description{
-Returns a vector with the current date and time in the UTC time zone. It is 
-  a wrapper around \code{lubridate::now}.
+Returns a vector with the current date and time in the UTC time zone.
 }
 \examples{
 now_utc(0)

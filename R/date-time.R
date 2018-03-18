@@ -1,13 +1,11 @@
 #' Is it a POSIXct object?
 #' 
-#' Wrapper arround \code{lubridate::is.POSIXct}.
-#' 
 #' @param x An R object.
 #'
 #' @seealso \code{\link[lubridate:is.POSIXt]{lubridate::is.POSIXct}}
 #' 
 #' @export
-is.POSIXct <- lubridate::is.POSIXct
+is.POSIXct <- function(x) inherits(x, "POSIXct")
 
 
 #' Format Date and POSIXct
@@ -47,8 +45,7 @@ format_utc <- function(x, format = NULL, usetz = TRUE) {
 
 #' Current time in UTC time zone
 #' 
-#' Returns a vector with the current date and time in the UTC time zone. It is 
-#'   a wrapper around \code{lubridate::now}.
+#' Returns a vector with the current date and time in the UTC time zone.
 #' 
 #' @param length Positive integer (scalar) indicating the length of the vector.
 #' 
@@ -70,6 +67,8 @@ now_utc <- function(length = 1L) {
     if (len == 0L) {
         as.POSIXct(character(), tz = 'UTC')
     } else {
-        rep(lubridate::now('UTC'), len)
+        now <- Sys.time()
+        attr(now, "tzone") <- 'UTC'
+        rep(now, len)
     }
 }

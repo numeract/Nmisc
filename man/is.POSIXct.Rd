@@ -10,7 +10,7 @@ is.POSIXct(x)
 \item{x}{An R object.}
 }
 \description{
-Wrapper arround \code{lubridate::is.POSIXct}.
+Is it a POSIXct object?
 }
 \seealso{
 \code{\link[lubridate:is.POSIXt]{lubridate::is.POSIXct}}

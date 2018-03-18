@@ -1,7 +1,7 @@
 Package: Nmisc
 Type: Package
 Title: Miscellaneous R Functions Used at Numeract
-Version: 0.1.0.9003
+Version: 0.1.0.9004
 Author: c(
     person("Mike", "Badescu", email = "mike.badescu@numeract.com", role = c("aut", "cre")),
     person("Ana-Maria", "Niculescu", role = "aut"),
@@ -23,7 +23,6 @@ Depends:
 Imports:
     dplyr,
     lintr,
-    lubridate,
     magrittr,
     purrr,
     rappdirs,
@@ -31,4 +30,5 @@ Imports:
     styler,
     tibble
 Suggests:
+    lubridate,
     testthat
