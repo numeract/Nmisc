@@ -1,4 +1,5 @@
 # Nmisc
+[![Travis build status](https://travis-ci.org/numeract/Nmisc.svg?branch=master)](https://travis-ci.org/numeract/Nmisc)
 
 Miscellaneous R functions used at Numeract. 
 
