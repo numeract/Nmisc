@@ -1,5 +1,6 @@
 # Nmisc
 [![Travis build status](https://travis-ci.org/numeract/Nmisc.svg?branch=master)](https://travis-ci.org/numeract/Nmisc)
+[![Coverage status](https://codecov.io/gh/numeract/Nmisc/branch/master/graph/badge.svg)](https://codecov.io/github/numeract/Nmisc?branch=master)
 
 Miscellaneous R functions used at Numeract. 
 

@@ -29,6 +29,7 @@ Imports:
     rlang,
     styler,
     tibble
-Suggests:
+Suggests: 
     lubridate,
-    testthat
+    testthat,
+    covr
