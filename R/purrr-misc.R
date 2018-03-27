@@ -29,12 +29,12 @@ keep_at <- function(.x, .at) {
     
     if (length(.at) == 0L) return(.x[0L])
     
-    .p <- if (is.character(.at)) {
+    .p <- if (is.character(.at) && .at %in% names(.x)) {
         names(.x) %in% .at
-    } else if (is.numeric(.at)) {
+    } else if (is.numeric(.at) && as.integer(.at) <= length(.x)) {
         seq_along(.x) %in% as.integer(.at)
     } else {
-        stop("`.at` must be character (names) or a numeric (positions)")
+        stop("`.at` must be a valid character (names) or a valid numeric (positions)")
     }
     
     purrr::keep(.x, .p)
@@ -47,9 +47,9 @@ discard_at <- function(.x, .at) {
     
     if (length(.at) == 0L) return(.x)
     
-    .p <- if (is.character(.at)) {
+    .p <- if (is.character(.at) && .at %in% names(.x)) {
         names(.x) %in% .at
-    } else if (is.numeric(.at)) {
+    } else if (is.numeric(.at) && as.integer(.at) <= length(.x)) {
         seq_along(.x) %in% as.integer(.at)
     } else {
         stop("`.at` must be character (names) or a numeric (positions)")

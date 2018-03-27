@@ -31,6 +31,7 @@ test_that("keep_at(.x, .at) works for character input", {
     expect_equal(keep_at(l, "Second"), l[2])
 })
 
+
 test_that("keep_at(.x, .at) keeps multiple values", {
     x <- c(1, 2, 3)
     names(x) <- c("First", "Second", "Second")
@@ -38,6 +39,31 @@ test_that("keep_at(.x, .at) keeps multiple values", {
     
     expect_equal(keep_at(x, "Second"), x[2:3])
     expect_equal(keep_at(l, "Second"), l[2:3])
+})
+
+
+test_that("keep_at(.x, .at) stops with wrong input", {
+    x <- c(1, 2, 3)
+    names(x) <- c("First", "Second", "Last")
+    l <- as.list(x)
+    
+    expect_error(keep_at(x, l))
+})
+
+test_that("keep_at(.x, .at) stops with invalid numeric", {
+    x <- c(1, 2, 3)
+    names(x) <- c("First", "Second", "Last")
+    l <- as.list(x)
+    
+    expect_error(keep_at(x, 4))
+})
+
+test_that("keep_at(.x, .at) stops with invalid name", {
+    x <- c(1, 2, 3)
+    names(x) <- c("First", "Second", "Last")
+    l <- as.list(x)
+    
+    expect_error(keep_at(x, "Invalid"))
 })
 
 
@@ -62,7 +88,7 @@ test_that("discard_at(.x, .at) works for numeric input", {
     expect_equal(discard_at(l, 1), l[2:3])
 })
 
-test_that("keep_at(.x, .at) works for character input", {
+test_that("discard_at(.x, .at) works for character input", {
     x <- c(1, 2, 3)
     names(x) <- c("First", "Second", "Last")
     l <- as.list(x)
@@ -71,11 +97,36 @@ test_that("keep_at(.x, .at) works for character input", {
     expect_equal(discard_at(l, "Last"), l[1:2])
 })
 
-test_that("keep_at(.x, .at) discards multiple values", {
+test_that("discard_at(.x, .at) discards multiple values", {
     x <- c(1, 2, 3)
     names(x) <- c("First", "Second", "Second")
     l <- as.list(x)
     
     expect_equal(discard_at(x, "Second"), x[1])
     expect_equal(discard_at(l, "Second"), l[1])
+})
+
+
+test_that("discard_at(.x, .at) stops with wrong input", {
+    x <- c(1, 2, 3)
+    names(x) <- c("First", "Second", "Last")
+    l <- as.list(x)
+    
+    expect_error(discard_at(x, l))
+})
+
+test_that("discard_at(.x, .at) stops with invalid numeric", {
+    x <- c(1, 2, 3)
+    names(x) <- c("First", "Second", "Last")
+    l <- as.list(x)
+    
+    expect_error(discard_at(x, 4))
+})
+
+test_that("discard_at(.x, .at) stops with invalid name", {
+    x <- c(1, 2, 3)
+    names(x) <- c("First", "Second", "Last")
+    l <- as.list(x)
+    
+    expect_error(discard_at(x, "Invalid"))
 })
