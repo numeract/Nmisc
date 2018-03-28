@@ -41,7 +41,12 @@ test_that("format_utc() works for Date, with format, with tz", {
     expect_match(result, "2018/02/13 18-55-51 UTC")
 })
 
-test_that("format_utc() stops whith wrong input", {
+test_that("format_utc() stops with wrong input", {
     wrong_date <- "2018-02-13 12:55:51"
     expect_error(format_utc(wrong_date))
+}) 
+
+
+test_that("format_utc() stops with NA", {
+    expect_error(format_utc(NA))
 }) 
