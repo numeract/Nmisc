@@ -21,6 +21,9 @@ test_that("keep_at(.x, .at) works with NA", {
     expect_equal(keep_at(x, NA_character_), x[0])
     expect_equal(keep_at(x, NA_integer_), x[0])
     expect_equal(keep_at(x, NA), x[0])
+    expect_equal(keep_at(x, c(1, 2, NA)), x[0])
+    expect_equal(keep_at(x, c(NA, 2, NA)), x[0])
+    expect_equal(keep_at(x, c(NA, NA, NA)), x[0])
 })
 
 

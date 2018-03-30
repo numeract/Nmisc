@@ -27,7 +27,7 @@
 #' @export
 keep_at <- function(.x, .at) {
     
-    if (length(.at) == 0L || is.na(.at)) return(.x[0L])
+    if (length(.at) == 0L || !all(!is.na(.at))) return(.x[0L])
     
     .p <- if (is.character(.at)) {
         names(.x) %in% .at
