@@ -13,17 +13,17 @@ test_that("keep_at(.x, .at) works zero length input", {
 })
 
 
-test_that("keep_at(.x, .at) works with NA", {
+test_that("keep_at(.x, .at) stops with NA", {
     x <- c(1, 2, 3)
     names(x) <- c("First", "Second", "Last")
     l <- as.list(x)
     
-    expect_equal(keep_at(x, NA_character_), x[0])
-    expect_equal(keep_at(x, NA_integer_), x[0])
-    expect_equal(keep_at(x, NA), x[0])
-    expect_equal(keep_at(x, c(1, 2, NA)), x[0])
-    expect_equal(keep_at(x, c(NA, 2, NA)), x[0])
-    expect_equal(keep_at(x, c(NA, NA, NA)), x[0])
+    expect_error(keep_at(x, NA_character_))
+    expect_error(keep_at(x, NA_integer_))
+    expect_error(keep_at(x, NA))
+    expect_error(keep_at(x, c(1, 2, NA)))
+    expect_error(keep_at(x, c(NA, 2, NA)))
+    expect_error(keep_at(x, c(NA, NA, NA)))
 })
 
 
@@ -78,14 +78,17 @@ test_that("discard_at(.x, .at) works zero length input", {
 })
 
 
-test_that("discard_at(.x, .at) works with NA", {
+test_that("discard_at(.x, .at) stops with NA", {
     x <- c(1, 2, 3)
     names(x) <- c("First", "Second", "Last")
     l <- as.list(x)
     
-    expect_equal(discard_at(x, NA_character_), x)
-    expect_equal(discard_at(x, NA_integer_), x)
-    expect_equal(discard_at(x, NA), x)
+    expect_error(discard_at(x, NA_character_))
+    expect_error(discard_at(x, NA_integer_))
+    expect_error(discard_at(x, NA))
+    expect_error(discard_at(x, c(1, 2, NA)))
+    expect_error(discard_at(x, c(NA, 2, NA)))
+    expect_error(discard_at(x, c(NA, NA, NA)))
 })
 
 

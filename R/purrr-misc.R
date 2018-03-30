@@ -27,8 +27,8 @@
 #' @export
 keep_at <- function(.x, .at) {
     
-    if (length(.at) == 0L || !all(!is.na(.at))) return(.x[0L])
-    
+    if (length(.at) == 0L) return(.x[0L])
+    if (any(is.na(.at))) stop(".at should not contain NA's")
     .p <- if (is.character(.at)) {
         names(.x) %in% .at
     } else if (is.numeric(.at)) {
@@ -45,8 +45,8 @@ keep_at <- function(.x, .at) {
 #' @rdname keep_at
 discard_at <- function(.x, .at) {
     
-    if (length(.at) == 0L || is.na(.at)) return(.x)
-    
+    if (length(.at) == 0L) return(.x)
+    if (any(is.na(.at))) stop(".at should not contain NA's")
     .p <- if (is.character(.at)) {
         names(.x) %in% .at
     } else if (is.numeric(.at)) {
