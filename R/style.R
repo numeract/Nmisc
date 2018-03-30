@@ -21,9 +21,12 @@
 #' @export
 style_script <- function(file_path) {
     
+    if (!file.exists(file_path)) stop(paste0("Cannot find file: ", file_path,
+                                             ". Did you specify the right path?"))
+    
     tidy_style <- styler::tidyverse_style(
-        scope = "indention",
-        strict = TRUE, indent_by = 2,
+        scope = "tokens",
+        strict = TRUE, indent_by = 4,
         start_comments_with_one_space = TRUE,
         reindention = styler::tidyverse_reindention(),
         math_token_spacing = styler::tidyverse_math_token_spacing()
