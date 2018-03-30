@@ -38,17 +38,17 @@ style_script <- function(file_path) {
 #' Check R code styling
 #'
 #' Check adherence to a given style, syntax errors and possible
-#'   semantic issues.
+#'   semantic issues. 
 #'
-#' @param  file_name The name of the file you want to check.
+#' @param  file_path The path to the file you want to check.
 #' 
 #' @examples
 #' \donttest{check_style("file_name.R")}
 #'
 #' @export
-check_style <- function(file_name) {
+check_style <- function(file_path) {
     
-    # lintr::with_defaults(camel_case_linter = NULL,
-    #                     snake_case_linter = NULL)
-    lintr::lint(file_name)
+    if (!file.exists(file_path)) stop(paste0("Cannot find file: ", file_path,
+                                             ". Did you specify the right path?"))
+    lintr::lint(file_path)
 }

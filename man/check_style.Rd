@@ -4,10 +4,10 @@
 \alias{check_style}
 \title{Check R code styling}
 \usage{
-check_style(file_name)
+check_style(file_path)
 }
 \arguments{
-\item{file_name}{The name of the file you want to check.}
+\item{file_path}{The path to the file you want to check.}
 }
 \description{
 Check adherence to a given style, syntax errors and possible
