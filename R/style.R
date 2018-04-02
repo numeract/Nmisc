@@ -21,8 +21,9 @@
 #' @export
 style_script <- function(file_path) {
     
-    if (!file.exists(file_path)) stop(paste0("Cannot find file: ", file_path,
-                                             ". Did you specify the right path?"))
+    if (!file.exists(file_path)) 
+        stop(paste0("Cannot find file: ", file_path,
+                    ". Did you specify the right path?"))
     
     tidy_style <- styler::tidyverse_style(
         scope = "tokens",
@@ -43,7 +44,7 @@ style_script <- function(file_path) {
 #' Check adherence to a given style, syntax errors and possible
 #'   semantic issues. 
 #'
-#' @param  file_path The path to the file you want to check.
+#' @param file_path The path to the file you want to check.
 #' 
 #' @examples
 #' \donttest{check_style("file_name.R")}
@@ -51,7 +52,25 @@ style_script <- function(file_path) {
 #' @export
 check_style <- function(file_path) {
     
-    if (!file.exists(file_path)) stop(paste0("Cannot find file: ", file_path,
-                                             ". Did you specify the right path?"))
-    lintr::lint(file_path)
+    linters <- list(
+        line_length_linter = lintr::line_length_linter(80),
+        absolute_paths_linter = lintr::absolute_paths_linter,
+        assignment_linter = lintr::assignment_linter,
+        closed_curly_linter = lintr::closed_curly_linter,
+        commas_linter = lintr::commas_linter,
+        infix_spaces_linter = lintr::infix_spaces_linter,
+        no_tab_linter = lintr::no_tab_linter,
+        multiple_dots_linter = lintr::multiple_dots_linter,
+        open_curly_linter = lintr::open_curly_linter,
+        spaces_inside_linter = lintr::spaces_inside_linter,
+        spaces_left_parentheses_linter = lintr::spaces_left_parentheses_linter,
+        trailing_blank_lines_linter = lintr::trailing_blank_lines_linter)
+    
+    # lintr::lint_package(path = ".", linters = linters)
+    
+    if (!file.exists(file_path))
+        stop(paste0("Cannot find file: ", file_path, 
+                    ". Did you specify the right path?"))
+    
+    lintr::lint(file_path, linters = linters)
 }

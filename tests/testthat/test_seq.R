@@ -1,6 +1,6 @@
 context("Testing sequence functions")
 
-df1 <- data.frame(col1 = c(1:4), col2  = c(5,9))
+df1 <- data.frame(col1 = c(1:4), col2  = c(5, 9))
 df2 <- data.frame(col1 = c(1:4))
 df3 <- data.frame(col1 = c(NA), col2 = c(1))
 df4 <- data.frame(col1 = numeric(), col2 = numeric())
@@ -38,4 +38,3 @@ test_that("seq_ncol works on matrix", {
     expect_equal(seq_ncol(m3), 1:2)
     expect_equal(seq_ncol(m4), 1:2)
 })
-
