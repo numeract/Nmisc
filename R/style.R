@@ -126,6 +126,7 @@ check_style <- function(file_path) {
     lintr::lint(file_path, linters = linters)
 }
 
+
 #' Check R code styling for an entire package.
 #'
 #' Check adherence to a given style, syntax errors and possible
