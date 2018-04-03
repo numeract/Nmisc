@@ -2,7 +2,7 @@
 % Please edit documentation in R/style.R
 \name{check_style}
 \alias{check_style}
-\title{Check R code styling}
+\title{Check R code styling for a specified R file.}
 \usage{
 check_style(file_path)
 }
@@ -11,9 +11,13 @@ check_style(file_path)
 }
 \description{
 Check adherence to a given style, syntax errors and possible
-  semantic issues.
+semantic issues.
 }
 \examples{
 \donttest{check_style("file_name.R")}
 
+}
+\seealso{
+Other code styling functions: \code{\link{check_package_style}},
+  \code{\link{style_package}}, \code{\link{style_script}}
 }
