@@ -7,7 +7,7 @@
 style_package(package_path = ".")
 }
 \arguments{
-\item{file_path}{The path of the root directory of the package
+\item{package_path}{The path of the root directory of the package
 you want to style.}
 }
 \value{

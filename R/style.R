@@ -1,6 +1,6 @@
 tidy_style <- styler::tidyverse_style(
     scope = "tokens",
-    strict = TRUE, indent_by = 4,
+    strict = FALSE, indent_by = 4,
     start_comments_with_one_space = TRUE,
     reindention = styler::tidyverse_reindention(),
     math_token_spacing = styler::tidyverse_math_token_spacing()
@@ -49,7 +49,7 @@ style_script <- function(file_path) {
 #'
 #' Pretty-print all R files without changing the user's formatting intent.
 #'
-#' @param file_path The path of the root directory of the package
+#' @param package_path The path of the root directory of the package
 #' you want to style.
 #'
 #' @return Invisibly returns a data frame that indicates for
@@ -131,7 +131,7 @@ check_style <- function(file_path) {
 #' Check adherence to a given style, syntax errors and possible
 #' semantic issues for all R files.
 #'
-#' @param path The path to the root directory of your package.
+#' @param package_path The path to the root directory of your package.
 #'
 #' @family code styling functions
 #'

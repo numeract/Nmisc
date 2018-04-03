@@ -7,7 +7,7 @@
 check_package_style(package_path = ".")
 }
 \arguments{
-\item{path}{The path to the root directory of your package.}
+\item{package_path}{The path to the root directory of your package.}
 }
 \description{
 Check adherence to a given style, syntax errors and possible
