@@ -36,7 +36,7 @@ format_utc <- function(x, format = NULL, usetz = TRUE) {
         if (is.null(format)) {
             format <- "%Y-%m-%d %H:%M:%S"
         }
-        format.POSIXct(x, format = format, tz = 'UTC', usetz = usetz)
+        format.POSIXct(x, format = format, tz = "UTC", usetz = usetz)
     } else {
         stop("not a Date/POSIXct")
     }
@@ -65,10 +65,10 @@ now_utc <- function(length = 1L) {
     stopifnot(base::length(len) == 1L || len >= 0L)
     
     if (len == 0L) {
-        as.POSIXct(character(), tz = 'UTC')
+        as.POSIXct(character(), tz = "UTC")
     } else {
         now <- Sys.time()
-        attr(now, "tzone") <- 'UTC'
+        attr(now, "tzone") <- "UTC"
         rep(now, len)
     }
 }

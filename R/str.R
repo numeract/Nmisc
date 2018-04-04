@@ -9,7 +9,7 @@
 #' @seealso \code{\link{cat}}
 #'
 #' @export
-catn <- function(...) cat(..., '\n')
+catn <- function(...) cat(..., "\n")
 
 
 #' High level overview of the structure of an R object
