@@ -4,24 +4,21 @@
 \alias{check_style}
 \title{Check R code styling for a specified R file or directory}
 \usage{
-check_style(path = getwd(), recursive = TRUE, verbose = FALSE, ...)
+check_style(path = ".", exclude = NULL, ...)
 }
 \arguments{
 \item{path}{The path to the file or directory you want to check.}
 
-\item{recursive}{Should it also check subdirectories? (for directories only)}
-
-\item{verbose}{Should linted files be displayed?}
+\item{exclude}{File names to be excluded from linting.}
 
 \item{...}{Other lintr::lint parameters.}
 }
 \description{
 Check adherence to the Nmisc style, syntax errors and possible
- semantic issues.
+  semantic issues.
 }
 \examples{
 \donttest{check_style("file_name.R")}
-\donttest{check_style("file_name.R", recursive = TRUE, verbose = TRUE)}
-\donttest{check_style("file_name.R", parse_settings = TRUE, cache = TRUE)}
+\donttest{check_style(".", exclude = c("R/foo.R", "R/bar.R"))}
 
 }

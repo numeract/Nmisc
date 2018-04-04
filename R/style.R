@@ -45,6 +45,13 @@ fix_style <- function(path = getwd()) {
 }
 
 
+# avoid recomputing/redefining over and over
+# skip multiple of 4 indents
+.WHITESPACE_OK <- seq.int(4, 80, 4) %>%
+    purrr::map_chr(~ paste0(rep(" ", .), collapse = ""))
+.WHITESPACE_OK <- c(.WHITESPACE_OK, "#' ")
+
+
 trailing_whitespace_linter2 <- function(source_file) {
     
     res <- rex::re_matches(
@@ -57,17 +64,14 @@ trailing_whitespace_linter2 <- function(source_file) {
     
     # adjust res for lines we want to skip
     if (length(source_file$lines) >= 1L) {
-        skip_lines <- c(
-            "#' ",
-            "    "
-        )
+        
         for (i in seq_along(source_file$lines)) {
             ln <- source_file$lines[i]
-            if (ln %in% skip_lines) {
+            if (ln %in% .WHITESPACE_OK) {
                 res[[i]] <- data.frame(
-                    space = NA_character_, 
-                    space.start = NA_integer_, 
-                    space.end = NA_integer_, 
+                    space = NA_character_,
+                    space.start = NA_integer_,
+                    space.end = NA_integer_,
                     stringsAsFactors = FALSE
                 )
             }
@@ -102,32 +106,25 @@ trailing_whitespace_linter2 <- function(source_file) {
 
 
 #' Check R code styling for a specified R file or directory
-#'
+#' 
 #' Check adherence to the Nmisc style, syntax errors and possible
-#'  semantic issues.
-#'
+#'   semantic issues.
+#' 
 #' @param path The path to the file or directory you want to check.
-#' @param recursive Should it also check subdirectories? (for directories only)
-#' @param verbose Should linted files be displayed?
-#' @param exclusion List of file names to be excluded from linting.
+#' @param exclude File names to be excluded from linting.
 #' @param ... Other lintr::lint parameters.
-#'
+#' 
 #' @examples
 #' \donttest{check_style("file_name.R")}
-#' \donttest{check_style("file_name.R", recursive = TRUE, verbose = TRUE)}
-#' \donttest{check_style("file_name.R", parse_settings = TRUE, cache = TRUE)}
-#' \donttest{check_style("file_name.R", exclude = c("tests/test-foo.R", "R/m.R)}
-#'
+#' \donttest{check_style(".", exclude = c("R/foo.R", "R/bar.R"))}
+#' 
 #' @export
-check_style <- function(path = getwd(),
-                        recursive = TRUE,
-                        verbose = FALSE,
+check_style <- function(path = ".",
                         exclude = NULL,
                         ...) {
     
-    if (!is.null(exclude) &&
-        !(is.list(exclude) || is.vector(exclude) || rlang::is_string(path))) {
-        stop("exclude must be a list, vector or string.")
+    if (length(exclude) > 0L && !rlang::is_character(exclude)) {
+        stop("exclude must be a character vector of file paths.")
     }
     
     if (!rlang::is_string(path)) {
@@ -135,29 +132,29 @@ check_style <- function(path = getwd(),
     }
     
     if (!file.exists(path)) {
-        stop(paste0("Cannot find path: ", path, "."))
+        stop(paste0("Cannot find path: ", path))
     }
     
+    # start with default linter, modify to suit our purposes
     linters <- lintr::default_linters
-    linters[['trailing_whitespace_linter']] <- trailing_whitespace_linter2
-    linters[['object_name_linter']] <- NULL
+    linters[["trailing_whitespace_linter"]] <- trailing_whitespace_linter2
+    linters[["object_name_linter"]] <- NULL
     
-    is_file <- file.exists(path) && !dir.exists(path)
-    if (is_file) {
-        lintr::lint(filename = path, linters = linters, ...)
-    } else {
+    # create a vector of files
+    if (dir.exists(path)) {
         files <- list.files(
-            path = ".", pattern = "\\.R$", recursive = recursive)
-        
+            path = path, pattern = "\\.(R|r)$", recursive = TRUE)
         files <- files %if_not_in% exclude
-        
-        dir.create("lintr/R/", recursive = TRUE)
-        file.copy(from = files, to = "lintr/R/", 
-                  overwrite = TRUE, 
-                  copy.mode = TRUE)
-        
-        on.exit(unlink("lintr", recursive = TRUE))
-        lintr::lint_package("lintr", linters = linters)
-        
+    } else {
+        files <- path
     }
+    
+    # follow lint_package process
+    lints <- lintr:::flatten_lints(lapply(files, function(file) {
+        lintr::lint(file, linters = linters, ...)
+    }))
+    lints <- lintr:::reorder_lints(lints)
+    class(lints) <- "lints"
+    
+    lints
 }
