@@ -109,21 +109,28 @@ trailing_whitespace_linter2 <- function(source_file) {
 #' @param path The path to the file or directory you want to check.
 #' @param recursive Should it also check subdirectories? (for directories only)
 #' @param verbose Should linted files be displayed?
+#' @param exclusion List of file names to be excluded from linting.
 #' @param ... Other lintr::lint parameters.
 #'
 #' @examples
 #' \donttest{check_style("file_name.R")}
 #' \donttest{check_style("file_name.R", recursive = TRUE, verbose = TRUE)}
 #' \donttest{check_style("file_name.R", parse_settings = TRUE, cache = TRUE)}
+#' \donttest{check_style("file_name.R", exclude = c("tests/test-foo.R", "R/m.R)}
 #'
 #' @export
 check_style <- function(path = getwd(),
                         recursive = TRUE,
                         verbose = FALSE,
+                        exclude = NULL,
                         ...) {
     
-    is_string <- is.character(path) && length(path) == 1L
-    if (!is_string) {
+    if (!is.null(exclude) &&
+        !(is.list(exclude) || is.vector(exclude) || rlang::is_string(path))) {
+        stop("exclude must be a list, vector or string.")
+    }
+    
+    if (!rlang::is_string(path)) {
         stop("path is not a string.")
     }
     
@@ -133,19 +140,24 @@ check_style <- function(path = getwd(),
     
     linters <- lintr::default_linters
     linters[['trailing_whitespace_linter']] <- trailing_whitespace_linter2
+    linters[['object_name_linter']] <- NULL
     
     is_file <- file.exists(path) && !dir.exists(path)
     if (is_file) {
-        lintr::lint(
-            filename = path, linters = linters, ...)
+        lintr::lint(filename = path, linters = linters, ...)
     } else {
         files <- list.files(
             path = ".", pattern = "\\.R$", recursive = recursive)
-        purrr::map(files, function(f) {
-            if (verbose) {
-                print(paste0("Linting: ", f))
-            }
-            lintr::lint(f, linters = linters, ...)
-        })
+        
+        files <- files %if_not_in% exclude
+        
+        dir.create("lintr/R/", recursive = TRUE)
+        file.copy(from = files, to = "lintr/R/", 
+                  overwrite = TRUE, 
+                  copy.mode = TRUE)
+        
+        on.exit(unlink("lintr", recursive = TRUE))
+        lintr::lint_package("lintr", linters = linters)
+        
     }
 }
