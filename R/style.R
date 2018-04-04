@@ -7,59 +7,6 @@ nmisc_style <- styler::tidyverse_style(
 )
 
 
-trailing_whitespace_linter2 <- function(source_file) {
-    res <- rex::re_matches(
-        source_file$lines,
-        rex::rex(rex::or(rex::none_of(" ")),
-            rex::capture(name = "space", rex::some_of(" ", rex::regex("\\t"))),
-            rex::or(rex::newline, rex::end)),
-        global = TRUE,
-        locations = TRUE)
-    
-    lapply(seq_along(source_file$lines), function(itr) {
-        
-        mapply(
-            FUN = function(start, end) {
-                if (is.na(start)) {
-                    return()
-                }
-                line_number <- names(source_file$lines)[itr]
-                lintr::Lint(
-                    filename = source_file$filename,
-                    line_number = line_number,
-                    column_number = start,
-                    type = "style",
-                    message = "Trailing whitespace is superfluous.",
-                    line = source_file$lines[as.character(line_number)],
-                    ranges = list(c(start, end)),
-                    linter = "trailing_whitespace_linter"
-                )
-            },
-            start = res[[itr]]$space.start,
-            end = res[[itr]]$space.end,
-            SIMPLIFY = FALSE
-        )
-    })
-}
-
-
-linters <- list(
-    line_length_linter = lintr::line_length_linter(80),
-    absolute_path_linter = lintr::absolute_path_linter(),
-    assignment_linter = lintr::assignment_linter,
-    closed_curly_linter = lintr::closed_curly_linter,
-    commas_linter = lintr::commas_linter,
-    infix_spaces_linter = lintr::infix_spaces_linter,
-    no_tab_linter = lintr::no_tab_linter,
-    object_name_linter = lintr::object_name_linter(),
-    open_curly_linter = lintr::open_curly_linter,
-    spaces_inside_linter = lintr::spaces_inside_linter,
-    spaces_left_parentheses_linter = lintr::spaces_left_parentheses_linter,
-    trailing_blank_lines_linter = lintr::trailing_blank_lines_linter,
-    trailing_whitespace_linter = trailing_whitespace_linter2
-)
-
-
 #' Fix R coding style
 #'
 #' Fix R coding style issues in a specified file or directory,
@@ -98,6 +45,62 @@ fix_style <- function(path = getwd()) {
 }
 
 
+trailing_whitespace_linter2 <- function(source_file) {
+    
+    res <- rex::re_matches(
+        source_file$lines,
+        rex::rex(
+            capture(name = "space", some_of(" ", rex::regex("\\t"))),
+            or(newline, end)),
+        global = TRUE,
+        locations = TRUE)
+    
+    # adjust res for lines we want to skip
+    if (length(source_file$lines) >= 1L) {
+        skip_lines <- c(
+            "#' ",
+            "    "
+        )
+        for (i in seq_along(source_file$lines)) {
+            ln <- source_file$lines[i]
+            if (ln %in% skip_lines) {
+                res[[i]] <- data.frame(
+                    space = NA_character_, 
+                    space.start = NA_integer_, 
+                    space.end = NA_integer_, 
+                    stringsAsFactors = FALSE
+                )
+            }
+        }
+    }
+    
+    lapply(seq_along(source_file$lines), function(itr) {
+        
+        mapply(
+            FUN = function(start, end) {
+                if (is.na(start)) {
+                    return()
+                }
+                line_number <- names(source_file$lines)[itr]
+                lintr::Lint(
+                    filename = source_file$filename,
+                    line_number = line_number,
+                    column_number = start,
+                    type = "style",
+                    message = "Trailing whitespace is superfluous.",
+                    line = source_file$lines[as.character(line_number)],
+                    ranges = list(c(start, end)),
+                    linter = "trailing_whitespace_linter"
+                )
+            },
+            start = res[[itr]]$space.start,
+            end = res[[itr]]$space.end,
+            SIMPLIFY = FALSE
+        )
+    })
+}
+
+
 #' Check R code styling for a specified R file or directory
 #'
 #' Check adherence to the Nmisc style, syntax errors and possible
@@ -119,7 +122,7 @@ check_style <- function(path = getwd(),
                         verbose = FALSE,
                         ...) {
     
-    is_string <- is.character(path) && length(path) == 1
+    is_string <- is.character(path) && length(path) == 1L
     if (!is_string) {
         stop("path is not a string.")
     }
@@ -128,52 +131,21 @@ check_style <- function(path = getwd(),
         stop(paste0("Cannot find path: ", path, "."))
     }
     
+    linters <- lintr::default_linters
+    linters[['trailing_whitespace_linter']] <- trailing_whitespace_linter2
+    
     is_file <- file.exists(path) && !dir.exists(path)
     if (is_file) {
-        lintr::lint(filename = path,
-                    linters = linters,
-                    ... = ...)
+        lintr::lint(
+            filename = path, linters = linters, ...)
     } else {
-        files <- list.files(path = ".",
-                            pattern = "\\.R$",
-                            recursive = recursive)
-        purrr::map(files,
-                   function(f) {
-                       if (verbose) {
-                           print(paste0("Linting: ", f))
-                       }
-                       lintr::lint(f, linters = linters, ... = ...)
-                   })
+        files <- list.files(
+            path = ".", pattern = "\\.R$", recursive = recursive)
+        purrr::map(files, function(f) {
+            if (verbose) {
+                print(paste0("Linting: ", f))
+            }
+            lintr::lint(f, linters = linters, ...)
+        })
     }
 }
-
-
-# New linters only available in nightly build
-
-# linters <- list(
-#     line_length_linter = lintr::line_length_linter(80),
-#     nonportable_path_linter = lintr::nonportable_path_linter,
-#     absolute_path_linter = lintr::absolute_path_linter,
-#     assignment_linter = lintr::assignment_linter,
-#     open_curly_linter = lintr::open_curly_linter,
-#     implicit_integer_linter = lintr::implicit_integer_linter,
-#     extraction_operator_linter = lintr::extraction_operator_linter,
-#     closed_curly_linter = lintr::closed_curly_linter(),
-#     commas_linter = lintr::commas_linter,
-#     infix_spaces_linter = lintr::infix_spaces_linter,
-#     no_tab_linter = lintr::no_tab_linter,
-#     object_name_linter = lintr::object_name_linter,
-#     open_curly_linter = lintr::open_curly_linter,
-#     spaces_inside_linter = lintr::spaces_inside_linter,
-#     spaces_left_parentheses_linter = lintr::spaces_left_parentheses_linter,
-#     trailing_blank_lines_linter = lintr::trailing_blank_lines_linter,
-#     undesirable_function_linter = lintr::undesirable_function_linter,
-#     undesirable_operator_linter = lintr::undesirable_operator_linter,
-#     unneeded_concatenation_linter = lintr::unneeded_concatenation_linter,
-#     single_quotes_linter = lintr::single_quotes_linter,
-#     seq_linter = lintr::seq_linter,
-#     semicolon_terminator_linter = lintr::semicolon_terminator_linter,
-#     pipe_continuation_linter = lintr::pipe_continuation_linter,
-#     camel_case_linter = lintr::camel_case_linter,
-#     T_and_F_symbol_linter = lintr::T_and_F_symbol_linter
-# )

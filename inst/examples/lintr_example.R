@@ -1,8 +1,19 @@
-# nolint start
-
 # Problems
 
-f <- function(foo, na.rm) { } # it requests snake case for na.rm
+# first space after #' is not superfluous
+#'
+#' 
+#'  
+
+# warn about empty lines with length not multiple of 4
+# warn about trailing spaces after text including this line  
+f <- function(foo, na.rm) {
+
+  
+    a <- 1  
+    
+    a
+} # it requests snake case for na.rm
 
 # Line length should not exceed 80 characters
 print("This line should be affected by the style checker because it is a very long line")
@@ -39,4 +50,3 @@ if(TRUE) {}
 # There should be no trailing blank spaces at the end of the file
 
 
-# nolint end
