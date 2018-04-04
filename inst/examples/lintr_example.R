@@ -1,13 +1,18 @@
 # Unless needed, add only one example for each warning / error.
 
-# known bug: warning regardless of how many spaces for missing columns
-# Commas should never have a space before.
-df[rows, , drop = FALSE]
-# Commas should always have a space after.
-df[rows,, drop = FALSE]
 
-# Use <-, not =, for assigment.
+# Warning applied to line `a <- 2`, not before or after
+# Trailing blank lines are superfluous.
+q <- function() {
+    
+    a <- 2  
+
+    a
+}
+
+
+# Use <-, not =, for assignment.
 a = 3
 
-# Put space arround all infix operators.
+# Put space around all infix operators.
 a<-3
