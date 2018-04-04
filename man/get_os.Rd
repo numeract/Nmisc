@@ -7,8 +7,10 @@
 get_os()
 }
 \value{
-One of \code{"win"}, \code{"mac"}, \code{"unix"}, \code{"Unknown OS"}.
+One of \code{"win"}, \code{"mac"}, \code{"unix"}, 
+ \code{"Unknown OS"}.
 }
 \description{
-A simple wrapper arround \code{rappdirs:::get_os}, allowing it to be exported.
+A simple wrapper arround \code{rappdirs:::get_os},
+ allowing it to be exported.
 }

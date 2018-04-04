@@ -2,22 +2,26 @@
 % Please edit documentation in R/style.R
 \name{check_style}
 \alias{check_style}
-\title{Check R code styling for a specified R file.}
+\title{Check R code styling for a specified R file or directory}
 \usage{
-check_style(file_path)
+check_style(path = getwd(), recursive = TRUE, verbose = FALSE, ...)
 }
 \arguments{
-\item{file_path}{The path to the file you want to check.}
+\item{path}{The path to the file or directory you want to check.}
+
+\item{recursive}{Should it also check subdirectories? (for directories only)}
+
+\item{verbose}{Should linted files be displayed?}
+
+\item{...}{Other lintr::lint parameters.}
 }
 \description{
-Check adherence to a given style, syntax errors and possible
-semantic issues.
+Check adherence to the Nmisc style, syntax errors and possible
+ semantic issues.
 }
 \examples{
 \donttest{check_style("file_name.R")}
+\donttest{check_style("file_name.R", recursive = TRUE, verbose = TRUE)}
+\donttest{check_style("file_name.R", parse_settings = TRUE, cache = TRUE)}
 
-}
-\seealso{
-Other code styling functions: \code{\link{check_package_style}},
-  \code{\link{style_package}}, \code{\link{style_script}}
 }

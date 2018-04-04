@@ -65,7 +65,8 @@ keep_if_not_in <- function(x, y) {
 #'   \code{na.rm}.
 #' 
 #' @param x,y Vectors (of the same mode) containing a sequence of items.
-#' @param na.rm Boolean value indicating whether \code{NA} should be omitted or not.
+#' @param na.rm Boolean value indicating whether
+#'  \code{NA} should be omitted or not.
 #' 
 #' @return A logical scalar that states the result.
 #' 
