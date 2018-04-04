@@ -7,6 +7,42 @@ nmisc_style <- styler::tidyverse_style(
 )
 
 
+trailing_whitespace_linter2 <- function(source_file) {
+    res <- rex::re_matches(
+        source_file$lines,
+        rex::rex(rex::or(rex::none_of(" ")),
+            rex::capture(name = "space", rex::some_of(" ", rex::regex("\\t"))),
+            rex::or(rex::newline, rex::end)),
+        global = TRUE,
+        locations = TRUE)
+    
+    lapply(seq_along(source_file$lines), function(itr) {
+        
+        mapply(
+            FUN = function(start, end) {
+                if (is.na(start)) {
+                    return()
+                }
+                line_number <- names(source_file$lines)[itr]
+                lintr::Lint(
+                    filename = source_file$filename,
+                    line_number = line_number,
+                    column_number = start,
+                    type = "style",
+                    message = "Trailing whitespace is superfluous.",
+                    line = source_file$lines[as.character(line_number)],
+                    ranges = list(c(start, end)),
+                    linter = "trailing_whitespace_linter"
+                )
+            },
+            start = res[[itr]]$space.start,
+            end = res[[itr]]$space.end,
+            SIMPLIFY = FALSE
+        )
+    })
+}
+
+
 linters <- list(
     line_length_linter = lintr::line_length_linter(80),
     absolute_path_linter = lintr::absolute_path_linter(),
@@ -20,20 +56,20 @@ linters <- list(
     spaces_inside_linter = lintr::spaces_inside_linter,
     spaces_left_parentheses_linter = lintr::spaces_left_parentheses_linter,
     trailing_blank_lines_linter = lintr::trailing_blank_lines_linter,
-    trailing_whitespace_linter = lintr::trailing_whitespace_linter
+    trailing_whitespace_linter = trailing_whitespace_linter2
 )
 
 
 #' Fix R coding style
-#'  
-#' Fix R coding style issues in a specified file or directory, 
+#'
+#' Fix R coding style issues in a specified file or directory,
 #'  based on Nmisc style
-#'  
+#'
 #' @param path The path to the file or directory you want to check.
-#'  
+#'
 #' @examples
 #' \donttest{fix_style("file_name.R")}
-#' 
+#'
 #' @export
 fix_style <- function(path = getwd()) {
     
@@ -110,6 +146,7 @@ check_style <- function(path = getwd(),
                    })
     }
 }
+
 
 # New linters only available in nightly build
 

@@ -7,7 +7,7 @@
 get_os()
 }
 \value{
-One of \code{"win"}, \code{"mac"}, \code{"unix"}, 
+One of \code{"win"}, \code{"mac"}, \code{"unix"},
  \code{"Unknown OS"}.
 }
 \description{

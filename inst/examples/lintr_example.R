@@ -1,46 +1,42 @@
-check_style(file.path("examples", "lintr_example.R"))
+# nolint start
 
 # Problems
 
 f <- function(foo, na.rm) { } # it requests snake case for na.rm
-    
-if (TRUE) {
-    # leading whitespace is still treated as trailing whitespace
-    
-    print("not ok")
-}
 
-# Line length
+# Line length should not exceed 80 characters
 print("This line should be affected by the style checker because it is a very long line")
 
-# Absolute path
+# Absolute paths should not be used
 file.exists("~/docs/foo")
 
-# Assignment
+# Assignments should use <- operator
 x = 5  # not ok
 
-# Closed curly
-if (TRUE) { 
-    print("not ok") }
+# Closed curly should be on its own line
+if (TRUE) {
+    print("not ok")}
 
-# Commas
+# Commas should leave spaces afterwards
 paste0("one","two")
 
-# Infix space
+# Infix operator spacing should exist
 x <- 5+3
 
-# No tabs
+# No tabs, only spaces should be allowed
         x <- 3
 
-# Object name linter
-onlySnake <- 5
-names_please <- 6
+# Only one naming convention should work
+onlyCamel <- 5
+only_snake <- 6
 
-# No spaces inside parentheses
+# No spaces inside parentheses should be allowed
 if ( TRUE) {}
 
 # Space before parentheses, as well
 if(TRUE) {}
 
-# And the trailing blank spaces at the end of the file
+# There should be no trailing blank spaces at the end of the file
 
+
+# nolint end

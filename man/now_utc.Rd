@@ -10,7 +10,7 @@ now_utc(length = 1L)
 \item{length}{Positive integer (scalar) indicating the length of the vector.}
 }
 \value{
-A POSIXct vector of size \code{length} with the \code{tzone} 
+A POSIXct vector of size \code{length} with the \code{tzone}
   atribute set to "UTC".
 }
 \description{

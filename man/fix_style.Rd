@@ -2,10 +2,7 @@
 % Please edit documentation in R/style.R
 \name{fix_style}
 \alias{fix_style}
-\title{Fix R coding style
- 
-Fix R coding style issues in a specified file or directory, 
- based on Nmisc style}
+\title{Fix R coding style}
 \usage{
 fix_style(path = getwd())
 }
@@ -13,9 +10,7 @@ fix_style(path = getwd())
 \item{path}{The path to the file or directory you want to check.}
 }
 \description{
-Fix R coding style
- 
-Fix R coding style issues in a specified file or directory, 
+Fix R coding style issues in a specified file or directory,
  based on Nmisc style
 }
 \examples{
