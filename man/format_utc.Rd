@@ -21,6 +21,10 @@ A character string representing the formatted date.
 \description{
 Converts Date and POSIXct objects to the format given as input.
 }
+\examples{
+format_utc(Sys.time(), format = "\%Y-\%m-\%d", usetz = FALSE)
+
+}
 \seealso{
 \code{\link{format.Date}}, \code{\link{format.POSIXct}}
 }

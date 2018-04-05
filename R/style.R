@@ -17,15 +17,15 @@ nmisc_style <- styler::tidyverse_style(
 
 
 #' Fix R coding style
-#'
+#' 
 #' Fix R coding style issues in a specified file or directory,
 #'  based on Nmisc style
-#'
+#' 
 #' @param path The path to the file or directory you want to check.
-#'
+#' 
 #' @examples
 #' \donttest{fix_style("file_name.R")}
-#'
+#' 
 #' @export
 fix_style <- function(path = getwd()) {
     
