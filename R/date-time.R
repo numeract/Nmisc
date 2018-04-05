@@ -24,6 +24,9 @@ is.POSIXct <- function(x) inherits(x, "POSIXct")
 #' 
 #' @seealso \code{\link{format.Date}}, \code{\link{format.POSIXct}}
 #' 
+#' @examples
+#' format_utc(Sys.time(), format = "%Y-%m-%d", usetz = FALSE)
+#' 
 #' @export
 format_utc <- function(x, format = NULL, usetz = TRUE) {
     
