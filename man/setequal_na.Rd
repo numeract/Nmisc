@@ -9,7 +9,8 @@ setequal_na(x, y, na.rm = FALSE)
 \arguments{
 \item{x, y}{Vectors (of the same mode) containing a sequence of items.}
 
-\item{na.rm}{Boolean value indicating whether \code{NA} should be omitted or not.}
+\item{na.rm}{Boolean value indicating whether
+\code{NA} should be omitted or not.}
 }
 \value{
 A logical scalar that states the result.

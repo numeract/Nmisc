@@ -28,7 +28,8 @@ Imports:
     rappdirs,
     rlang,
     styler,
-    tibble
+    tibble,
+    rex
 Suggests: 
     lubridate,
     testthat,

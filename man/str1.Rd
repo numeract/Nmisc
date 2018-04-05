@@ -16,7 +16,7 @@ str2(x)
 Does not return anything.
 }
 \description{
-\code{str1()} is a wrapper around \code{\link{str}} which sets maximal level 
+\code{str1()} is a wrapper around \code{\link{str}} which sets maximal level
   of nesting to 1, while \code{str2()} sets maximal level of nesting to 2.
 }
 \seealso{

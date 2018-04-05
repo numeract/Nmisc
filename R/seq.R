@@ -7,7 +7,7 @@
 #' @return a vector of integers
 #'
 #' @seealso \code{\link{seq}}
-#' 
+#'
 #' @export
 seq_nrow <- function(x) seq_len(nrow(x))
 

@@ -9,12 +9,12 @@
 #' @seealso \code{\link{cat}}
 #'
 #' @export
-catn <- function(...) cat(..., '\n')
+catn <- function(...) cat(..., "\n")
 
 
 #' High level overview of the structure of an R object
 #'
-#' \code{str1()} is a wrapper around \code{\link{str}} which sets maximal level 
+#' \code{str1()} is a wrapper around \code{\link{str}} which sets maximal level
 #'   of nesting to 1, while \code{str2()} sets maximal level of nesting to 2.
 #'
 #' @param x An R object

@@ -9,7 +9,7 @@ format_utc(x, format = NULL, usetz = TRUE)
 \arguments{
 \item{x}{A Date or POSIXct object to be converted.}
 
-\item{format}{A character string. The default format is 
+\item{format}{A character string. The default format is
 "\%Y-\%m-\%d" for Date and "\%Y-\%m-\%d \%H:\%M:\%S" for POSIXct.}
 
 \item{usetz}{Logical. If TRUE, the time zone abbreviation is
