@@ -1,3 +1,12 @@
+# surpress R CMD check notes
+reorder_lints <- lintr:::reorder_lints
+flatten_lints <- lintr:::flatten_lints
+capture <- rex:::capture
+end <- rex:::shortcuts$end
+newline <- rex:::shortcuts$newline
+or <- rex:::or
+some_of <- rex:::some_of
+
 nmisc_style <- styler::tidyverse_style(
     scope = "tokens",
     strict = FALSE, indent_by = 4,
@@ -145,6 +154,8 @@ check_style <- function(path = ".",
     linters <- lintr::default_linters
     linters[["trailing_whitespace_linter"]] <- trailing_whitespace_linter2
     linters[["object_name_linter"]] <- NULL
+    linters[["closed_curly_linter"]] <- NULL
+    linters[["open_curly_linter"]] <- NULL
     
     # create a vector of files
     if (dir.exists(path)) {
@@ -156,10 +167,10 @@ check_style <- function(path = ".",
     }
     
     # follow lint_package process
-    lints <- lintr:::flatten_lints(lapply(files, function(file) {
+    lints <- flatten_lints(lapply(files, function(file) {
         lintr::lint(file, linters = linters, ...)
     }))
-    lints <- lintr:::reorder_lints(lints)
+    lints <- reorder_lints(lints)
     
     # select top N most freq linters
     if (!is.null(top)) {
