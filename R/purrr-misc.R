@@ -1,10 +1,10 @@
 #' Keep or discard elements
-#'  
+#' 
 #' @description
 #' 
 #'  \code{keep_at()} keeps only the elements from specific positions or
 #'   columns, while \code{discard_at()} does the opposite.
-#'   The functions are wrappers around \code{purrr::keep} and 
+#'   The functions are wrappers around \code{purrr::keep} and
 #'   \code{purrr::discard}, respectively.
 #' 
 #' @param .x A list or vector.
@@ -12,7 +12,7 @@
 #' 
 #' @return A list or vector.
 #' 
-#' @examples 
+#' @examples
 #' x <- c(1, 2, 3)
 #' names(x) <- c("First", "Second", "Last")
 #' keep_at(x, "Second")
@@ -28,6 +28,7 @@
 keep_at <- function(.x, .at) {
     
     if (length(.at) == 0L) return(.x[0L])
+    if (any(is.na(.at))) stop("`.at`` must not contain NA's")
     
     .p <- if (is.character(.at)) {
         names(.x) %in% .at
@@ -46,6 +47,7 @@ keep_at <- function(.x, .at) {
 discard_at <- function(.x, .at) {
     
     if (length(.at) == 0L) return(.x)
+    if (any(is.na(.at))) stop("`.at` must not contain NA's")
     
     .p <- if (is.character(.at)) {
         names(.x) %in% .at

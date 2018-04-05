@@ -1,8 +1,9 @@
-# Nmisc 0.1.0.9003
+# Nmisc 0.2.0
 
-- added `now_utc()`
-- re-export `is.POSIXct()`, `get_os()`
-- fix `seq_ncol()`
+- added `check_style` - a custom linter
+- fix code style
+- added unit tests
+- added custom styler (WIP)
 
 
 # Nmisc 0.1.0

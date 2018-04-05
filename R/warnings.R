@@ -1,9 +1,9 @@
 #' Avoid R’s warning feature
-#'
+#' 
 #' Clear warnings for production code.
-#'
+#' 
 #' @seealso \code{\link{warnings}}
-#'
+#' 
 #' @export
 clear_warnings <- function() {
 

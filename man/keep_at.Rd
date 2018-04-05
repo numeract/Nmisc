@@ -20,7 +20,7 @@ A list or vector.
 \description{
 \code{keep_at()} keeps only the elements from specific positions or
   columns, while \code{discard_at()} does the opposite.
-  The functions are wrappers around \code{purrr::keep} and 
+  The functions are wrappers around \code{purrr::keep} and
   \code{purrr::discard}, respectively.
 }
 \examples{

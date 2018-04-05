@@ -2,18 +2,26 @@
 % Please edit documentation in R/style.R
 \name{check_style}
 \alias{check_style}
-\title{Check R code styling}
+\title{Check R code styling for a specified R file or directory}
 \usage{
-check_style(file_name)
+check_style(path = ".", top = NULL, exclude = NULL, ...)
 }
 \arguments{
-\item{file_name}{The name of the file you want to check.}
+\item{path}{The path to the file or directory you want to check.}
+
+\item{top}{An integer scalar (or a vector) to list the most frequent issues.}
+
+\item{exclude}{File names to be excluded from linting.}
+
+\item{...}{Other lintr::lint parameters.}
 }
 \description{
-Check adherence to a given style, syntax errors and possible
+Check adherence to the Nmisc style, syntax errors and possible
   semantic issues.
 }
 \examples{
 \donttest{check_style("file_name.R")}
+\donttest{check_style("file_name.R", top = 2:3)}
+\donttest{check_style(".", exclude = c("R/foo.R", "R/bar.R"))}
 
 }
