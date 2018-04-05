@@ -9,7 +9,7 @@ check_style(path = ".", top = NULL, exclude = NULL, ...)
 \arguments{
 \item{path}{The path to the file or directory you want to check.}
 
-\item{top}{List only the top N most frequent issues.}
+\item{top}{An integer scalar (or a vector) to list the most frequent issues.}
 
 \item{exclude}{File names to be excluded from linting.}
 
@@ -21,7 +21,7 @@ Check adherence to the Nmisc style, syntax errors and possible
 }
 \examples{
 \donttest{check_style("file_name.R")}
-\donttest{check_style("file_name.R", top = 2)}
+\donttest{check_style("file_name.R", top = 2:3)}
 \donttest{check_style(".", exclude = c("R/foo.R", "R/bar.R"))}
 
 }

@@ -111,13 +111,13 @@ trailing_whitespace_linter2 <- function(source_file) {
 #'   semantic issues.
 #' 
 #' @param path The path to the file or directory you want to check.
-#' @param top List only the top N most frequent issues.
+#' @param top An integer scalar (or a vector) to list the most frequent issues.
 #' @param exclude File names to be excluded from linting.
 #' @param ... Other lintr::lint parameters.
 #' 
 #' @examples
 #' \donttest{check_style("file_name.R")}
-#' \donttest{check_style("file_name.R", top = 2)}
+#' \donttest{check_style("file_name.R", top = 2:3)}
 #' \donttest{check_style(".", exclude = c("R/foo.R", "R/bar.R"))}
 #' 
 #' @export
@@ -133,8 +133,8 @@ check_style <- function(path = ".",
         stop(paste0("Cannot find `path`: ", path))
     }
     
-    if (length(top) > 0L && !rlang::is_scalar_integerish(top)) {
-        stop("`top` must be a scalar integer.")
+    if (length(top) > 0L && !rlang::is_integerish(top)) {
+        stop("`top` must be an integer.")
     }
     
     if (length(exclude) > 0L && !rlang::is_character(exclude)) {
@@ -161,15 +161,16 @@ check_style <- function(path = ".",
     }))
     lints <- lintr:::reorder_lints(lints)
     
+    # select top N most freq linters
     if (!is.null(top)) {
         frequent_linters <- lints %>%
             purrr::map_chr("linter") %>%
             table() %>%
             sort(decreasing = TRUE) %>%
-            names() %>%
-            head(top)
+            names()
+        top_frequent_linters <- frequent_linters[top]
         lints <- lints %>%
-            purrr::keep(~ .$linter %in% frequent_linters)
+            purrr::keep(~ .$linter %in% top_frequent_linters)
     }
     class(lints) <- "lints"
     
