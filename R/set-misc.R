@@ -19,7 +19,14 @@
 #'
 #' @export
 keep_if_in <- function(x, y) {
-
+    
+    if (is.null(x)) stop("x should not be a NULL")
+    if (all(is.na(x))) stop("x should not be NA")
+    if (length(x) == 0) stop("x should have at least 1 element")
+    if (is.null(y)) stop("y should not be a NULL")
+    if (length(y) == 0) stop("y should have at least 1 element")
+    if (all(is.na(y))) stop("y should not be NA")
+    
     x[x %in% y]
 }
 
@@ -49,7 +56,14 @@ keep_if_in <- function(x, y) {
 #'
 #' @export
 keep_if_not_in <- function(x, y) {
-
+    
+    if (is.null(x)) stop("x should not be a NULL")
+    if (all(is.na(x))) stop("x should not be NA")
+    if (length(x) == 0) stop("x should have at least 1 element")
+    if (is.null(y)) stop("y should not be a NULL")
+    if (length(y) == 0) stop("y should have at least 1 element")
+    if (all(is.na(y))) stop("y should not be NA")
+    
     x[!(x %in% y)]
 }
 
@@ -88,6 +102,7 @@ keep_if_not_in <- function(x, y) {
 #' @export
 setequal_na <- function(x, y, na.rm = FALSE) {
     
+    if (is.null(x) || is.null(y)) stop("Input sets should not be NULL")
     if (na.rm) {
         x <- stats::na.omit(x)
         y <- stats::na.omit(y)

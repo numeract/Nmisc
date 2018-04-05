@@ -1,9 +1,11 @@
 context("Testing data-time.R")
 
+
 test_that("is.POSIXct(x) works", {
     date <- as.POSIXct("2018/02/13 12-55-51")
     expect_true(is.POSIXct(date))
 })
+
 
 test_that("format_utc() works for Date", {
     date <- lubridate::ymd(20101215)
@@ -12,12 +14,14 @@ test_that("format_utc() works for Date", {
     expect_match(result, "2010-12-15")
 })
 
+
 test_that("format_utc() works for Date, with format", {
     date <- lubridate::ymd(20101215)
     result <- format_utc(date, "%Y/%m/%d")
 
     expect_match(result, "2010/12/15")
 })
+
 
 test_that("format_utc() works for POSIXct", {
     date <- lubridate::ymd_hms("2018/02/13 12-55-51")
@@ -26,12 +30,14 @@ test_that("format_utc() works for POSIXct", {
     expect_match(result, "2018-02-13 12:55:51 UTC")
 })
 
+
 test_that("format_utc() works for POSIXct with format", {
     date <- lubridate::ymd_hms("2018-02-13 12:55:51")
     result <- format_utc(date, "%Y/%m/%d %H-%M-%S")
 
     expect_match(result, "2018/02/13 12-55-51 UTC")
 })
+
 
 test_that("format_utc() works for Date, with format, with tz", {
     date <- lubridate::ymd_hms("2018-02-13 12:55:51")
@@ -40,6 +46,7 @@ test_that("format_utc() works for Date, with format, with tz", {
 
     expect_match(result, "2018/02/13 18-55-51 UTC")
 })
+
 
 test_that("format_utc() stops with wrong input", {
     wrong_date <- "2018-02-13 12:55:51"
@@ -50,3 +57,9 @@ test_that("format_utc() stops with wrong input", {
 test_that("format_utc() stops with NA", {
     expect_error(format_utc(NA))
 }) 
+
+
+test_that("format_utc() stops Date, with format NA", {
+    date <- lubridate::ymd(20101215)
+    expect_error(format_utc(date, NA))
+})

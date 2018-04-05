@@ -24,4 +24,3 @@ test_that("pull_with_names stops with name_col vector", {
 test_that("pull_with_names stops with NA var", {
     expect_error(pull_with_names(iris, NA, "Species"))
 })
-
