@@ -1,3 +1,4 @@
+
 #' Pull out a single column
 #'
 #' Pull out a single column by using its name or its position
@@ -16,6 +17,10 @@
 #' 
 #' @export
 pull_with_names <- function(.data, var = -1, name_col) {
-        dplyr::pull(.data, var) %>%
-            rlang::set_names(.data[[name_col]])
+    if (is.null(name_col)) stop("name_col should be a character()")
+    if (length(name_col) > 1) stop("name_col should be a character() of length 1") 
+    if (is.na(name_col)) stop("name_col should be a character()")
+    dplyr::pull(.data, var) %>%
+        rlang::set_names(.data[[name_col]])
 }
+
