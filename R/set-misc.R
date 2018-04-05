@@ -89,10 +89,9 @@ keep_if_not_in <- function(x, y) {
 #' @export
 setequal_na <- function(x, y, na.rm = FALSE) {
     
-    if (is.null(x) || is.null(y)) stop("Input sets should not be NULL")
     if (na.rm) {
-        x <- stats::na.omit(x)
-        y <- stats::na.omit(y)
+        x <- if (is.null(x)) x else stats::na.omit(x)
+        y <- if (is.null(y)) y else stats::na.omit(y)
     }
     
     base::setequal(x, y)

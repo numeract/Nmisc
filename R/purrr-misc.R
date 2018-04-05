@@ -29,6 +29,7 @@ keep_at <- function(.x, .at) {
     
     if (length(.at) == 0L) return(.x[0L])
     if (any(is.na(.at))) stop(".at should not contain NA's")
+    
     .p <- if (is.character(.at)) {
         names(.x) %in% .at
     } else if (is.numeric(.at)) {
@@ -47,6 +48,7 @@ discard_at <- function(.x, .at) {
     
     if (length(.at) == 0L) return(.x)
     if (any(is.na(.at))) stop(".at should not contain NA's")
+    
     .p <- if (is.character(.at)) {
         names(.x) %in% .at
     } else if (is.numeric(.at)) {
