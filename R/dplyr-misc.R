@@ -17,9 +17,11 @@
 #' 
 #' @export
 pull_with_names <- function(.data, var = -1, name_col) {
-    if (is.null(name_col)) stop("name_col should be a character()")
-    if (length(name_col) > 1L) stop("name_col should be a character() of length 1") 
-    if (is.na(name_col)) stop("name_col should be a character()")
+    
+    if (!rlang::is_scalar_character(name_col) || is.na(name_col)) {
+        stop("`name_col` must be a valid character of length 1")
+    }
+    
     dplyr::pull(.data, var) %>%
         rlang::set_names(.data[[name_col]])
 }
