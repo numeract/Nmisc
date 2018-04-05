@@ -111,28 +111,34 @@ trailing_whitespace_linter2 <- function(source_file) {
 #'   semantic issues.
 #' 
 #' @param path The path to the file or directory you want to check.
+#' @param top List only the top N most frequent issues.
 #' @param exclude File names to be excluded from linting.
 #' @param ... Other lintr::lint parameters.
 #' 
 #' @examples
 #' \donttest{check_style("file_name.R")}
+#' \donttest{check_style("file_name.R", top = 2)}
 #' \donttest{check_style(".", exclude = c("R/foo.R", "R/bar.R"))}
 #' 
 #' @export
 check_style <- function(path = ".",
+                        top = NULL,
                         exclude = NULL,
                         ...) {
     
-    if (length(exclude) > 0L && !rlang::is_character(exclude)) {
-        stop("exclude must be a character vector of file paths.")
-    }
-    
     if (!rlang::is_string(path)) {
-        stop("path is not a string.")
+        stop("`path` must be a string.")
+    }
+    if (!file.exists(path)) {
+        stop(paste0("Cannot find `path`: ", path))
     }
     
-    if (!file.exists(path)) {
-        stop(paste0("Cannot find path: ", path))
+    if (length(top) > 0L && !rlang::is_scalar_integerish(top)) {
+        stop("`top` must be a scalar integer.")
+    }
+    
+    if (length(exclude) > 0L && !rlang::is_character(exclude)) {
+        stop("`exclude` must be a character vector of file paths.")
     }
     
     # start with default linter, modify to suit our purposes
@@ -154,6 +160,17 @@ check_style <- function(path = ".",
         lintr::lint(file, linters = linters, ...)
     }))
     lints <- lintr:::reorder_lints(lints)
+    
+    if (!is.null(top)) {
+        frequent_linters <- lints %>%
+            purrr::map_chr("linter") %>%
+            table() %>%
+            sort(decreasing = TRUE) %>%
+            names() %>%
+            head(top)
+        lints <- lints %>%
+            purrr::keep(~ .$linter %in% frequent_linters)
+    }
     class(lints) <- "lints"
     
     lints
