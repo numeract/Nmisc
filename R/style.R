@@ -152,8 +152,12 @@ check_style <- function(path = ".",
     
     # start with default linter, modify to suit our purposes
     linters <- lintr::default_linters
+    # keep indented spaces (multiple of 4) and one space after #'
     linters[["trailing_whitespace_linter"]] <- trailing_whitespace_linter2
+    # allow for both underscore_name and camelCase
     linters[["object_name_linter"]] <- NULL
+    # closed and open curlies on the same line are useful for
+    # RStudio IDE document outline; used in R6 and tests.
     linters[["closed_curly_linter"]] <- NULL
     linters[["open_curly_linter"]] <- NULL
     
