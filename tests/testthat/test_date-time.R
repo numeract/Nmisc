@@ -63,3 +63,15 @@ test_that("format_utc() stops Date, with format NA", {
     date <- lubridate::ymd(20101215)
     expect_error(format_utc(date, NA))
 })
+
+
+test_that("now_utc() works ", {
+    expect_true(is.POSIXct(now_utc()))
+})
+
+
+
+test_that("now_utc() stops with length negative", {
+    expect_error(now_utc(length == -1))
+})
+
