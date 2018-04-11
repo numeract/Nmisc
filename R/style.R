@@ -66,7 +66,8 @@ trailing_whitespace_linter2 <- function(source_file) {
     res <- rex::re_matches(
         source_file$lines,
         rex::rex(
-            capture(name = "space", some_of(" ", rex::regex("\\t"))),
+            # match 2 or more spaces; it's OK to have one space at the end
+            capture(name = "space", rex::regex("[ \\t]{2,}")),
             or(newline, end)),
         global = TRUE,
         locations = TRUE)
@@ -103,7 +104,7 @@ trailing_whitespace_linter2 <- function(source_file) {
                     message = "Trailing whitespace is superfluous.",
                     line = source_file$lines[as.character(line_number)],
                     ranges = list(c(start, end)),
-                    linter = "trailing_whitespace_linter"
+                    linter = "trailing_whitespace_linter2"
                 )
             },
             start = res[[itr]]$space.start,
@@ -153,7 +154,8 @@ check_style <- function(path = ".",
     # start with default linter, modify to suit our purposes
     linters <- lintr::default_linters
     # keep indented spaces (multiple of 4) and one space after #'
-    linters[["trailing_whitespace_linter"]] <- trailing_whitespace_linter2
+    linters[["trailing_whitespace_linter"]] <- NULL
+    linters[["trailing_whitespace_linter2"]] <- trailing_whitespace_linter2
     # allow for both underscore_name and camelCase
     linters[["object_name_linter"]] <- NULL
     # closed and open curlies on the same line are useful for

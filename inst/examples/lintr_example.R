@@ -6,11 +6,13 @@
 #'  
 
 # warn about empty lines with length not multiple of 4
+# do not warn if only one space (like this line) 
 # warn about trailing spaces after text including this line  
 f <- function(foo, na.rm) {
 
   
-    a <- 1  
+    a <- 1 
+    a <- 2  
     
     a
 }
