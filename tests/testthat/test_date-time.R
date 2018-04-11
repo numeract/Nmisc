@@ -94,6 +94,22 @@ test_that("now_utc() works with length 0", {
 })
 
 test_that("now_utc() stops when length has more than 1 values", {
-    length_list <- list(c(1, 2), c(2, 3))
-    expect_error(now_utc(length =  length_list))
+    
+    length_values <- list(c(1, 2), c(2, 3))
+    expect_error(now_utc(length =  length_values))
+})
+
+
+test_that("now_utc() stops with length NULL", {
+    
+    expect_error(now_utc(length =  NULL))
+})
+
+
+
+test_that("now_utc() stops with length NA", {
+    
+    expect_error(now_utc(length =  NA))
+    expect_error(now_utc(length =  c(NA, 1)))
+    expect_error(now_utc(length =  c(NA, NA)))
 })
