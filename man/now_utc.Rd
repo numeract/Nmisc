@@ -7,7 +7,9 @@
 now_utc(length = 1L)
 }
 \arguments{
-\item{length}{Positive integer (scalar) indicating the length of the vector.}
+\item{length}{Positive integer (scalar) indicating the 
+length of the returned vector. If length is a vector of multiple elements, 
+only the first element is taken into account.}
 }
 \value{
 A POSIXct vector of size \code{length} with the \code{tzone}

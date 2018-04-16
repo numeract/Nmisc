@@ -66,6 +66,10 @@ test_that("format_utc() stops Date, with format NA", {
 
 
 test_that("now_utc() works ", {
+    now_utc_value <- now_utc()
+    sec_diff <- difftime(Sys.time(),
+                         now_utc_value, units = "secs")
+    expect_true(sec_diff < 1)
     expect_true(is.POSIXct(now_utc()))
 })
 
