@@ -1,3 +1,7 @@
+# Nmisc 0.2.1
+
+- move code style functionality to new package Nstyle
+
 # Nmisc 0.2.0
 
 - added `check_style` - a custom linter
