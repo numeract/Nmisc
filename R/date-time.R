@@ -50,7 +50,9 @@ format_utc <- function(x, format = NULL, usetz = TRUE) {
 #' 
 #' Returns a vector with the current date and time in the UTC time zone.
 #' 
-#' @param length Positive integer (scalar) indicating the length of the vector.
+#' @param length Positive integer (scalar) indicating the 
+#' length of the returned vector. If length is a vector of multiple elements, 
+#' only the first element is taken into account.
 #' 
 #' @return A POSIXct vector of size \code{length} with the \code{tzone}
 #'   atribute set to "UTC".

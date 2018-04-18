@@ -33,5 +33,3 @@ The package is still in development, functions will be updated.
     + `keep_at` and `discard_at`
 - extending `dplyr`:
     + `pull_with_names`
-- code style:
-    + `style_script` and `check_style`
