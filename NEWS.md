@@ -1,6 +1,12 @@
+# Nmisc 0.2.2
+
+- 100% coverage
+
+
 # Nmisc 0.2.1
 
 - move code style functionality to new package Nstyle
+
 
 # Nmisc 0.2.0
 

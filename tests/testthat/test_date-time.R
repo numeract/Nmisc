@@ -64,15 +64,16 @@ test_that("format_utc() stops Date, with format NA", {
     expect_error(format_utc(date, NA))
 })
 
+
 test_that("now_utc() works ", {
-    now_utc_value <- now_utc()
-    
+    now_utc_value <- now_utc(length = 0)
+    expect_true(is.POSIXct(now_utc_value))
     expect_equal(lubridate::tz(now_utc_value), 'UTC')
-    expect_true(is.POSIXct(now_utc()))
     
-    sec_diff <- difftime(
-        Sys.time(),
-        now_utc_value, units = "secs")
+    now_utc_value <- now_utc(length = 1)
+    expect_true(is.POSIXct(now_utc_value))
+    expect_equal(lubridate::tz(now_utc_value), 'UTC')
+    sec_diff <- difftime(Sys.time(), now_utc_value, units = "secs")
     expect_true(sec_diff < 1)
 })
 
@@ -80,11 +81,10 @@ test_that("now_utc() works ", {
 test_that("now_utc() works with length vector of multiple elements", {
     now_utc_length1 <- length(now_utc(length = c(1, 2)))
     now_utc_expect_length1 <- length(now_utc(length = 1))
+    expect_equal(now_utc_length1, now_utc_expect_length1)
     
     now_utc_length2 <- length(now_utc(length = c(2, 1)))
     now_utc_expect_length2 <- length(now_utc(length = 2))
-    
-    expect_equal(now_utc_length1, now_utc_expect_length1)
     expect_equal(now_utc_length2, now_utc_expect_length2)
     
     length_values <- list(c(1, 2), c(2, 3))
@@ -100,4 +100,3 @@ test_that("now_utc() stops with length NULL, NA", {
     expect_error(now_utc(length =  c(NA, 1)))
     expect_error(now_utc(length =  c(NA, NA)))
 })
-
