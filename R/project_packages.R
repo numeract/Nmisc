@@ -69,3 +69,26 @@ library_packages <- function() {
     
     add_packages_info(pkg)
 }
+
+
+
+install_project_packages <- function() {
+    
+    referenced_pkgs <- referenced_packages()
+    loaded_pkgs <- loaded_packages()
+    library_pkgs <- library_packages()
+    
+    all_packages <- referenced_pkgs %>%
+        # dplyr::bind_rows(loaded_pkgs) %>%
+        dplyr::bind_rows(library_pkgs) %>%
+        dplyr::distinct(package)
+    
+    all_packages$is_installed <- vapply(
+        all_packages$package,
+        function(x) x %in% rownames(installed.packages()), 
+        logical(1))
+    
+    all_packages <- all_packages[!all_packages$is_installed, ]
+    #install.packages(all_packages$package)
+}
+
