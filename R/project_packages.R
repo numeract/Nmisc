@@ -1,4 +1,3 @@
-
 add_packages_info <- function(pkgs) {
     
     pkgs$is_installed <- vapply(
@@ -117,23 +116,20 @@ required_packages <- function() {
 }
 
 
-install_project_packages <- function() {
+generate_install_file <- function() {
     
     referenced_pkgs <- referenced_packages()
     loaded_pkgs <- loaded_packages()
     library_pkgs <- library_packages()
+    required_pkgs <- required_packages()
     
     all_packages <- referenced_pkgs %>%
-        # dplyr::bind_rows(loaded_pkgs) %>%
+        dplyr::bind_rows(required_pkgs) %>%
         dplyr::bind_rows(library_pkgs) %>%
-        dplyr::distinct(package)
-    
-    all_packages$is_installed <- vapply(
-        all_packages$package,
-        function(x) x %in% rownames(installed.packages()), 
-        logical(1))
+        dplyr::distinct()
     
     all_packages <- all_packages[!all_packages$is_installed, ]
-    #install.packages(all_packages$package)
+    all_packages <- paste(all_packages$package, collapse = ",")
+    install_stmt <- paste0("install.packages(c(", all_packages, "))")
+    write(install_stmt, file = "install_packages.R")
 }
-
