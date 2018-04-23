@@ -1,3 +1,4 @@
+
 add_packages_info <- function(pkgs) {
     
     desc <- lapply(pkgs$package, utils::packageDescription)
@@ -10,6 +11,28 @@ add_packages_info <- function(pkgs) {
     pkgs <- pkgs[!pkgs$is_base, ]
 }
 
+
+prepare_file_text <- function() {
+    
+    file_pattern <- '.*\\.R(md)?$'
+    exclude_pattern <- 'EDA/|test|^_'
+    exclude_comments_pattern <- '#.*'
+    
+    fls <- list.files(path = ".", pattern = file_pattern, recursive = TRUE) %>%
+        purrr::discard(~grepl(exclude_pattern, .))
+    
+    lns <- fls %>%
+        purrr::map(readLines) %>%
+        unlist(use.names = FALSE) %>%
+        purrr::discard(~grepl(exclude_comments_pattern, .)) %>%
+        stringr::str_replace_all('\\s', '') %>%
+        stringr::str_replace_all('\\r\\n', '') %>%
+        stringr::str_replace_all('\\n', '') %>%
+        stringr::str_replace_all('"', '') %>%
+        stringr::str_replace_all('\'', '')
+    
+    lns
+}
 
 loaded_packages <- function() {
     
@@ -49,27 +72,24 @@ referenced_packages <- function() {
 
 library_packages <- function() {
     
-    file_pattern <- '.*\\.R(md)?$'
-    exclude_pattern <- 'EDA/|test|^_'
-    fls <- list.files(path = ".", pattern = file_pattern, recursive = TRUE) %>%
-        purrr::discard(~grepl(exclude_pattern, .))
+   lns <- prepare_file_text()
     
-    lns <- fls %>%
-        purrr::map(readLines) %>%
-        unlist(use.names = FALSE)
-    
-    regex_pattern <- '(?<=library\\(\\")([^\r\n]+)(?=\\"\\))'
+   regex_pattern <- '(?<=library\\()([^\r\n]+)(?=\\))'
     pkg <- stringr::str_extract_all(lns, regex_pattern) %>% 
         purrr::discard(~length(.) == 0) %>%
         unlist(use.names = FALSE) %>% 
-        tibble::as_tibble() %>%
-        dplyr::rename(package = value) %>%
-        dplyr::distinct() %>%
-        as.data.frame()
-    
-    add_packages_info(pkg)
+        tibble::as_tibble() 
+    if (nrow(pkg) == 0) {
+        pkg
+    } else {
+        pkg <- pkg %>%
+            dplyr::rename(package = value) %>%
+            dplyr::distinct() %>%
+            as.data.frame()
+        add_packages_info(pkg)
+    }
+   
 }
-
 
 
 install_project_packages <- function() {
