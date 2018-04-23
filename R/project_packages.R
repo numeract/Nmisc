@@ -71,23 +71,21 @@ referenced_packages <- function() {
         dplyr::rename(package = value) %>%
         dplyr::distinct() %>%
         as.data.frame()
-    pkg
     add_packages_info(pkg)
 }
 
 
-
 library_packages <- function() {
     
-   lns <- prepare_file_text()
+    lns <- prepare_file_text()
     
-   regex_pattern <- '(?<=library\\()([^\r\n]+)(?=\\))'
+    regex_pattern <- '(?<=library\\()([a-zA-Z]+)(?=\\))'
     pkg <- stringr::str_extract_all(lns, regex_pattern) %>% 
         purrr::discard(~length(.) == 0) %>%
         unlist(use.names = FALSE) %>% 
-        tibble::as_tibble() 
+        tibble::as_tibble()
     if (nrow(pkg) == 0) {
-        pkg
+        as.data.frame(pkg) 
     } else {
         pkg <- pkg %>%
             dplyr::rename(package = value) %>%
@@ -95,7 +93,6 @@ library_packages <- function() {
             as.data.frame()
         add_packages_info(pkg)
     }
-   
 }
 
 
