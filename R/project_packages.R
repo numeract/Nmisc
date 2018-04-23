@@ -27,23 +27,26 @@ prepare_file_text <- function() {
     
     file_pattern <- '.*\\.R(md)?$'
     exclude_pattern <- 'EDA/|test|^_'
-    exclude_comments_pattern <- '#.*'
     
     fls <- list.files(path = ".", pattern = file_pattern, recursive = TRUE) %>%
         purrr::discard(~grepl(exclude_pattern, .))
     
+    exclude_comments_pattern <- '#.*'
     lns <- fls %>%
         purrr::map(readLines) %>%
         unlist(use.names = FALSE) %>%
         purrr::discard(~grepl(exclude_comments_pattern, .)) %>%
+        stringr::str_replace_all("[\r\n]" , "") %>%
         stringr::str_replace_all('\\s', '') %>%
-        stringr::str_replace_all('\\r\\n', '') %>%
         stringr::str_replace_all('\\n', '') %>%
         stringr::str_replace_all('"', '') %>%
         stringr::str_replace_all('\'', '')
     
+    lns <- paste(lns, collapse = '')
+    
     lns
 }
+
 
 loaded_packages <- function() {
     
