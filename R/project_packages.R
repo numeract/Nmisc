@@ -60,14 +60,7 @@ loaded_packages <- function() {
 
 referenced_packages <- function() {
     
-    file_pattern <- '.*\\.R(md)?$'
-    exclude_pattern <- 'EDA/|test|^_'
-    fls <- list.files(path = ".", pattern = file_pattern, recursive = TRUE) %>%
-        purrr::discard(~grepl(exclude_pattern, .))
-    
-    lns <- fls %>%
-        purrr::map(readLines) %>%
-        unlist(use.names = FALSE)
+    lns <- prepare_file_text()
     
     regex_pattern <- '[[:alnum:]_.]+::'
     pkg <- stringr::str_extract_all(lns, regex_pattern) %>% 
@@ -78,7 +71,7 @@ referenced_packages <- function() {
         dplyr::rename(package = value) %>%
         dplyr::distinct() %>%
         as.data.frame()
-    
+    pkg
     add_packages_info(pkg)
 }
 
