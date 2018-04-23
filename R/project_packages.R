@@ -129,7 +129,11 @@ generate_install_file <- function() {
         dplyr::distinct()
     
     all_packages <- all_packages[!all_packages$is_installed, ]
-    all_packages <- paste(all_packages$package, collapse = ",")
-    install_stmt <- paste0("install.packages(c(", all_packages, "))")
-    write(install_stmt, file = "install_packages.R")
+    if (nrow(all_packages) == 0) {
+        print("All necessary packages are already installed!")
+    } else {
+        all_packages <- paste(all_packages$package, collapse = ",")
+        install_stmt <- paste0("install.packages(c(", all_packages, "))")
+        write(install_stmt, file = "install_packages.R")
+    }
 }
