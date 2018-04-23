@@ -1,13 +1,24 @@
 
 add_packages_info <- function(pkgs) {
     
-    desc <- lapply(pkgs$package, utils::packageDescription)
-    pkgs$is_base <- vapply(
-        desc, function(x) identical(x$Priority, "base"), logical(1))
+    pkgs$is_installed <- vapply(
+        pkgs$package,
+        function(x) x %in% rownames(installed.packages()), 
+        logical(1))
     
-    pkgs$source <- sapply(desc, "[", "Repository")
-    pkgs$version <- sapply(desc, "[", "Version")
-
+    for (i in 1:nrow(pkgs)) {
+        if (pkgs$is_installed[i]) {
+            desc <- lapply(pkgs$package[i], utils::packageDescription)
+            pkgs$is_base[i] <- vapply(
+                desc, function(x) identical(x$Priority, "base"), logical(1))
+            pkgs$source[i] <- sapply(desc, "[", "Repository")
+            pkgs$version[i] <- sapply(desc, "[", "Version")
+        } else {
+            pkgs$is_base[i] <- FALSE
+            pkgs$source[i] <- NA
+            pkgs$version[i] <- NA
+        }
+    }
     pkgs <- pkgs[!pkgs$is_base, ]
 }
 
