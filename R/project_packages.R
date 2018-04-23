@@ -96,6 +96,27 @@ library_packages <- function() {
 }
 
 
+required_packages <- function() {
+    
+    lns <- prepare_file_text()
+    
+    regex_pattern <- '(?<=require\\()([a-zA-Z]+)(?=\\))'
+    pkg <- stringr::str_extract_all(lns, regex_pattern) %>% 
+        purrr::discard(~length(.) == 0) %>%
+        unlist(use.names = FALSE) %>% 
+        tibble::as_tibble() 
+    if (nrow(pkg) == 0) {
+        as.data.frame(pkg) 
+    } else {
+        pkg <- pkg %>%
+            dplyr::rename(package = value) %>%
+            dplyr::distinct() %>%
+            as.data.frame()
+        add_packages_info(pkg)
+    }
+}
+
+
 install_project_packages <- function() {
     
     referenced_pkgs <- referenced_packages()
