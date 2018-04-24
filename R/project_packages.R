@@ -78,11 +78,23 @@ library_packages <- function() {
     
     lns <- prepare_file_text()
     
-    regex_pattern <- '(?<=library\\()([a-zA-Z]+)(?=\\))'
-    pkg <- stringr::str_extract_all(lns, regex_pattern) %>% 
+    regex_pattern_single <- '(?<=library\\()([a-zA-Z1-9-_]+?)(?=\\))'
+    pkg_single <- stringr::str_extract_all(lns, regex_pattern_single) %>% 
         purrr::discard(~length(.) == 0) %>%
         unlist(use.names = FALSE) %>% 
         tibble::as_tibble()
+    
+    regex_pattern_multiple <- '(?<=library\\(c\\()(\\X+?)(?=\\)\\))'
+    pkg_multiple <- stringr::str_extract_all(lns, regex_pattern_multiple) %>%
+        unlist(use.names = FALSE) %>%
+        strsplit(",") %>%
+        purrr::discard(~length(.) == 0) %>%
+        unlist(use.names = FALSE) %>%
+        tibble::as_tibble()
+    
+    pkg <- pkg_single %>%
+        dplyr::bind_rows(pkg_multiple)
+    
     if (nrow(pkg) == 0) {
         as.data.frame(pkg) 
     } else {
