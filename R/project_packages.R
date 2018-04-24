@@ -4,23 +4,25 @@ add_packages_info <- function(pkgs) {
         pkgs$package,
         function(x) x %in% rownames(installed.packages()), 
         logical(1))
+    
     crans <- available.packages()[, "Package"]
+    
     for (i in 1:nrow(pkgs)) {
         if (pkgs$is_installed[i]) {
+            
             desc <- lapply(pkgs$package[i], utils::packageDescription)
             pkgs$is_base[i] <- vapply(
                 desc, function(x) identical(x$Priority, "base"), logical(1))
             pkgs$source[i] <- sapply(desc, "[", "Repository")
             pkgs$version[i] <- sapply(desc, "[", "Version")
         } else {
-            
             if (pkgs$package[i] %in% crans) {
                 pkgs$source[i] <- 'CRAN'
             } else {
                 pkgs$source[i] <- githubinstall::gh_suggest(pkgs$package[i])[1]
             }
-            pkgs$is_base[i] <- FALSE
             
+            pkgs$is_base[i] <- FALSE
             pkgs$version[i] <- NA
         }
     }
@@ -77,6 +79,7 @@ referenced_packages <- function() {
         dplyr::rename(package = value) %>%
         dplyr::distinct() %>%
         as.data.frame()
+    
     add_packages_info(pkg)
 }
 
