@@ -39,7 +39,8 @@ prepare_file_text <- function() {
         stringr::str_replace_all('\\s', '') %>%
         stringr::str_replace_all('\\n', '') %>%
         stringr::str_replace_all('"', '') %>%
-        stringr::str_replace_all('\'', '')
+        stringr::str_replace_all('\'', '') %>%
+        stringr::str_replace_all('\\t', '')
     
     lns <- paste(lns, collapse = '')
     
