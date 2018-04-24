@@ -4,7 +4,7 @@ add_packages_info <- function(pkgs) {
         pkgs$package,
         function(x) x %in% rownames(installed.packages()), 
         logical(1))
-    
+    crans <- available.packages()[, "Package"]
     for (i in 1:nrow(pkgs)) {
         if (pkgs$is_installed[i]) {
             desc <- lapply(pkgs$package[i], utils::packageDescription)
@@ -13,8 +13,14 @@ add_packages_info <- function(pkgs) {
             pkgs$source[i] <- sapply(desc, "[", "Repository")
             pkgs$version[i] <- sapply(desc, "[", "Version")
         } else {
+            
+            if (pkgs$package[i] %in% crans) {
+                pkgs$source[i] <- 'CRAN'
+            } else {
+                pkgs$source[i] <- 'GITHUB'
+            }
             pkgs$is_base[i] <- FALSE
-            pkgs$source[i] <- NA
+            
             pkgs$version[i] <- NA
         }
     }
@@ -154,11 +160,58 @@ generate_install_file <- function() {
         dplyr::distinct()
     
     all_packages <- all_packages[!all_packages$is_installed, ]
+    all_packages_cran <- all_packages[all_packages$source == 'CRAN', ]
+    all_packages_github <- all_packages[all_packages$source == 'GITHUB', ]
+    
     if (nrow(all_packages) == 0) {
         print("All necessary packages are already installed!")
     } else {
-        all_packages <- paste(all_packages$package, collapse = ",")
-        install_stmt <- paste0("install.packages(c(", all_packages, "))")
-        write(install_stmt, file = "install_packages.R")
+        if (nrow(all_packages_github) == 0) {
+            
+            all_packages_cran <- paste(
+                all_packages_cran$package, 
+                collapse = "','")
+            install_stmt_cran <- paste0(
+                "install.packages(c('",
+                all_packages_cran, 
+                "'), quiet = TRUE",
+                ")")
+            
+            write(install_stmt_cran, file = "install_packages.R")
+            
+        } else if (nrow(all_packages_cran) == 0) {
+            
+            all_packages_github <- paste(
+                all_packages_github$package, 
+                collapse = "','")
+            install_stmt_github <-  paste0(
+                "githubinstall::githubinstall(c('", 
+                all_packages_github,
+                "'), quiet = TRUE",
+                ")")
+            
+            write(install_stmt_github, file = "install_packages.R")
+        } else {
+            all_packages_cran <- paste(
+                all_packages_cran$package,
+                collapse = ",")
+            all_packages_github <- paste(
+                all_packages_github$package, 
+                collapse = ",")
+            
+            install_stmt_cran <- paste0(
+                "install.packages(c(",
+                all_packages_cran, 
+                ', quiet = TRUE',
+                "))")
+            install_stmt_github <-  paste0(
+                "githubinstall::githubinstall(c(", 
+                all_packages_github,
+                ', quiet = TRUE',
+                "))")
+            install_stmt <- paste0(install_stmt_cran, ';', install_stmt_github)
+            
+            write(install_stmt, file = "install_packages.R") 
+        }
     }
 }
