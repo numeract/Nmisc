@@ -73,12 +73,11 @@ referenced_packages <- function() {
     regex_pattern <- '[[:alnum:]_.]+::'
     pkg <- stringr::str_extract_all(lns, regex_pattern) %>% 
         purrr::discard(~length(.) == 0) %>%
-        unlist(use.names = FALSE) %>% 
-        tibble::as_tibble() %>%
+        unlist(use.names = FALSE) %>%
+        dplyr::as_data_frame() %>%
         dplyr::mutate(value = gsub('::$', '', value)) %>%
         dplyr::rename(package = value) %>%
-        dplyr::distinct() %>%
-        as.data.frame()
+        dplyr::distinct()
     
     add_packages_info(pkg)
 }
@@ -219,3 +218,4 @@ generate_install_file <- function() {
         }
     }
 }
+
