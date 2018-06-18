@@ -1,5 +1,8 @@
 add_packages_info <- function(pkgs) {
     
+    if (is.data.frame(pkgs)) {
+        pkgs <- as.data.frame(pkgs)
+    }
     pkgs$is_installed <- vapply(
         pkgs$package,
         function(x) x %in% rownames(installed.packages()), 
@@ -77,8 +80,7 @@ referenced_packages <- function() {
         tibble::as_tibble() %>%
         dplyr::mutate(value = gsub('::$', '', value)) %>%
         dplyr::rename(package = value) %>%
-        dplyr::distinct() %>%
-        as.data.frame()
+        dplyr::distinct()
     
     add_packages_info(pkg)
 }
@@ -219,3 +221,4 @@ generate_install_file <- function() {
         }
     }
 }
+
