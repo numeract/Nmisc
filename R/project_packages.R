@@ -62,6 +62,7 @@ loaded_packages <- function() {
         stringsAsFactors = FALSE)
     
     add_packages_info(pkgs)
+    pkgs$requested_by <- "loaded"
 }
 
 
@@ -79,6 +80,7 @@ referenced_packages <- function() {
         dplyr::distinct()
     
     add_packages_info(pkg)
+    pkgs$requested_by <- "reference"
 }
 
 
@@ -112,6 +114,7 @@ library_packages <- function() {
             as.data.frame()
         add_packages_info(pkg)
     }
+    pkgs$requested_by <- "library"
 }
 
 
@@ -145,6 +148,7 @@ required_packages <- function() {
             as.data.frame()
         add_packages_info(pkg)
     }
+    pkgs$requested_by <- "require"
 }
 
 
