@@ -1,8 +1,5 @@
 add_packages_info <- function(pkgs) {
-    
-    if (is.data.frame(pkgs)) {
-        pkgs <- as.data.frame(pkgs)
-    }
+ 
     pkgs$is_installed <- vapply(
         pkgs$package,
         function(x) x %in% rownames(installed.packages()), 
