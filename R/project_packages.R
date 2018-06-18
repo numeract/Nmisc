@@ -37,7 +37,7 @@ prepare_file_text <- function() {
     fls <- list.files(path = ".", pattern = file_pattern, recursive = TRUE) %>%
         purrr::discard(~grepl(exclude_pattern, .))
     
-    exclude_comments_pattern <- '#.*'
+    exclude_comments_pattern <- '^#.*'
     lns <- fls %>%
         purrr::map(readLines) %>%
         unlist(use.names = FALSE) %>%
