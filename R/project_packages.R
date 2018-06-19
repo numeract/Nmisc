@@ -1,24 +1,25 @@
 add_packages_info <- function(pkgs) {
- 
-    pkgs$is_installed <- purrr::map_lgl(
+    
+    pkgs$is_installed <- vapply(
         pkgs$package,
-        function(x) x %in% rownames(installed.packages()))
+        function(x) x %in% rownames(installed.packages()), 
+        logical(1))
     
     crans <- available.packages()[, "Package"]
     
     for (i in 1:nrow(pkgs)) {
         if (pkgs$is_installed[i]) {
             
-            desc <- purrr::map(pkgs$package[i], utils::packageDescription)
-            pkgs$is_base[i] <- purrr::map_lgl(
-                desc, function(x) identical(x$Priority, "base"))
+            desc <- lapply(pkgs$package[i], utils::packageDescription)
+            pkgs$is_base[i] <- vapply(
+                desc, function(x) identical(x$Priority, "base"), logical(1))
             pkgs$source[i] <- sapply(desc, "[", "Repository")
             pkgs$version[i] <- sapply(desc, "[", "Version")
         } else {
             if (pkgs$package[i] %in% crans) {
                 pkgs$source[i] <- 'CRAN'
             } else {
-                pkgs$source[i] <- NA_character_
+                pkgs$source[i] <- githubinstall::gh_suggest(pkgs$package[i])[1]
             }
             
             pkgs$is_base[i] <- FALSE
@@ -57,12 +58,12 @@ prepare_file_text <- function() {
 
 loaded_packages <- function() {
     
-    pkgs <- data.frame(
+    pkgs <- dplyr::data_frame(
         package = names(sessionInfo()$loadedOnly), 
-        stringsAsFactors = FALSE)
+        stringsAsFactors = FALSE) %>%
+        dplyr::mutate(requested_by = "loaded")
     
     add_packages_info(pkgs)
-    pkgs$requested_by <- "loaded"
 }
 
 
@@ -75,12 +76,12 @@ referenced_packages <- function() {
         purrr::discard(~length(.) == 0) %>%
         unlist(use.names = FALSE) %>%
         dplyr::as_data_frame() %>%
-        dplyr::mutate(value = gsub('::$', '', value)) %>%
+        dplyr::mutate(value = gsub('::$', '', value), 
+                      requested_by  = "reference") %>%
         dplyr::rename(package = value) %>%
         dplyr::distinct()
     
     add_packages_info(pkg)
-    pkgs$requested_by <- "reference"
 }
 
 
@@ -109,12 +110,12 @@ library_packages <- function() {
         as.data.frame(pkg) 
     } else {
         pkg <- pkg %>%
-            dplyr::rename(package = value) %>%
+            dplyr::rename(package = value,
+                          requested_by  = "library") %>%
             dplyr::distinct() %>%
             as.data.frame()
         add_packages_info(pkg)
     }
-    pkgs$requested_by <- "library"
 }
 
 
@@ -143,12 +144,13 @@ required_packages <- function() {
         as.data.frame(pkg) 
     } else {
         pkg <- pkg %>%
-            dplyr::rename(package = value) %>%
+            dplyr::rename(package = value,
+                          requested_by = "require") %>%
             dplyr::distinct() %>%
             as.data.frame()
         add_packages_info(pkg)
     }
-    pkgs$requested_by <- "require"
+   
 }
 
 
