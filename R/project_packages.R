@@ -204,7 +204,6 @@ generate_install_file <- function(packages_df) {
         print("All necessary packages are already installed!")
     } else {
         if (nrow(packages_df_github) == 0) {
-            
             packages_df_cran <- paste(
                 packages_df_cran$package_name, 
                 collapse = "','")
@@ -214,21 +213,24 @@ generate_install_file <- function(packages_df) {
                 "'), quiet = TRUE",
                 ")")
             
-            write(install_stmt_cran, file = "instpackages_df.R")
+            write(install_stmt_cran, file = "install_packages.R")
             
         } else if (nrow(packages_df_cran) == 0) {
-            
+            install_devtools_stmt <- 'install.packages("devtools"); '
             packages_df_github <- paste(
                 packages_df_github$source, 
                 collapse = "','")
             install_stmt_github <-  paste0(
+                install_devtools_stmt,
                 "devtools::install_github(c('", 
                 packages_df_github,
                 "'), quiet = TRUE",
                 ")")
             
-            write(install_stmt_github, file = "instpackages_df.R")
+            write(install_stmt_github, file = "install_packages.R")
         } else {
+            install_devtools_stmt <- 'install.packages("devtools")'
+            
             packages_df_cran <- paste(
                 packages_df_cran$package_name,
                 collapse = ",")
@@ -247,7 +249,8 @@ generate_install_file <- function(packages_df) {
                 packages_df_github,
                 "'), quiet = TRUE",
                 ")")
-            install_stmt <- paste0(install_stmt_cran, '; ', install_stmt_github)
+            install_stmt <- paste0(install_devtools_stmt, "; ", 
+                                   install_stmt_cran, '; ', install_stmt_github)
             
             write(install_stmt, file = "install_packages.R") 
         }
