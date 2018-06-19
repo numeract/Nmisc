@@ -158,7 +158,7 @@ required_packages <- function(include_pattern, exclude_pattern) {
 
 
 get_packages <- function(
-    include_pattern = '.*\\.R(md)?$', 
+    include_pattern = '\\.R(md)?$', 
     exclude_pattern = 'EDA/|tests|^_', 
     package_options = c('library', 'required', 'referenced')) {
     
@@ -185,7 +185,7 @@ get_packages <- function(
     }
     
     packages %>%
-        dplyr::distinct(package_name)
+        dplyr::distinct(package_name, version, .keep_all = TRUE)
 }
 
 
