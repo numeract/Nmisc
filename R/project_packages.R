@@ -1,26 +1,25 @@
 INSTALLED_PACKAGES <- rownames(installed.packages())
+CRAN_PACKAGES <- available.packages()[, "Package"]
 
 add_packages_info <- function(packages_df) {
     
     packages_df$is_installed <- purrr::map_lgl(
         packages_df$package_name,
         function(x) x %in% INSTALLED_PACKAGES)
-    
-    cran_packages <- available.packages()[, "Package"]
-    
     for (i in 1:nrow(packages_df)) {
         # if the package is already installed, we take information from package 
         # descriptions, otherwise we look for it in CRAN repository
         if (packages_df$is_installed[i]) {
-            desc <- lapply(packages_df$package_name[i],
-                           utils::packageDescription)
-            packages_df$is_base[i] <- purrr::map_lgl(
-                desc, function(x) identical(x$Priority, "base"))
-            packages_df$source[i] <- sapply(desc, "[[", "Repository")
-            packages_df$version[i] <- sapply(desc, "[[", "Version")
+            desc <-  utils::packageDescription(
+                packages_df$package_name[i], 
+                fields = c("Priority", "Version", "Repository"))
+            desc <- unlist(desc)
+            packages_df$is_base[i] <- identical(desc['Priority'], "base")
+            packages_df$source[i] <- desc['Repository']
+            packages_df$version[i] <- desc['Version']
             
         } else {
-            if (packages_df$package_name[i] %in% cran_packages) {
+            if (packages_df$package_name[i] %in% CRAN_PACKAGES) {
                 packages_df$source[i] <- 'CRAN'
             } else {
                 packages_df$source[i] <- NA_character_
@@ -45,7 +44,7 @@ prepare_file_text <- function(include_pattern, exclude_pattern) {
     lns <- fls %>%
         purrr::map(readLines) %>%
         unlist(use.names = FALSE) %>%
-        purrr::discard(~grepl(exclude_comments_pattern, .)) %>%
+        purrr::discard(~grepl( exclude_comments_pattern, .)) %>%
         stringr::str_replace_all("[\r\n]" , "") %>%
         stringr::str_replace_all('\\s', '') %>%
         stringr::str_replace_all('\\n', '') %>%
