@@ -1,33 +1,32 @@
-add_packages_info <- function(pkgs) {
+INSTALLED_PACKAGES <- rownames(installed.packages())
+add_packages_info <- function(packages_df) {
+    packages_df$is_installed <- purrr::map_lgl(
+        packages_df$package_name,
+        function(x) x %in% INSTALLED_PACKAGES)
     
-    pkgs$is_installed <- vapply(
-        pkgs$package,
-        function(x) x %in% rownames(installed.packages()), 
-        logical(1))
+    cran_packages <- available.packages()[, "Package"]
     
-    crans <- available.packages()[, "Package"]
-    
-    for (i in 1:nrow(pkgs)) {
-        if (pkgs$is_installed[i]) {
-            
-            desc <- lapply(pkgs$package[i], utils::packageDescription)
-            pkgs$is_base[i] <- vapply(
-                desc, function(x) identical(x$Priority, "base"), logical(1))
-            pkgs$source[i] <- sapply(desc, "[", "Repository")
-            pkgs$version[i] <- sapply(desc, "[", "Version")
+    for (i in 1:nrow(packages_df)) {
+        if (packages_df$is_installed[i]) {
+            desc <- lapply(packages_df$package_name[i], utils::packageDescription)
+            packages_df$is_base[i] <- purrr::map_lgl(
+                desc, function(x) identical(x$Priority, "base"))
+            packages_df$source[i] <- sapply(desc, "[", "Repository")
+            packages_df$version[i] <- sapply(desc, "[", "Version")
         } else {
-            if (pkgs$package[i] %in% crans) {
-                pkgs$source[i] <- 'CRAN'
+            if (packages_df$package_name[i] %in% cran_packages) {
+                packages_df$source[i] <- 'CRAN'
             } else {
-                pkgs$source[i] <- githubinstall::gh_suggest(pkgs$package[i])[1]
+                packages_df$source[i] <- NA_character_
             }
             
-            pkgs$is_base[i] <- FALSE
-            pkgs$version[i] <- NA
+            packages_df$is_base[i] <- FALSE
+            packages_df$version[i] <- NA
         }
     }
-    pkgs <- pkgs[!pkgs$is_base, ]
+    packages_df <- packages_df[!packages_df$is_base, ]
 }
+
 
 
 prepare_file_text <- function() {
@@ -59,7 +58,7 @@ prepare_file_text <- function() {
 loaded_packages <- function() {
     
     pkgs <- dplyr::data_frame(
-        package = names(sessionInfo()$loadedOnly), 
+        package_name = names(sessionInfo()$loadedOnly), 
         stringsAsFactors = FALSE) %>%
         dplyr::mutate(requested_by = "loaded")
     
@@ -78,7 +77,7 @@ referenced_packages <- function() {
         dplyr::as_data_frame() %>%
         dplyr::mutate(value = gsub('::$', '', value), 
                       requested_by  = "reference") %>%
-        dplyr::rename(package = value) %>%
+        dplyr::rename(package_name = value) %>%
         dplyr::distinct()
     
     add_packages_info(pkg)
@@ -110,7 +109,7 @@ library_packages <- function() {
         as.data.frame(pkg) 
     } else {
         pkg <- pkg %>%
-            dplyr::rename(package = value,
+            dplyr::mutate(package_name = value,
                           requested_by  = "library") %>%
             dplyr::distinct() %>%
             as.data.frame()
@@ -144,7 +143,7 @@ required_packages <- function() {
         as.data.frame(pkg) 
     } else {
         pkg <- pkg %>%
-            dplyr::rename(package = value,
+            dplyr::mutate(package_name = value,
                           requested_by = "require") %>%
             dplyr::distinct() %>%
             as.data.frame()
