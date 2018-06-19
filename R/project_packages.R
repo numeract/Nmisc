@@ -1,5 +1,7 @@
 INSTALLED_PACKAGES <- rownames(installed.packages())
+
 add_packages_info <- function(packages_df) {
+    
     packages_df$is_installed <- purrr::map_lgl(
         packages_df$package_name,
         function(x) x %in% INSTALLED_PACKAGES)
@@ -7,12 +9,16 @@ add_packages_info <- function(packages_df) {
     cran_packages <- available.packages()[, "Package"]
     
     for (i in 1:nrow(packages_df)) {
+        # if the package is already installed, we take information from package 
+        # descriptions, otherwise we look for it in CRAN repository
         if (packages_df$is_installed[i]) {
-            desc <- lapply(packages_df$package_name[i], utils::packageDescription)
+            desc <- lapply(packages_df$package_name[i],
+                           utils::packageDescription)
             packages_df$is_base[i] <- purrr::map_lgl(
                 desc, function(x) identical(x$Priority, "base"))
             packages_df$source[i] <- sapply(desc, "[", "Repository")
             packages_df$version[i] <- sapply(desc, "[", "Version")
+            
         } else {
             if (packages_df$package_name[i] %in% cran_packages) {
                 packages_df$source[i] <- 'CRAN'
@@ -150,6 +156,34 @@ required_packages <- function() {
         add_packages_info(pkg)
     }
    
+}
+
+
+get_packages <- function(
+    include_pattern = NULL, 
+    exclude_pattern = NULL, 
+    package_options = NULL) {
+    
+    packages <- data_frame()
+    if (!is.null(package_options)) {
+        if ("library" %in% package_options) {
+            packages <- packages %>% 
+                dplyr::bind_rows(library_packages())
+        }
+        if ("required" %in% package_options) {
+            packages <- packages %>% 
+                dplyr::bind_rows(required_packages())
+        }
+        if ("referenced" %in% package_options) {
+            packages <- packages %>% 
+                dplyr::bind_rows(referenced_packages())
+        }
+    } else {
+        packages <- packages %>% 
+            dplyr::bind_rows(library_packages()) %>%
+            dplyr::bind_rows(required_packages()) %>%
+            dplyr::bind_rows(referenced_packages())
+    }
 }
 
 
