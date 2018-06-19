@@ -16,8 +16,8 @@ add_packages_info <- function(packages_df) {
                            utils::packageDescription)
             packages_df$is_base[i] <- purrr::map_lgl(
                 desc, function(x) identical(x$Priority, "base"))
-            packages_df$source[i] <- sapply(desc, "[", "Repository")
-            packages_df$version[i] <- sapply(desc, "[", "Version")
+            packages_df$source[i] <- sapply(desc, "[[", "Repository")
+            packages_df$version[i] <- sapply(desc, "[[", "Version")
             
         } else {
             if (packages_df$package_name[i] %in% cran_packages) {
@@ -159,38 +159,33 @@ required_packages <- function(include_pattern, exclude_pattern) {
 
 get_packages <- function(
     include_pattern = '.*\\.R(md)?$', 
-    exclude_pattern = 'EDA/|test|^_', 
-    package_options = NULL) {
+    exclude_pattern = 'EDA/|tests|^_', 
+    package_options = c('library', 'required', 'referenced')) {
     
     packages <- dplyr::data_frame()
-    if (!is.null(package_options)) {
-        if ("library" %in% package_options) {
-            packages <- packages %>% 
-                dplyr::bind_rows(
-                    library_packages(include_pattern, exclude_pattern))
-        }
-        if ("required" %in% package_options) {
-            packages <- packages %>% 
-                dplyr::bind_rows(required_packages(
-                    include_pattern, exclude_pattern))
-        }
-        if ("referenced" %in% package_options) {
-            packages <- packages %>% 
-                dplyr::bind_rows(referenced_packages(
-                    include_pattern, exclude_pattern))
-        }
-        packages %>%
-            dplyr::distinct()
-    } else {
+    if ("library" %in% package_options) {
         packages <- packages %>% 
-            dplyr::bind_rows(library_packages(
-                include_pattern, exclude_pattern)) %>%
-            dplyr::bind_rows(required_packages(
-                include_pattern, exclude_pattern)) %>%
-            dplyr::bind_rows(referenced_packages(
-                include_pattern, exclude_pattern))  %>%
-            dplyr::distinct()
+            dplyr::bind_rows(
+                library_packages(include_pattern, exclude_pattern))
     }
+    if ("required" %in% package_options) {
+        packages <- packages %>% 
+            dplyr::bind_rows(required_packages(
+                include_pattern, exclude_pattern))
+    }
+    if ("referenced" %in% package_options) {
+        packages <- packages %>% 
+            dplyr::bind_rows(referenced_packages(
+                include_pattern, exclude_pattern))
+    }
+    
+    if ("loaded" %in% package_options) {
+        packages <- packages %>% 
+            dplyr::bind_rows(loaded_packages())
+    }
+    
+    packages %>%
+        dplyr::distinct(package_name)
 }
 
 
