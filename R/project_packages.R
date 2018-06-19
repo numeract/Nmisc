@@ -159,7 +159,7 @@ required_packages <- function(include_pattern, exclude_pattern) {
 
 get_packages <- function(
     include_pattern = '\\.R(md)?$', 
-    exclude_pattern = 'EDA/|tests|^_', 
+    exclude_pattern = 'tests|^_', 
     package_options = c('library', 'required', 'referenced')) {
     
     packages <- dplyr::data_frame()
