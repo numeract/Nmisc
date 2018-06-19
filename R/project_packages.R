@@ -35,12 +35,10 @@ add_packages_info <- function(packages_df) {
 
 
 
-prepare_file_text <- function() {
+prepare_file_text <- function(include_pattern, exclude_pattern) {
     
-    file_pattern <- '.*\\.R(md)?$'
-    exclude_pattern <- 'EDA/|test|^_'
-    
-    fls <- list.files(path = ".", pattern = file_pattern, recursive = TRUE) %>%
+    fls <- list.files(
+        path = ".", pattern = include_pattern, recursive = TRUE) %>%
         purrr::discard(~grepl(exclude_pattern, .))
     
     exclude_comments_pattern <- '^#.*'
@@ -72,9 +70,9 @@ loaded_packages <- function() {
 }
 
 
-referenced_packages <- function() {
+referenced_packages <- function(include_pattern, exclude_pattern) {
     
-    lns <- prepare_file_text()
+    lns <- prepare_file_text(include_pattern, exclude_pattern)
     
     regex_pattern <- '[[:alnum:]_.]+::'
     pkg <- stringr::str_extract_all(lns, regex_pattern) %>% 
@@ -90,9 +88,9 @@ referenced_packages <- function() {
 }
 
 
-library_packages <- function() {
+library_packages <- function(include_pattern, exclude_pattern) {
     
-    lns <- prepare_file_text()
+    lns <- prepare_file_text(include_pattern, exclude_pattern)
     
     regex_pattern_single <- '(?<=library\\()([a-zA-Z1-9-_]+?)(?=\\))'
     pkg_single <- stringr::str_extract_all(lns, regex_pattern_single) %>% 
@@ -124,9 +122,9 @@ library_packages <- function() {
 }
 
 
-required_packages <- function() {
+required_packages <- function(include_pattern, exclude_pattern) {
     
-    lns <- prepare_file_text()
+    lns <- prepare_file_text(include_pattern, exclude_pattern)
     
     regex_pattern_single <- '(?<=require\\()([a-zA-Z1-9-_]+?)(?=\\))'
     pkg_single <- stringr::str_extract_all(lns, regex_pattern_single) %>% 
@@ -155,105 +153,103 @@ required_packages <- function() {
             as.data.frame()
         add_packages_info(pkg)
     }
-   
+    
 }
 
 
 get_packages <- function(
-    include_pattern = NULL, 
-    exclude_pattern = NULL, 
+    include_pattern = '.*\\.R(md)?$', 
+    exclude_pattern = 'EDA/|test|^_', 
     package_options = NULL) {
     
-    packages <- data_frame()
+    packages <- dplyr::data_frame()
     if (!is.null(package_options)) {
         if ("library" %in% package_options) {
             packages <- packages %>% 
-                dplyr::bind_rows(library_packages())
+                dplyr::bind_rows(
+                    library_packages(include_pattern, exclude_pattern))
         }
         if ("required" %in% package_options) {
             packages <- packages %>% 
-                dplyr::bind_rows(required_packages())
+                dplyr::bind_rows(required_packages(
+                    include_pattern, exclude_pattern))
         }
         if ("referenced" %in% package_options) {
             packages <- packages %>% 
-                dplyr::bind_rows(referenced_packages())
+                dplyr::bind_rows(referenced_packages(
+                    include_pattern, exclude_pattern))
         }
+        packages %>%
+            dplyr::distinct()
     } else {
         packages <- packages %>% 
-            dplyr::bind_rows(library_packages()) %>%
-            dplyr::bind_rows(required_packages()) %>%
-            dplyr::bind_rows(referenced_packages())
+            dplyr::bind_rows(library_packages(
+                include_pattern, exclude_pattern)) %>%
+            dplyr::bind_rows(required_packages(
+                include_pattern, exclude_pattern)) %>%
+            dplyr::bind_rows(referenced_packages(
+                include_pattern, exclude_pattern))  %>%
+            dplyr::distinct()
     }
 }
 
 
-generate_install_file <- function() {
+generate_install_file <- function(packages_df) {
     
-    referenced_pkgs <- referenced_packages()
-    loaded_pkgs <- loaded_packages()
-    library_pkgs <- library_packages()
-    required_pkgs <- required_packages()
+    packages_df <- packages_df[!packages_df$is_installed, ]
+    packages_df_cran <- packages_df[packages_df$source == 'CRAN', ]
+    packages_df_github <- packages_df[packages_df$source != 'CRAN', ]
     
-    all_packages <- referenced_pkgs %>%
-        dplyr::bind_rows(required_pkgs) %>%
-        dplyr::bind_rows(library_pkgs) %>%
-        dplyr::distinct()
-    
-    all_packages <- all_packages[!all_packages$is_installed, ]
-    all_packages_cran <- all_packages[all_packages$source == 'CRAN', ]
-    all_packages_github <- all_packages[all_packages$source != 'CRAN', ]
-    
-    if (nrow(all_packages) == 0) {
+    if (nrow(packages_df) == 0) {
         print("All necessary packages are already installed!")
     } else {
-        if (nrow(all_packages_github) == 0) {
+        if (nrow(packages_df_github) == 0) {
             
-            all_packages_cran <- paste(
-                all_packages_cran$package, 
+            packages_df_cran <- paste(
+                packages_df_cran$package_name, 
                 collapse = "','")
             install_stmt_cran <- paste0(
                 "install.packages(c('",
-                all_packages_cran, 
+                packages_df_cran, 
                 "'), quiet = TRUE",
                 ")")
             
-            write(install_stmt_cran, file = "install_packages.R")
+            write(install_stmt_cran, file = "instpackages_df.R")
             
-        } else if (nrow(all_packages_cran) == 0) {
+        } else if (nrow(packages_df_cran) == 0) {
             
-            all_packages_github <- paste(
-                all_packages_github$source, 
+            packages_df_github <- paste(
+                packages_df_github$source, 
                 collapse = "','")
             install_stmt_github <-  paste0(
                 "devtools::install_github(c('", 
-                all_packages_github,
+                packages_df_github,
                 "'), quiet = TRUE",
                 ")")
             
-            write(install_stmt_github, file = "install_packages.R")
+            write(install_stmt_github, file = "instpackages_df.R")
         } else {
-            all_packages_cran <- paste(
-                all_packages_cran$package,
+            packages_df_cran <- paste(
+                packages_df_cran$package_name,
                 collapse = ",")
-            all_packages_github <- paste(
-                all_packages_github$source, 
+            packages_df_github <- paste(
+                packages_df_github$source, 
                 collapse = "','")
             
             install_stmt_cran <- paste0(
                 "install.packages(c(",
-                all_packages_cran, 
+                packages_df_cran, 
                 ', quiet = TRUE',
                 "))")
-           
+            
             install_stmt_github <-  paste0(
                 "devtools::install_github(c('", 
-                all_packages_github,
+                packages_df_github,
                 "'), quiet = TRUE",
                 ")")
-            install_stmt <- paste0(install_stmt_cran, ';', install_stmt_github)
+            install_stmt <- paste0(install_stmt_cran, '; ', install_stmt_github)
             
             write(install_stmt, file = "install_packages.R") 
         }
     }
 }
-
