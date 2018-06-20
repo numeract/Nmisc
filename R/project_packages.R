@@ -58,14 +58,14 @@ prepare_file_text <- function(include_pattern, exclude_pattern) {
 }
 
 
-loaded_packages <- function() {
+get_loaded_packages <- function() {
     
-    pkgs <- dplyr::data_frame(
+    packages <- dplyr::data_frame(
         package_name = names(sessionInfo()$loadedOnly), 
         stringsAsFactors = FALSE) %>%
         dplyr::mutate(requested_by = "loaded")
     
-    add_packages_info(pkgs)
+    add_packages_info(packages)
 }
 
 
@@ -180,7 +180,7 @@ get_packages <- function(
     
     if ("loaded" %in% package_options) {
         packages <- packages %>% 
-            dplyr::bind_rows(loaded_packages())
+            dplyr::bind_rows(get_loaded_packages())
     }
     
     packages %>%
