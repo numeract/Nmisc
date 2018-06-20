@@ -1,12 +1,13 @@
 INSTALLED_PACKAGES <- rownames(utils::installed.packages())
-CRAN_PACKAGES <- utils::available.packages()[, "Package"]
+CRAN_PACKAGES <- utils::available.packages(
+    repos =  "https://cran.rstudio.com/")[, "Package"]
 
 add_packages_info <- function(packages_df) {
     
     packages_df$is_installed <- purrr::map_lgl(
         packages_df$package_name,
         function(x) x %in% INSTALLED_PACKAGES)
-    for (i in 1:nrow(packages_df)) {
+    for (i in Nmisc::seq_nrow(packages_df)) {
         # if the package is already installed, take information from package 
         # description, otherwise look for package in CRAN repository
         if (packages_df$is_installed[i]) {
