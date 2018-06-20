@@ -1,5 +1,5 @@
-INSTALLED_PACKAGES <- rownames(installed.packages())
-CRAN_PACKAGES <- available.packages()[, "Package"]
+INSTALLED_PACKAGES <- rownames(utils::installed.packages())
+CRAN_PACKAGES <- utils::available.packages()[, "Package"]
 
 add_packages_info <- function(packages_df) {
     
