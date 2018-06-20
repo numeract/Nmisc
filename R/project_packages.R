@@ -36,12 +36,12 @@ add_packages_info <- function(packages_df) {
 
 prepare_file_text <- function(include_pattern, exclude_pattern) {
     
-    fls <- list.files(
+    project_files <- list.files(
         path = ".", pattern = include_pattern, recursive = TRUE) %>%
         purrr::discard(~grepl(exclude_pattern, .))
     
     exclude_comments_pattern <- '^#.*'
-    lns <- fls %>%
+    lines <- project_files %>%
         purrr::map(readLines) %>%
         unlist(use.names = FALSE) %>%
         purrr::discard(~grepl( exclude_comments_pattern, .)) %>%
@@ -52,9 +52,9 @@ prepare_file_text <- function(include_pattern, exclude_pattern) {
         stringr::str_replace_all('\'', '') %>%
         stringr::str_replace_all('\\t', '')
     
-    lns <- paste(lns, collapse = '')
+    lines <- paste(lines, collapse = '')
     
-    lns
+    lines
 }
 
 
