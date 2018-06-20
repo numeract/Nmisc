@@ -87,36 +87,38 @@ get_referenced_packages <- function(include_pattern, exclude_pattern) {
 }
 
 
-library_packages <- function(include_pattern, exclude_pattern) {
+get_library_packages <- function(include_pattern, exclude_pattern) {
     
-    lns <- prepare_file_text(include_pattern, exclude_pattern)
+    code_lines <- prepare_file_text(include_pattern, exclude_pattern)
     
     regex_pattern_single <- '(?<=library\\()([a-zA-Z1-9-_]+?)(?=\\))'
-    pkg_single <- stringr::str_extract_all(lns, regex_pattern_single) %>% 
+    single_packages <- stringr::str_extract_all(
+        code_lines, regex_pattern_single) %>% 
         purrr::discard(~length(.) == 0) %>%
         unlist(use.names = FALSE) %>% 
         tibble::as_tibble()
     
     regex_pattern_multiple <- '(?<=library\\(c\\()(\\X+?)(?=\\)\\))'
-    pkg_multiple <- stringr::str_extract_all(lns, regex_pattern_multiple) %>%
+    multiple_packages <- stringr::str_extract_all(
+        code_lines, regex_pattern_multiple) %>%
         unlist(use.names = FALSE) %>%
         strsplit(",") %>%
         purrr::discard(~length(.) == 0) %>%
         unlist(use.names = FALSE) %>%
         tibble::as_tibble()
     
-    pkg <- pkg_single %>%
-        dplyr::bind_rows(pkg_multiple)
+    packages <- single_packages %>%
+        dplyr::bind_rows(multiple_packages)
     
-    if (nrow(pkg) == 0) {
-        as.data.frame(pkg) 
+    if (nrow(packages) == 0) {
+        dplyr::as_data_frame(packages)
     } else {
-        pkg <- pkg %>%
+        packages <- packages %>%
             dplyr::mutate(package_name = value,
                           requested_by  = "library") %>%
-            dplyr::distinct() %>%
-            as.data.frame()
-        add_packages_info(pkg)
+            dplyr::distinct(package_name, .keep_all = TRUE) %>%
+            dplyr::as_data_frame()
+        add_packages_info(packages)
     }
 }
 
@@ -167,7 +169,7 @@ get_packages <- function(
     if ("library" %in% package_options) {
         packages <- packages %>% 
             dplyr::bind_rows(
-                library_packages(include_pattern, exclude_pattern))
+                get_library_packages(include_pattern, exclude_pattern))
     }
     if ("required" %in% package_options) {
         packages <- packages %>% 
