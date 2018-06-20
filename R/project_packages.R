@@ -81,8 +81,8 @@ get_referenced_packages <- function(include_pattern, exclude_pattern) {
         dplyr::mutate(value = gsub('::$', '', value), 
                       requested_by  = "reference") %>%
         dplyr::rename(package_name = value) %>%
-        dplyr::distinct()
-    
+        dplyr::distinct(package_name, .keep_all = TRUE)
+
     add_packages_info(packages)
 }
 
@@ -96,7 +96,7 @@ get_library_packages <- function(include_pattern, exclude_pattern) {
         code_lines, regex_pattern_single) %>% 
         purrr::discard(~length(.) == 0) %>%
         unlist(use.names = FALSE) %>% 
-        tibble::as_tibble()
+        dplyr::as_data_frame()
     
     regex_pattern_multiple <- '(?<=library\\(c\\()(\\X+?)(?=\\)\\))'
     multiple_packages <- stringr::str_extract_all(
@@ -105,7 +105,7 @@ get_library_packages <- function(include_pattern, exclude_pattern) {
         strsplit(",") %>%
         purrr::discard(~length(.) == 0) %>%
         unlist(use.names = FALSE) %>%
-        tibble::as_tibble()
+        dplyr::as_data_frame()
     
     packages <- single_packages %>%
         dplyr::bind_rows(multiple_packages)
@@ -116,8 +116,7 @@ get_library_packages <- function(include_pattern, exclude_pattern) {
         packages <- packages %>%
             dplyr::mutate(package_name = value,
                           requested_by  = "library") %>%
-            dplyr::distinct(package_name, .keep_all = TRUE) %>%
-            dplyr::as_data_frame()
+            dplyr::distinct(package_name, .keep_all = TRUE) 
         add_packages_info(packages)
     }
 }
@@ -132,7 +131,7 @@ get_required_packages <- function(include_pattern, exclude_pattern) {
         code_lines, regex_pattern_single) %>% 
         purrr::discard(~length(.) == 0) %>%
         unlist(use.names = FALSE) %>% 
-        tibble::as_tibble() 
+        dplyr::as_data_frame()
     
     regex_pattern_multiple <- '(?<=require\\(c\\()(\\X+?)(?=\\)\\))'
     multiple_packages <- stringr::str_extract_all(
@@ -141,7 +140,7 @@ get_required_packages <- function(include_pattern, exclude_pattern) {
         strsplit(",") %>%
         purrr::discard(~length(.) == 0) %>%
         unlist(use.names = FALSE) %>%
-        tibble::as_tibble()
+        dplyr::as_data_frame()
     
     packages <- single_packages %>%
         dplyr::bind_rows(multiple_packages)
@@ -152,11 +151,9 @@ get_required_packages <- function(include_pattern, exclude_pattern) {
         packages <- packages %>%
             dplyr::mutate(package_name = value,
                           requested_by = "require") %>%
-            dplyr::distinct(package_name, .keep_all = TRUE) %>%
-            dplyr::as_data_frame()
+            dplyr::distinct(package_name, .keep_all = TRUE)
         add_packages_info(packages)
     }
-    
 }
 
 
