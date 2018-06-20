@@ -175,12 +175,44 @@ get_required_packages <- function(include_pattern, exclude_pattern) {
 }
 
 
+#' Get information about the packages used in the project
+#' 
+#' @description
+#' 
+#'  the function returns a data frame containing information regarding 
+#'  packages that are loaded with \code{library()}, \code{require()}, used
+#'  with \code{::} operator and/or already loaded packages
+#'  
+#' 
+#' @param include_pattern A string representing a regex that matches 
+#' project files in which to look for packages. By default, \code{get_packages}
+#' includes all .R files in the current project
+#' @param exclude_pattern A string representing a regex that matches 
+#' project files in which not to look for packages. By default, 
+#' \code{get_packages} excludes all files found in "tests" folder.
+#' @param package_options A character vector that represents the method through
+#' which packages are loaded or referenced. The options are: \code{libray} for 
+#' packages loaded using  \code{libray()}, \code{required} for 
+#' packages loaded using  \code{require()}, \code{referenced} for 
+#' packages referenced using  \code{::} operator and \code{loaded}, used to 
+#' include packages already loaded in the current session
+#' 
+#' @return A data frame containing package information.
+#' 
+#' @examples
+#' get_packages(
+#' 'included_file\\.R(md)?$', 
+#' 'excluded_file\\.R(md)?$', 
+#' c('required', 'library'))
+#' 
+#' @export
 get_packages <- function(
     include_pattern = '\\.R(md)?$', 
     exclude_pattern = 'tests|^_', 
     package_options = c('library', 'required', 'referenced')) {
     
     packages <- dplyr::data_frame()
+    
     if ("library" %in% package_options) {
         packages <- packages %>% 
             dplyr::bind_rows(
@@ -202,11 +234,37 @@ get_packages <- function(
             dplyr::bind_rows(get_loaded_packages())
     }
     
+    # keep distinct rows taking into account "package_name" and "version" cols
     packages %>%
         dplyr::distinct(package_name, version, .keep_all = TRUE)
 }
 
 
+
+#' Takes a data frame containing package information and generates an install
+#' file based on it
+#' 
+#' @description
+#' 
+#'  the function takes the output of \code{get_packages} and
+#'  writes in a file the commands needed in order to install
+#'  packages used through the project that are not already installed.
+#'   
+#' @param packages_df A data frame obtained with \code{get_packages} that 
+#' contains information regarding the name, version and source of the package.
+#' 
+#' @return Nothing
+#' 
+#' @examples
+#' packages_df <- get_packages(
+#'                'included_file\\.R(md)?$', 
+#'                'excluded_file\\.R(md)?$', 
+#'                 c('required', 'library'))
+#' generate_install_file(packages_df)
+#' 
+#' @seealso \code{\link[get_packages]{get_packages}}
+#' 
+#' @export
 generate_install_file <- function(packages_df) {
     
     packages_df <- packages_df[!packages_df$is_installed, ]
