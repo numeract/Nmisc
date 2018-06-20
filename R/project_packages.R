@@ -123,7 +123,7 @@ get_library_packages <- function(include_pattern, exclude_pattern) {
 }
 
 
-required_packages <- function(include_pattern, exclude_pattern) {
+get_required_packages <- function(include_pattern, exclude_pattern) {
     
     code_lines <- prepare_file_text(include_pattern, exclude_pattern)
     
@@ -173,7 +173,7 @@ get_packages <- function(
     }
     if ("required" %in% package_options) {
         packages <- packages %>% 
-            dplyr::bind_rows(required_packages(
+            dplyr::bind_rows(get_required_packages(
                 include_pattern, exclude_pattern))
     }
     if ("referenced" %in% package_options) {
