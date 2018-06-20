@@ -71,10 +71,10 @@ get_loaded_packages <- function() {
 
 get_referenced_packages <- function(include_pattern, exclude_pattern) {
     
-    lns <- prepare_file_text(include_pattern, exclude_pattern)
+    code_lines <- prepare_file_text(include_pattern, exclude_pattern)
     
     regex_pattern <- '[[:alnum:]_.]+::'
-    pkg <- stringr::str_extract_all(lns, regex_pattern) %>% 
+    packages <- stringr::str_extract_all(code_lines, regex_pattern) %>% 
         purrr::discard(~length(.) == 0) %>%
         unlist(use.names = FALSE) %>%
         dplyr::as_data_frame() %>%
@@ -83,7 +83,7 @@ get_referenced_packages <- function(include_pattern, exclude_pattern) {
         dplyr::rename(package_name = value) %>%
         dplyr::distinct()
     
-    add_packages_info(pkg)
+    add_packages_info(packages)
 }
 
 
