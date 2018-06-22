@@ -3,7 +3,9 @@ CRAN_PACKAGES <- utils::available.packages(
     repos =  "https://cran.rstudio.com/")[, "Package"]
 
 add_packages_info <- function(packages_df) {
-    
+    packages_df$is_base <- NA
+    packages_df$source <- NA_character_
+    packages_df$version <- NA_character_
     packages_df$is_installed <- purrr::map_lgl(
         packages_df$package_name,
         function(x) x %in% INSTALLED_PACKAGES)
