@@ -272,33 +272,56 @@ generate_install_file <- function(packages_df) {
     packages_df_cran <- packages_df %>%
         dplyr::filter(source == "CRAN")
     packages_df_github <- packages_df %>%
-        dplyr::filter(source != "CRAN")
+        dplyr::filter(is.na(source))
     if (nrow(packages_df) == 0) {
         print("All necessary packages are already installed!")
     } else {
+        
         cran_packages <- paste(
             packages_df_cran$package_name, 
             collapse = "','")
         
         github_packages <- paste(
-            packages_df_github$source, 
+            packages_df_github$package_name, 
             collapse = "','")
         
         vector_cran_packages <- paste0(
+            "cran_packages <- ",
             "c('",
             cran_packages, 
             "') \n")
         
-        install_devtools_stmt <- 'install.packages("devtools"); '
-        
         vector_github_packages <-  paste0(
-            install_devtools_stmt,
-            "\n", "c('", 
+            "github_packages <- ", "c('", 
             github_packages,
-            ") \n")
+            "') \n")
         
-        statement <- paste0(vector_cran_packages, vector_github_packages)  
-        write(statement, file = "install_packages.R") 
+        if (nrow(packages_df_github ) != 0) {
+            install_devtools_stmt <- 'install.packages("githubinstall") \n'
+            install_all_statement <- paste0(
+                vector_cran_packages,
+                vector_github_packages,
+                install_devtools_stmt,
+                'tryCatch({ \n',
+                'install.packages(cran_packages, quiet = TRUE) \n',
+                'githubinstall::githubinstall(github_packages, quiet = TRUE) \n',
+                '}, ', 
+                'error = function(cond) { message(cond)}, \n',
+                'warning = function(cond) { message(cond)})')  
+        } else {
+            install_all_statement <- paste0(
+                vector_cran_packages,
+                vector_github_packages,
+                'tryCatch({ \n',
+                'install.packages(cran_packages, quiet = TRUE) \n',
+                'devtools::install_github(github_packages, quiet = TRUE) \n',
+                '}, \n', '
+                error=function(cond) { message(cond)',
+                '\n }, \n,
+                warning = function(cond) { message(cond)}')  
+        }
+        
+        write(install_all_statement, file = "install_packages.R") 
     }
 }
 
