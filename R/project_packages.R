@@ -78,7 +78,7 @@ get_referenced_packages <- function(include_pattern, exclude_pattern) {
     
     code_lines <- get_file_text(include_pattern, exclude_pattern)
     
-    regex_pattern <- '[[:alnum:]_.]+::'
+    regex_pattern <- '[_.a-zA-Z]+::'
     # extract only the names of the packages used with "::" operator,
     # add the column requested by, select rows with distinct package names
     packages <- stringr::str_extract_all(code_lines, regex_pattern) %>% 
@@ -89,7 +89,7 @@ get_referenced_packages <- function(include_pattern, exclude_pattern) {
                       requested_by  = "reference") %>%
         dplyr::rename(package_name = value) %>%
         dplyr::distinct(package_name, .keep_all = TRUE)
-
+    
     add_packages_info(packages)
 }
 
@@ -296,13 +296,18 @@ generate_install_file <- function(packages_df) {
             github_packages,
             "') \n")
         
+        # if there are github packages that are not already installed
+        # first install 'githubinstall' package and then use it to 
+        # install other packages
         if (nrow(packages_df_github ) != 0) {
             install_devtools_stmt <- 'install.packages("githubinstall") \n'
-            install_github_stmt <- 'githubinstall::githubinstall
-                                    (github_packages, quiet = TRUE) \n'
-            install_cran_stmt <- 'install.packages
-                                (cran_packages, quiet = TRUE) \n'
-            
+            install_github_stmt <- paste0('githubinstall::githubinstall(',
+                                          'github_packages',
+                                          ", ask = FALSE",
+                                          ", quiet = TRUE) \n") 
+            install_cran_stmt <- paste0('install.packages(',
+                                        'cran_packages, ',
+                                        'quiet = TRUE) \n')
         } else {
             install_devtools_stmt <- ''
             install_github_stmt <- ''
@@ -320,6 +325,7 @@ generate_install_file <- function(packages_df) {
             '}, ', 
             'error = function(cond) { message(cond)}, \n',
             'warning = function(cond) { message(cond)})')  
+        
         write(install_all_statement, file = "install_packages.R") 
     }
 }
