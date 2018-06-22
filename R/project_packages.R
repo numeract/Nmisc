@@ -51,7 +51,6 @@ get_file_text <- function(include_pattern, exclude_pattern) {
         unlist(use.names = FALSE) %>%
         purrr::discard(~grepl( exclude_comments_pattern, .)) %>%
         stringr::str_replace_all("[\r\n]" , "") %>%
-        stringr::str_replace_all('\\s', '') %>%
         stringr::str_replace_all('\\n', '') %>%
         stringr::str_replace_all('"', '') %>%
         stringr::str_replace_all('\'', '') %>%
@@ -268,7 +267,6 @@ get_packages <- function(
 #' @export
 generate_install_file <- function(packages_df) {
     
-    packages_df <- packages_df[!packages_df$is_installed, ]
     packages_df_cran <- packages_df %>%
         dplyr::filter(source == "CRAN")
     packages_df_github <- packages_df %>%
@@ -297,14 +295,13 @@ generate_install_file <- function(packages_df) {
             "') \n")
         
         # if there are github packages that are not already installed
-        # first install 'githubinstall' package and then use it to 
+        # first install 'devtools' package and then use it to 
         # install other packages
         if (nrow(packages_df_github ) != 0) {
-            install_devtools_stmt <- 'install.packages("githubinstall") \n'
-            install_github_stmt <- paste0('githubinstall::githubinstall(',
-                                          'github_packages',
-                                          ", ask = FALSE",
-                                          ", quiet = TRUE) \n") 
+            install_devtools_stmt <- 'install.packages("devtools") \n'
+            install_github_stmt <- paste0('devtools::install_github(',
+                                          'github_packages, ',
+                                          "quiet = TRUE) \n") 
             install_cran_stmt <- paste0('install.packages(',
                                         'cran_packages, ',
                                         'quiet = TRUE) \n')
@@ -323,8 +320,7 @@ generate_install_file <- function(packages_df) {
             install_github_stmt,
             install_cran_stmt,
             '}, ', 
-            'error = function(cond) { message(cond)}, \n',
-            'warning = function(cond) { message(cond)})')  
+            'error = function(cond) { message(cond)})')  
         
         write(install_all_statement, file = "install_packages.R") 
     }
