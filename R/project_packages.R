@@ -298,29 +298,28 @@ generate_install_file <- function(packages_df) {
         
         if (nrow(packages_df_github ) != 0) {
             install_devtools_stmt <- 'install.packages("githubinstall") \n'
-            install_all_statement <- paste0(
-                vector_cran_packages,
-                vector_github_packages,
-                install_devtools_stmt,
-                'tryCatch({ \n',
-                'install.packages(cran_packages, quiet = TRUE) \n',
-                'githubinstall::githubinstall(github_packages, quiet = TRUE) \n',
-                '}, ', 
-                'error = function(cond) { message(cond)}, \n',
-                'warning = function(cond) { message(cond)})')  
+            install_github_stmt <- 'githubinstall::githubinstall
+                                    (github_packages, quiet = TRUE) \n'
+            install_cran_stmt <- 'install.packages
+                                (cran_packages, quiet = TRUE) \n'
+            
         } else {
-            install_all_statement <- paste0(
-                vector_cran_packages,
-                vector_github_packages,
-                'tryCatch({ \n',
-                'install.packages(cran_packages, quiet = TRUE) \n',
-                'devtools::install_github(github_packages, quiet = TRUE) \n',
-                '}, \n', '
-                error=function(cond) { message(cond)',
-                '\n }, \n,
-                warning = function(cond) { message(cond)}')  
+            install_devtools_stmt <- ''
+            install_github_stmt <- ''
+            install_cran_stmt <- 'install.packages
+            (cran_packages, quiet = TRUE) \n'
         }
         
+        install_all_statement <- paste0(
+            vector_cran_packages,
+            vector_github_packages,
+            install_devtools_stmt,
+            'tryCatch({ \n',
+            install_github_stmt,
+            install_cran_stmt,
+            '}, ', 
+            'error = function(cond) { message(cond)}, \n',
+            'warning = function(cond) { message(cond)})')  
         write(install_all_statement, file = "install_packages.R") 
     }
 }
