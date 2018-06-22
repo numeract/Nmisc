@@ -1,6 +1,4 @@
 INSTALLED_PACKAGES <- rownames(utils::installed.packages())
-CRAN_PACKAGES <- utils::available.packages(
-    repos =  "https://cran.rstudio.com/")[, "Package"]
 
 add_packages_info <- function(packages_df) {
     packages_df$is_base <- NA
@@ -15,26 +13,28 @@ add_packages_info <- function(packages_df) {
         if (packages_df$is_installed[i]) {
             desc <-  utils::packageDescription(
                 packages_df$package_name[i], 
-                fields = c("Priority", "Version", "Repository"))
+                fields = c(
+                    "Priority", "Version", "Repository",
+                    "GithubRepo", "GithubUsername"))
             desc <- unlist(desc)
             packages_df$is_base[i] <- identical(desc['Priority'], "base")
-            packages_df$source[i] <- desc['Repository']
-            packages_df$version[i] <- desc['Version']
-            
-        } else {
-            if (packages_df$package_name[i] %in% CRAN_PACKAGES) {
-                packages_df$source[i] <- 'CRAN'
+            if (is.na(desc['Repository'])) {
+                if (!is.na(desc["GithubRepo"])) {
+                    packages_df$source[i] <- paste0(
+                        desc["GithubUsername"], "/", desc["GithubRepo"])
+                }   
             } else {
-                packages_df$source[i] <- NA_character_
+                packages_df$source[i] <- desc['Repository']
             }
-            
+            packages_df$version[i] <- desc['Version']
+        } else {
+            packages_df$source[i] <- NA_character_
             packages_df$is_base[i] <- FALSE
             packages_df$version[i] <- NA
         }
     }
     packages_df <- packages_df[!packages_df$is_base, ]
 }
-
 
 
 get_file_text <- function(include_pattern, exclude_pattern) {
