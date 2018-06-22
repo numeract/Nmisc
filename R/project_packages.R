@@ -297,27 +297,23 @@ generate_install_file <- function(packages_df) {
         # if there are github packages that are not already installed
         # first install 'devtools' package and then use it to 
         # install other packages
-        if (nrow(packages_df_github ) != 0) {
-            install_devtools_stmt <- 'install.packages("devtools") \n'
-            install_github_stmt <- paste0('devtools::install_github(',
-                                          'github_packages, ',
-                                          "quiet = TRUE) \n") 
-            install_cran_stmt <- paste0('install.packages(',
-                                        'cran_packages, ',
-                                        'quiet = TRUE) \n')
-        } else {
-            install_devtools_stmt <- ''
-            install_github_stmt <- ''
-            install_cran_stmt <- 'install.packages
-            (cran_packages, quiet = TRUE) \n'
-        }
+        install_devtools_stmt <- 'install.packages("devtools") \n'
+        install_github_stmt <- paste0('devtools::install_github(',
+                                      'github_packages, ',
+                                      "quiet = TRUE) \n") 
+        install_cran_stmt <- paste0('install.packages(',
+                                    'cran_packages, ',
+                                    'quiet = TRUE) \n')
         
         install_all_statement <- paste0(
             vector_cran_packages,
             vector_github_packages,
-            install_devtools_stmt,
             'tryCatch({ \n',
+            'if (length(github_packages) != 0) { \n \t',
+            install_devtools_stmt,
+            '\t',
             install_github_stmt,
+            '} \n' ,
             install_cran_stmt,
             '}, ', 
             'error = function(cond) { message(cond)})')  
