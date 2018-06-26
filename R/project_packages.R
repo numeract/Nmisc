@@ -177,6 +177,27 @@ get_required_packages <- function(include_pattern, exclude_pattern) {
 }
 
 
+get_description_packages <- function(
+    description_path = "DESCRIPTION", 
+    options = c("Depends", "Imports")) {
+    description_data <- read.dcf(description_path)
+    desc_packages <- 
+        description_data[, intersect(colnames(description_data), options)] %>%
+        gsub(pattern = "\n", replacement = "") %>%
+        strsplit(",") %>%
+        unlist() %>%
+        setNames(NULL) 
+    
+    desc_packages <- desc_packages[!grepl("^R [(]", desc_packages)]
+    desc_packages <- desc_packages %>%
+        dplyr::as_data_frame() %>%
+        dplyr::mutate(requested_by  = "description") %>%
+        dplyr::rename(package_name = value) %>%
+        dplyr::distinct(package_name, .keep_all = TRUE)
+    
+    add_packages_info(desc_packages)
+}
+
 #' Get information about the packages used in the project
 #' 
 #' @description
@@ -234,6 +255,12 @@ get_packages <- function(
     if ("loaded" %in% package_options) {
         packages <- packages %>% 
             dplyr::bind_rows(get_loaded_packages())
+    }
+    
+    if ("description" %in% package_options) {
+        packages <- get_description_packages() %>%
+            dplyr::union(packages) %>%
+            dplyr::distinct(package_name, .keep_all = TRUE)
     }
     
     # keep distinct rows taking into account "package_name" and "version" cols
