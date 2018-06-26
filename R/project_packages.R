@@ -17,7 +17,7 @@ add_packages_info <- function(packages_df) {
                     "Priority", "Version", "Repository",
                     "GithubRepo", "GithubUsername"))
             desc <- unlist(desc)
-            packages_df$is_base[i] <- identical(desc['Priority'], "base")
+            packages_df$is_base[i] <- identical(desc[['Priority']], "base")
             if (is.na(desc['Repository'])) {
                 if (!is.na(desc["GithubRepo"])) {
                     packages_df$source[i] <- paste0(
@@ -33,7 +33,7 @@ add_packages_info <- function(packages_df) {
             packages_df$version[i] <- NA
         }
     }
-    packages_df <- packages_df[!packages_df$is_base, ]
+    packages_df
 }
 
 
@@ -295,7 +295,12 @@ get_packages <- function(
 #' @seealso \code{\link[get_packages]{get_packages}}
 #' 
 #' @export
-generate_install_file <- function(packages_df) {
+generate_install_file <- function(packages_df, include_core_packages = FALSE) {
+    
+    if (!include_core_packages) {
+        packages_df <- packages_df[!packages_df$is_base, ]
+    }
+    
     
     packages_df_cran <- packages_df %>%
         dplyr::filter(source == "CRAN")
