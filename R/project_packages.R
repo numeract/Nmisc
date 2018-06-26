@@ -198,6 +198,18 @@ get_description_packages <- function(
     add_packages_info(desc_packages)
 }
 
+
+# check if a package is already installed as a dependency by comparing the
+# packages that depend on it with the list of packages to be installed
+installed_as_dependency <- function(package_name, package_list) {
+    depend_on_package <- tools::dependsOnPkgs(package_name)
+    common_deps_length <- length(intersect(depend_on_package, package_list))
+    if (common_deps_length  == 0) {is_dependency <- FALSE}
+    else{is_dependency <- TRUE}
+    is_dependency
+}
+
+
 #' Get information about the packages used in the project
 #' 
 #' @description
@@ -296,11 +308,16 @@ get_packages <- function(
 #' 
 #' @export
 generate_install_file <- function(packages_df, include_core_packages = FALSE) {
+    packages_df <- packages_df[!packages_df$package_name == "base", ]
+    is_dependency <- purrr::map_lgl(
+        packages_df$package_name,
+        ~installed_as_dependency(., packages_df$package_name))
+    
+    packages_df <- packages_df[!is_dependency, ]
     
     if (!include_core_packages) {
         packages_df <- packages_df[!packages_df$is_base, ]
     }
-    
     
     packages_df_cran <- packages_df %>%
         dplyr::filter(source == "CRAN")
@@ -356,4 +373,3 @@ generate_install_file <- function(packages_df, include_core_packages = FALSE) {
         write(install_all_statement, file = "install_packages.R") 
     }
 }
-
