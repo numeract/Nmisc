@@ -217,8 +217,9 @@ get_description_packages <- function(
 #' which packages are loaded or referenced. The options are: \code{libray} for 
 #' packages loaded using  \code{libray()}, \code{required} for 
 #' packages loaded using  \code{require()}, \code{referenced} for 
-#' packages referenced using  \code{::} operator and \code{loaded}, used to 
-#' include packages already loaded in the current session
+#' packages referenced using  \code{::} operator, \code{loaded}, used to 
+#' include packages already loaded in the current session and \code{description}
+#' used to include packages mentioned in \code{DESCRIPTION} file
 #' 
 #' @return A data frame containing package information.
 #' 
@@ -232,7 +233,7 @@ get_description_packages <- function(
 get_packages <- function(
     include_pattern = '\\.R(md)?$', 
     exclude_pattern = 'tests|^_', 
-    package_options = c('library', 'required', 'referenced')) {
+    package_options = c('library', 'required', 'referenced', 'description')) {
     
     packages <- dplyr::data_frame()
     
