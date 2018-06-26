@@ -18,15 +18,15 @@ add_packages_info <- function(packages_df) {
                     "GithubRepo", "GithubUsername"))
             desc <- unlist(desc)
             packages_df$is_base[i] <- identical(desc[['Priority']], "base")
-            if (is.na(desc['Repository'])) {
-                if (!is.na(desc["GithubRepo"])) {
+            if (is.na(desc[['Repository']])) {
+                if (!is.na(desc[["GithubRepo"]])) {
                     packages_df$source[i] <- paste0(
-                        desc["GithubUsername"], "/", desc["GithubRepo"])
+                        desc[["GithubUsername"]], "/", desc[["GithubRepo"]])
                 }   
             } else {
-                packages_df$source[i] <- desc['Repository']
+                packages_df$source[i] <- desc[['Repository']]
             }
-            packages_df$version[i] <- desc['Version']
+            packages_df$version[i] <- desc[['Version']]
         } else {
             packages_df$source[i] <- NA_character_
             packages_df$is_base[i] <- FALSE
