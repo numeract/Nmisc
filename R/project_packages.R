@@ -1,36 +1,43 @@
 INSTALLED_PACKAGES <- rownames(utils::installed.packages())
 
 add_packages_info <- function(packages_df) {
-    packages_df$is_base <- NA
-    packages_df$source <- NA_character_
-    packages_df$version <- NA_character_
-    packages_df$is_installed <- purrr::map_lgl(
-        packages_df$package_name,
-        function(x) x %in% INSTALLED_PACKAGES)
-    for (i in Nmisc::seq_nrow(packages_df)) {
-        # if the package is already installed, take information from package 
-        # description, otherwise look for package in CRAN repository
-        if (packages_df$is_installed[i]) {
-            desc <-  utils::packageDescription(
-                packages_df$package_name[i], 
-                fields = c(
-                    "Priority", "Version", "Repository",
-                    "GithubRepo", "GithubUsername"))
-            desc <- unlist(desc)
-            packages_df$is_base[i] <- identical(desc[['Priority']], "base")
-            if (is.na(desc[['Repository']])) {
-                if (!is.na(desc[["GithubRepo"]])) {
-                    packages_df$source[i] <- paste0(
-                        desc[["GithubUsername"]], "/", desc[["GithubRepo"]])
-                }   
+    if (nrow(packages_df) == 0) {
+        colnames <- c("package_name", "requested_by", "is_base", "source",
+                      "version", "is_installed")
+        packages_df <- stats::setNames(
+            data.frame(matrix(ncol = 6, nrow = 0)), colnames)
+    } else {
+        packages_df$is_base <- NA
+        packages_df$source <- NA_character_
+        packages_df$version <- NA_character_
+        packages_df$is_installed <- purrr::map_lgl(
+            packages_df$package_name,
+            function(x) x %in% INSTALLED_PACKAGES)
+        for (i in Nmisc::seq_nrow(packages_df)) {
+            # if the package is already installed, take information from package 
+            # description, otherwise look for package in CRAN repository
+            if (packages_df$is_installed[i]) {
+                desc <-  utils::packageDescription(
+                    packages_df$package_name[i], 
+                    fields = c(
+                        "Priority", "Version", "Repository",
+                        "GithubRepo", "GithubUsername"))
+                desc <- unlist(desc)
+                packages_df$is_base[i] <- identical(desc[['Priority']], "base")
+                if (is.na(desc[['Repository']])) {
+                    if (!is.na(desc[["GithubRepo"]])) {
+                        packages_df$source[i] <- paste0(
+                            desc[["GithubUsername"]], "/", desc[["GithubRepo"]])
+                    }   
+                } else {
+                    packages_df$source[i] <- desc[['Repository']]
+                }
+                packages_df$version[i] <- desc[['Version']]
             } else {
-                packages_df$source[i] <- desc[['Repository']]
+                packages_df$source[i] <- NA_character_
+                packages_df$is_base[i] <- FALSE
+                packages_df$version[i] <- NA
             }
-            packages_df$version[i] <- desc[['Version']]
-        } else {
-            packages_df$source[i] <- NA_character_
-            packages_df$is_base[i] <- FALSE
-            packages_df$version[i] <- NA
         }
     }
     packages_df
@@ -70,7 +77,7 @@ get_loaded_packages <- function() {
         package_name = names(sessionInfo()$loadedOnly), 
         stringsAsFactors = FALSE) %>%
         dplyr::mutate(requested_by = "loaded")
-    
+
     add_packages_info(packages)
 }
 
@@ -237,8 +244,8 @@ installed_as_dependency <- function(package_name, package_list) {
 #' 
 #' @examples
 #' get_packages(
-#' 'included_file\\.R(md)?$', 
-#' 'excluded_file\\.R(md)?$', 
+#' '\\.R(md)?$', 
+#' 'test\\.R(md)?$', 
 #' c('required', 'library'))
 #' 
 #' @export
@@ -294,6 +301,8 @@ get_packages <- function(
 #'   
 #' @param packages_df A data frame obtained with \code{get_packages} that 
 #' contains information regarding the name, version and source of the package.
+#' @param include_core_packages Logical, whether or not to include in the 
+#' generated install file packages which come with R by default
 #' 
 #' @return Nothing
 #' 
@@ -308,7 +317,7 @@ get_packages <- function(
 #' 
 #' @export
 generate_install_file <- function(packages_df, include_core_packages = FALSE) {
-    packages_df <- packages_df[!packages_df$package_name == "base", ]
+    packages_df <- packages_df[!(packages_df$package_name == "base"), ]
     is_dependency <- purrr::map_lgl(
         packages_df$package_name,
         ~installed_as_dependency(., packages_df$package_name))
