@@ -13,7 +13,7 @@ add_packages_info <- function(packages_df) {
         packages_df$is_installed <- purrr::map_lgl(
             packages_df$package_name,
             function(x) x %in% INSTALLED_PACKAGES)
-        for (i in Nmisc::seq_nrow(packages_df)) {
+        for (i in seq_nrow(packages_df)) {
             # if the package is already installed, take information from package 
             # description, otherwise look for package in CRAN repository
             if (packages_df$is_installed[i]) {
@@ -74,7 +74,7 @@ get_loaded_packages <- function() {
     
     # get the names of the packages already loaded in the current session
     packages <- dplyr::data_frame(
-        package_name = names(sessionInfo()$loadedOnly), 
+        package_name = names(utils::sessionInfo()$loadedOnly), 
         stringsAsFactors = FALSE) %>%
         dplyr::mutate(requested_by = "loaded")
 
@@ -193,7 +193,7 @@ get_description_packages <- function(
         gsub(pattern = "\n", replacement = "") %>%
         strsplit(",") %>%
         unlist() %>%
-        setNames(NULL) 
+        stats::setNames(NULL) 
     
     desc_packages <- desc_packages[!grepl("^R [(]", desc_packages)]
     desc_packages <- desc_packages %>%
@@ -284,8 +284,12 @@ get_packages <- function(
     }
     
     # keep distinct rows taking into account "package_name" and "version" cols
-    packages %>%
-        dplyr::distinct(package_name, version, .keep_all = TRUE)
+    if (nrow(packages) != 0) {
+       packages <- packages %>%
+            dplyr::distinct(package_name, version, .keep_all = TRUE)
+    }
+    packages
+
 }
 
 
@@ -325,7 +329,8 @@ generate_install_file <- function(packages_df, include_core_packages = FALSE) {
     packages_df <- packages_df[!is_dependency, ]
     
     if (!include_core_packages) {
-        packages_df <- packages_df[!packages_df$is_base, ]
+        packages_df <- packages_df %>% 
+            dplyr::filter(is_base == FALSE)
     }
     
     packages_df_cran <- packages_df %>%
