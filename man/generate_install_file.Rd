@@ -5,11 +5,14 @@
 \title{Takes a data frame containing package information and generates an install
 file based on it}
 \usage{
-generate_install_file(packages_df)
+generate_install_file(packages_df, include_core_packages = FALSE)
 }
 \arguments{
 \item{packages_df}{A data frame obtained with \code{get_packages} that 
 contains information regarding the name, version and source of the package.}
+
+\item{include_core_packages}{Logical, whether or not to include in the 
+generated install file packages which come with R by default}
 }
 \value{
 Nothing

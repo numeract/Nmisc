@@ -5,7 +5,7 @@
 \title{Get information about the packages used in the project}
 \usage{
 get_packages(include_pattern = "\\\\.R(md)?$", exclude_pattern = "tests|^_",
-  package_options = c("library", "required", "referenced"))
+  package_options = c("library", "required", "referenced", "description"))
 }
 \arguments{
 \item{include_pattern}{A string representing a regex that matches 
@@ -20,8 +20,9 @@ project files in which not to look for packages. By default,
 which packages are loaded or referenced. The options are: \code{libray} for 
 packages loaded using  \code{libray()}, \code{required} for 
 packages loaded using  \code{require()}, \code{referenced} for 
-packages referenced using  \code{::} operator and \code{loaded}, used to 
-include packages already loaded in the current session}
+packages referenced using  \code{::} operator, \code{loaded}, used to 
+include packages already loaded in the current session and \code{description}
+used to include packages mentioned in \code{DESCRIPTION} file}
 }
 \value{
 A data frame containing package information.
@@ -33,8 +34,8 @@ the function returns a data frame containing information regarding
 }
 \examples{
 get_packages(
-'included_file\\\\.R(md)?$', 
-'excluded_file\\\\.R(md)?$', 
+'\\\\.R(md)?$', 
+'test\\\\.R(md)?$', 
 c('required', 'library'))
 
 }
