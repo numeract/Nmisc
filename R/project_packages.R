@@ -74,7 +74,7 @@ get_loaded_packages <- function() {
     
     # get the names of the packages already loaded in the current session
     packages <- dplyr::data_frame(
-        package_name = names(utils::sessionInfo()$loadedOnly), 
+        package_name = names(utils:::sessionInfo()$loadedOnly), 
         stringsAsFactors = FALSE) %>%
         dplyr::mutate(requested_by = "loaded")
 
@@ -317,7 +317,7 @@ get_packages <- function(
 #'                 c('required', 'library'))
 #' generate_install_file(packages_df)
 #' 
-#' @seealso \code{\link[get_packages]{get_packages}}
+#' @seealso \code{\link{get_packages}}
 #' 
 #' @export
 generate_install_file <- function(packages_df, include_core_packages = FALSE) {

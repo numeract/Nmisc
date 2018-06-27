@@ -31,5 +31,5 @@ generate_install_file(packages_df)
 
 }
 \seealso{
-\code{\link[get_packages]{get_packages}}
+\code{\link{get_packages}}
 }
