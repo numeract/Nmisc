@@ -1,4 +1,7 @@
 INSTALLED_PACKAGES <- rownames(utils::installed.packages())
+# quiets concerns of R CMD check
+if (getRversion() >= "2.15.1")  
+    utils::globalVariables(c("value", "package_name", "is_base"))
 
 add_packages_info <- function(packages_df) {
     if (nrow(packages_df) == 0) {
@@ -74,7 +77,7 @@ get_loaded_packages <- function() {
     
     # get the names of the packages already loaded in the current session
     packages <- dplyr::data_frame(
-        package_name = names(utils:::sessionInfo()$loadedOnly), 
+        package_name = names(utils::sessionInfo()$loadedOnly), 
         stringsAsFactors = FALSE) %>%
         dplyr::mutate(requested_by = "loaded")
 
@@ -387,3 +390,4 @@ generate_install_file <- function(packages_df, include_core_packages = FALSE) {
         write(install_all_statement, file = "install_packages.R") 
     }
 }
+
