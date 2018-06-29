@@ -5,10 +5,11 @@ if (getRversion() >= "2.15.1")
 
 add_packages_info <- function(packages_df) {
     if (nrow(packages_df) == 0) {
-        colnames <- c("package_name", "requested_by", "is_base", "source",
-                      "version", "is_installed")
-        packages_df <- stats::setNames(
-            data.frame(matrix(ncol = 6, nrow = 0)), colnames)
+        packages_df <- packages_df %>%
+            tibble::add_column(is_base = logical(),
+                               source = character(),
+                               version = character(),
+                               is_installed = character())
     } else {
         packages_df$is_base <- NA
         packages_df$source <- NA_character_
