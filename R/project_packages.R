@@ -367,26 +367,18 @@ generate_install_file <- function(packages_df, include_core_packages = FALSE) {
         # if there are github packages that are not already installed
         # first install 'devtools' package and then use it to 
         # install other packages
-        install_devtools_stmt <- 'install.packages("devtools") \n'
-        install_github_stmt <- paste0('devtools::install_github(',
-                                      'github_packages, ',
-                                      "quiet = TRUE) \n") 
-        install_cran_stmt <- paste0('install.packages(',
-                                    'cran_packages, ',
-                                    'quiet = TRUE) \n')
-        
-        install_all_statement <- paste0(
+        install_all_statement <- paste(
             vector_cran_packages,
             vector_github_packages,
-            'tryCatch({ \n',
-            'if (length(github_packages) != 0) { \n \t',
-            install_devtools_stmt,
-            '\t',
-            install_github_stmt,
-            '} \n' ,
-            install_cran_stmt,
-            '}, ', 
-            'error = function(cond) { message(cond)})')  
+            "tryCatch({
+    if (!identical(github_packages, c(''))) {
+            install.packages('devtools')
+            devtools::install_github(github_packages, quiet = TRUE)
+            install.packages(cran_packages, quiet = TRUE)
+    } else {
+            install.packages(cran_packages, quiet = TRUE)
+    }
+},error = function(cond) { message(cond)})", sep = "")  
         
         write(install_all_statement, file = "install_packages.R") 
     }
