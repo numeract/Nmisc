@@ -1,0 +1,34 @@
+context("Testing project_packages.R")
+
+test_that("add_packages_info works", {
+    packages_df <- dplyr::data_frame(package_name = "dplyr",
+                                     requested_by = "reference")
+    
+    packages_info <- add_packages_info(packages_df)
+    expected_df <- dplyr::data_frame(
+        package_name = "dplyr", requested_by = "reference", 
+        is_base = FALSE, source = "CRAN", 
+        version = "0.7.5", is_installed = TRUE)
+    
+    expect_equal(packages_info, expected_df)
+})
+
+
+test_that("add_packages_info works with empty df as input", {
+    packages_info <- add_packages_info(dplyr::data_frame())
+    expected_df <- dplyr::data_frame(is_base = logical(),
+                                     source = character(),
+                                     version = character(),
+                                     is_installed = character())
+    
+    expect_equal(packages_info, expected_df)
+})
+
+
+test_that("add_packages_info stops with invalid input", {
+    expect_error(add_packages_info(NULL))
+    expect_error(add_packages_info(NA))
+    expect_error(add_packages_info(NA_character_))
+    expect_error(add_packages_info(list()))
+    expect_error(add_packages_info(c()))
+})
