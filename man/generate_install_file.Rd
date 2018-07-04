@@ -23,11 +23,10 @@ the function takes the output of \code{get_packages} and
  packages used through the project that are not already installed.
 }
 \examples{
-packages_df <- get_packages(
-               'included_file\\\\.R(md)?$', 
-               'excluded_file\\\\.R(md)?$', 
-                c('required', 'library'))
+\dontrun{
+packages_df <- get_packages(package_options = c("library"))
 generate_install_file(packages_df)
+}
 
 }
 \seealso{

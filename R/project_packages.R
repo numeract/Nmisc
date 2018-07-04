@@ -262,7 +262,9 @@ installed_as_dependency <- function(package_name, package_list) {
 #'  packages that are loaded with \code{library()}, \code{require()}, used
 #'  with \code{::} operator and/or already loaded packages
 #'  
-#' 
+#' @param project_path A string representing the path of the project root 
+#' in which the function will look recursively in order to find files that
+#' fit \code{include_pattern}
 #' @param include_pattern A string representing a regex that matches 
 #' project files in which to look for packages. By default, \code{get_packages}
 #' includes all .R files in the current project
@@ -280,10 +282,13 @@ installed_as_dependency <- function(package_name, package_list) {
 #' @return A data frame containing package information.
 #' 
 #' @examples
-#' get_packages(
-#' '\\.R(md)?$', 
-#' 'test\\.R(md)?$', 
-#' c('required', 'library'))
+#' \dontrun{
+#' packages_df <- get_packages(
+#'                 project_path = '.',
+#'                include_pattern = '\\.R(md)?$', 
+#'                exclude_pattern = '', 
+#'                package_options = c('referenced'))
+#' }
 #' 
 #' @export
 get_packages <- function(
@@ -360,11 +365,10 @@ get_packages <- function(
 #' @return Nothing
 #' 
 #' @examples
-#' packages_df <- get_packages(
-#'                'included_file\\.R(md)?$', 
-#'                'excluded_file\\.R(md)?$', 
-#'                 c('required', 'library'))
+#' \dontrun{
+#' packages_df <- get_packages(package_options = c("library"))
 #' generate_install_file(packages_df)
+#' }
 #' 
 #' @seealso \code{\link{get_packages}}
 #' 

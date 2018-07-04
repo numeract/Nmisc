@@ -4,10 +4,15 @@
 \alias{get_packages}
 \title{Get information about the packages used in the project}
 \usage{
-get_packages(include_pattern = "\\\\.R(md)?$", exclude_pattern = "tests|^_",
-  package_options = c("library", "required", "referenced", "description"))
+get_packages(project_path = ".", include_pattern = "\\\\.R(md)?$",
+  exclude_pattern = "tests|^_", package_options = c("library", "required",
+  "referenced", "description"))
 }
 \arguments{
+\item{project_path}{A string representing the path of the project root 
+in which the function will look recursively in order to find files that
+fit \code{include_pattern}}
+
 \item{include_pattern}{A string representing a regex that matches 
 project files in which to look for packages. By default, \code{get_packages}
 includes all .R files in the current project}
@@ -33,9 +38,12 @@ the function returns a data frame containing information regarding
  with \code{::} operator and/or already loaded packages
 }
 \examples{
-get_packages(
-'\\\\.R(md)?$', 
-'test\\\\.R(md)?$', 
-c('required', 'library'))
+\dontrun{
+packages_df <- get_packages(
+                project_path = '.',
+               include_pattern = '\\\\.R(md)?$', 
+               exclude_pattern = '', 
+               package_options = c('referenced'))
+}
 
 }
