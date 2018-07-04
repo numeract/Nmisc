@@ -62,3 +62,46 @@ test_that("get_library_packages has the same output", {
     
     expect_equal(library_packages, expected_output)
 })
+
+
+test_that("get_library_packages returns the same output", {
+    library_packages <- get_library_packages(".R", "")
+    expected_output <-  dplyr::data_frame(
+        package_name = character(),
+        requested_by = character(),
+        is_base = logical(),
+        source = character(),
+        version = character(),
+        is_installed = logical())
+    
+    expect_equal(library_packages, expected_output)
+})
+
+
+test_that("get_referenced_packages returns the same output", {
+    referenced_packages <- get_library_packages("os.R", "")
+    expected_output <-  dplyr::data_frame(
+        package_name = character(),
+        requested_by = character(),
+        is_base = logical(),
+        source = character(),
+        version = character(),
+        is_installed = logical())
+    
+    expect_equal(referenced_packages, expected_output)
+})
+
+
+test_that("get_required_packages returns the same output", {
+    required_packages <- get_library_packages(".R", "")
+    expected_output <-  dplyr::data_frame(
+        package_name = character(),
+        requested_by = character(),
+        is_base = logical(),
+        source = character(),
+        version = character(),
+        is_installed = logical())
+    
+    expect_equal(required_packages, expected_output)
+})
+

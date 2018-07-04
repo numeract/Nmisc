@@ -93,7 +93,8 @@ get_referenced_packages <- function(include_pattern, exclude_pattern) {
     regex_pattern <- '[_.a-zA-Z]+::'
     # extract only the names of the packages used with "::" operator,
     # add the column requested by, select rows with distinct package names
-    packages <- stringr::str_extract_all(code_lines, regex_pattern) %>% 
+    referenced_packages <- stringr::str_extract_all(
+        code_lines, regex_pattern) %>% 
         purrr::discard(~length(.) == 0) %>%
         unlist(use.names = FALSE) %>%
         dplyr::as_data_frame() %>%
@@ -101,8 +102,14 @@ get_referenced_packages <- function(include_pattern, exclude_pattern) {
                       requested_by  = "reference") %>%
         dplyr::rename(package_name = value) %>%
         dplyr::distinct(package_name, .keep_all = TRUE)
-    
-    add_packages_info(packages)
+    if (nrow(referenced_packages) == 0) {
+        referenced_packages <- dplyr::data_frame(
+            package_name = character(),
+            requested_by = character())
+        add_packages_info(referenced_packages)
+    } else {
+        add_packages_info(referenced_packages)
+    }
 }
 
 
@@ -178,7 +185,10 @@ get_required_packages <- function(include_pattern, exclude_pattern) {
         dplyr::bind_rows(multiple_packages)
     
     if (nrow(all_required_packages) == 0) {
-        dplyr::as_data_frame(all_required_packages) 
+        all_required_packages <- dplyr::data_frame(
+            package_name = character(),
+            requested_by = character())
+        add_packages_info(all_required_packages)
     } else {
         # rename columns, add requested_by column, select distinct rows taking 
         # into consideration "package_name" column
