@@ -1,6 +1,6 @@
 INSTALLED_PACKAGES <- rownames(utils::installed.packages())
 # quiets concerns of R CMD check
-if (getRversion() >= "2.15.1")  
+if (getRversion() >= "2.15.1")
     utils::globalVariables(c("value", "package_name", "is_base"))
 
 add_packages_info <- function(packages_df) {
@@ -18,8 +18,9 @@ add_packages_info <- function(packages_df) {
             packages_df$package_name,
             function(x) x %in% INSTALLED_PACKAGES)
         for (i in seq_nrow(packages_df)) {
-            # if the package is already installed, take information from package 
-            # description, otherwise look for package in CRAN repository
+            # if the package is already installed, take information from
+            # package description, otherwise look for package
+            # in CRAN repository
             if (packages_df$is_installed[i]) {
                 desc <-  utils::packageDescription(
                     packages_df$package_name[i], 
@@ -32,7 +33,7 @@ add_packages_info <- function(packages_df) {
                     if (!is.na(desc[["GithubRepo"]])) {
                         packages_df$source[i] <- paste0(
                             desc[["GithubUsername"]], "/", desc[["GithubRepo"]])
-                    }   
+                    }  
                 } else {
                     packages_df$source[i] <- desc[['Repository']]
                 }
@@ -49,13 +50,12 @@ add_packages_info <- function(packages_df) {
 
 
 get_file_text <- function(project_path, include_pattern, exclude_pattern) {
-    
     # look in the files of interest only
     project_files <- list.files(
         path = project_path, pattern = include_pattern, 
         full.names = TRUE, recursive = TRUE) %>%
         purrr::discard(~grepl(exclude_pattern, .))
-    
+   
     # read every line of text from each file, discard commented lines,
     # eliminate new line for Windows machines, eliminate spaces,
     # eliminate new line for Unix/MaxOS, eliminate quotes, eliminate tabs
@@ -63,7 +63,7 @@ get_file_text <- function(project_path, include_pattern, exclude_pattern) {
     lines <- project_files %>% 
         purrr::map(readLines) %>%
         unlist(use.names = FALSE) %>%
-        purrr::discard(~grepl( exclude_comments_pattern, .)) %>%
+        purrr::discard(~grepl(exclude_comments_pattern, .)) %>%
         stringr::str_replace_all("[\r\n]" , "") %>%
         stringr::str_replace_all('\\n', '') %>%
         stringr::str_replace_all('"', '') %>%
@@ -247,9 +247,13 @@ get_description_packages <- function(
 # packages that depend on it with the list of packages to be installed
 installed_as_dependency <- function(package_name, package_list) {
     depend_on_package <- tools::dependsOnPkgs(package_name)
-    common_deps_length <- length(intersect(depend_on_package, package_list))
-    if (common_deps_length  == 0) {is_dependency <- FALSE}
-    else{is_dependency <- TRUE}
+    common_deps_length <- length(
+        intersect(depend_on_package, package_list))
+    if (common_deps_length  == 0) {
+        is_dependency <- FALSE
+    } else {
+        is_dependency <- TRUE
+    }
     is_dependency
 }
 
@@ -312,13 +316,15 @@ get_packages <- function(
     }
     if ("required" %in% package_options) {
         packages <- packages %>% 
-            dplyr::bind_rows(get_required_packages(
-              project_path, include_pattern, exclude_pattern))
+            dplyr::bind_rows(
+                get_required_packages(
+                    project_path, include_pattern, exclude_pattern))
     }
     if ("referenced" %in% package_options) {
         packages <- packages %>% 
-            dplyr::bind_rows(get_referenced_packages(
-               project_path, include_pattern, exclude_pattern))
+            dplyr::bind_rows(
+                get_referenced_packages(
+                    project_path, include_pattern, exclude_pattern))
     }
     
     if ("loaded" %in% package_options) {
@@ -343,9 +349,7 @@ get_packages <- function(
             dplyr::distinct(package_name, version, .keep_all = TRUE)
     }
     packages
-
 }
-
 
 
 #' Takes a data frame containing package information and generates an install
@@ -432,4 +436,3 @@ generate_install_file <- function(packages_df, include_core_packages = FALSE) {
         write(install_all_statement, file = "install_packages.R") 
     }
 }
-
