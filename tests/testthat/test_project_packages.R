@@ -50,7 +50,6 @@ test_that("add_packages_info stops with invalid input", {
 })
 
 
-
 test_that("get_referenced_packages returns the same output", {
     referenced_packages <- get_library_packages("os.R", "")
     expected_output <-  dplyr::data_frame(
@@ -114,3 +113,8 @@ test_that("get_description_packages stops with wrong description path", {
         description_path = "..//..//R//os.R",
         options = c("Depends")))
 })
+
+# 
+# test_that("get_loaded_packages returns the same output", {
+#     detachAllPackages()
+# })
