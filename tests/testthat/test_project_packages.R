@@ -50,8 +50,9 @@ test_that("add_packages_info stops with invalid input", {
 })
 
 
-test_that("get_library_packages has the same output", {
-    library_packages <- get_library_packages(".R", "")
+
+test_that("get_referenced_packages returns the same output", {
+    referenced_packages <- get_library_packages("os.R", "")
     expected_output <-  dplyr::data_frame(
         package_name = character(),
         requested_by = character(),
@@ -60,7 +61,7 @@ test_that("get_library_packages has the same output", {
         version = character(),
         is_installed = logical())
     
-    expect_equal(library_packages, expected_output)
+    expect_equal(referenced_packages, expected_output)
 })
 
 
@@ -78,20 +79,6 @@ test_that("get_library_packages returns the same output", {
 })
 
 
-test_that("get_referenced_packages returns the same output", {
-    referenced_packages <- get_library_packages("os.R", "")
-    expected_output <-  dplyr::data_frame(
-        package_name = character(),
-        requested_by = character(),
-        is_base = logical(),
-        source = character(),
-        version = character(),
-        is_installed = logical())
-    
-    expect_equal(referenced_packages, expected_output)
-})
-
-
 test_that("get_required_packages returns the same output", {
     required_packages <- get_library_packages(".R", "")
     expected_output <-  dplyr::data_frame(
@@ -105,3 +92,25 @@ test_that("get_required_packages returns the same output", {
     expect_equal(required_packages, expected_output)
 })
 
+
+test_that("get_description_packages returns the same output", {
+    description_packages <- get_description_packages(
+        description_path = "..//..//DESCRIPTION",
+        options = c("Depends"))
+    expected_output <-  dplyr::data_frame(
+        package_name = character(),
+        requested_by = character(),
+        is_base = logical(),
+        source = character(),
+        version = character(),
+        is_installed = logical())
+    
+    expect_equal(description_packages, expected_output)
+})
+
+
+test_that("get_description_packages stops with wrong description path", {
+    expect_error(description_packages <- get_description_packages(
+        description_path = "..//..//R//os.R",
+        options = c("Depends")))
+})

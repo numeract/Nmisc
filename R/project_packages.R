@@ -81,8 +81,14 @@ get_loaded_packages <- function() {
         package_name = names(utils::sessionInfo()$loadedOnly), 
         stringsAsFactors = FALSE) %>%
         dplyr::mutate(requested_by = "loaded")
-
-    add_packages_info(packages)
+    if (nrow(packages) == 0) {
+        packages <- dplyr::data_frame(
+            package_name = character(),
+            requested_by = character())
+        add_packages_info(packages)
+    } else {
+        add_packages_info(packages)
+    }
 }
 
 
@@ -218,8 +224,14 @@ get_description_packages <- function(
         dplyr::mutate(requested_by  = "description") %>%
         dplyr::rename(package_name = value) %>%
         dplyr::distinct(package_name, .keep_all = TRUE)
-    
+    if (nrow(desc_packages) == 0) {
+        desc_packages <- dplyr::data_frame(
+            package_name = character(),
+            requested_by = character())
+        add_packages_info(desc_packages)
+    } else {
     add_packages_info(desc_packages)
+    }
 }
 
 
