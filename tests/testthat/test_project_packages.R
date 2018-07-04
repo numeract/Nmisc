@@ -51,7 +51,7 @@ test_that("add_packages_info stops with invalid input", {
 
 
 test_that("get_referenced_packages returns the same output", {
-    referenced_packages <- get_library_packages("os.R", "")
+    referenced_packages <- get_library_packages("..//..//", "os.R", "")
     expected_output <-  dplyr::data_frame(
         package_name = character(),
         requested_by = character(),
@@ -65,7 +65,7 @@ test_that("get_referenced_packages returns the same output", {
 
 
 test_that("get_library_packages returns the same output", {
-    library_packages <- get_library_packages(".R", "")
+    library_packages <- get_library_packages("..//..//", ".R", "")
     expected_output <-  dplyr::data_frame(
         package_name = character(),
         requested_by = character(),
@@ -79,7 +79,7 @@ test_that("get_library_packages returns the same output", {
 
 
 test_that("get_required_packages returns the same output", {
-    required_packages <- get_library_packages(".R", "")
+    required_packages <- get_library_packages("..//..//", ".R", "")
     expected_output <-  dplyr::data_frame(
         package_name = character(),
         requested_by = character(),
@@ -117,4 +117,30 @@ test_that("get_description_packages stops with wrong description path", {
 # 
 # test_that("get_loaded_packages returns the same output", {
 #     detachAllPackages()
+# })
+# 
+# test_that("generate_install_file works", {
+#     
+#     needed_packages <- get_packages(
+#         project_path = "..//..//",
+#         ".R",
+#         package_options = c('referenced'))
+#    generate_install_file(needed_packages)
+#    expected_script <- "cran_packages <- c('rappdirs','stringr',
+#                                         'dplyr','rex','devtools') 
+#    github_packages <- c('') 
+#    tryCatch({
+#        if (!identical(github_packages, c(''))) {
+#            install.packages('devtools')
+#            devtools::install_github(github_packages, quiet = TRUE)
+#            install.packages(cran_packages, quiet = TRUE)
+#        } else {
+#            install.packages(cran_packages, quiet = TRUE)
+#        }
+#    },error = function(cond) { message(cond)})"
+#    
+#    install_packages_content <- readChar("install_packages.R",
+#                                         file.info("install_packages.R")$size)
+#    expect_equal(install_packages_content, expected_script)
+#    unlink("install_packages.R")
 # })

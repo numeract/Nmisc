@@ -48,11 +48,11 @@ add_packages_info <- function(packages_df) {
 }
 
 
-get_file_text <- function(include_pattern, exclude_pattern) {
+get_file_text <- function(project_path, include_pattern, exclude_pattern) {
     
     # look in the files of interest only
     project_files <- list.files(
-        path = ".", pattern = include_pattern, recursive = TRUE) %>%
+        path = project_path, pattern = include_pattern, recursive = TRUE) %>%
         purrr::discard(~grepl(exclude_pattern, .))
     
     # read every line of text from each file, discard commented lines,
@@ -92,9 +92,10 @@ get_loaded_packages <- function() {
 }
 
 
-get_referenced_packages <- function(include_pattern, exclude_pattern) {
+get_referenced_packages <- function(
+    project_path, include_pattern, exclude_pattern) {
     
-    code_lines <- get_file_text(include_pattern, exclude_pattern)
+    code_lines <- get_file_text(project_path, include_pattern, exclude_pattern)
     
     regex_pattern <- '[_.a-zA-Z]+::'
     # extract only the names of the packages used with "::" operator,
@@ -119,9 +120,10 @@ get_referenced_packages <- function(include_pattern, exclude_pattern) {
 }
 
 
-get_library_packages <- function(include_pattern, exclude_pattern) {
+get_library_packages <- function(
+    project_path, include_pattern, exclude_pattern) {
     
-    code_lines <- get_file_text(include_pattern, exclude_pattern)
+    code_lines <- get_file_text(project_path, include_pattern, exclude_pattern)
     
     # create a data frame with the packages loaded individually with "library"
     regex_pattern_single <- '(?<=library\\()([a-zA-Z1-9-_]+?)(?=\\))'
@@ -163,9 +165,10 @@ get_library_packages <- function(include_pattern, exclude_pattern) {
 }
 
 
-get_required_packages <- function(include_pattern, exclude_pattern) {
+get_required_packages <- function(
+    project_path, include_pattern, exclude_pattern) {
     
-    code_lines <- get_file_text(include_pattern, exclude_pattern)
+    code_lines <- get_file_text(project_path, include_pattern, exclude_pattern)
     
     # create a data frame with the packages loaded individually with "require"
     regex_pattern_single <- '(?<=require\\()([a-zA-Z1-9-_]+?)(?=\\))'
@@ -210,6 +213,10 @@ get_required_packages <- function(include_pattern, exclude_pattern) {
 get_description_packages <- function(
     description_path = "DESCRIPTION", 
     options = c("Depends", "Imports")) {
+    if (!file.exists(description_path)) {
+        stop(paste0("File ", description_path, " does not exist!"))
+    }
+    
     description_data <- read.dcf(description_path)
     desc_packages <- 
         description_data[, intersect(colnames(description_data), options)] %>%
@@ -279,6 +286,7 @@ installed_as_dependency <- function(package_name, package_list) {
 #' 
 #' @export
 get_packages <- function(
+    project_path = ".",
     include_pattern = '\\.R(md)?$', 
     exclude_pattern = 'tests|^_', 
     package_options = c('library', 'required', 'referenced', 'description')) {
@@ -288,17 +296,18 @@ get_packages <- function(
     if ("library" %in% package_options) {
         packages <- packages %>% 
             dplyr::bind_rows(
-                get_library_packages(include_pattern, exclude_pattern))
+                get_library_packages(
+                    project_path, include_pattern, exclude_pattern))
     }
     if ("required" %in% package_options) {
         packages <- packages %>% 
             dplyr::bind_rows(get_required_packages(
-                include_pattern, exclude_pattern))
+              project_path, include_pattern, exclude_pattern))
     }
     if ("referenced" %in% package_options) {
         packages <- packages %>% 
             dplyr::bind_rows(get_referenced_packages(
-                include_pattern, exclude_pattern))
+               project_path, include_pattern, exclude_pattern))
     }
     
     if ("loaded" %in% package_options) {
