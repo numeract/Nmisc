@@ -9,7 +9,7 @@ add_packages_info <- function(packages_df) {
             tibble::add_column(is_base = logical(),
                                source = character(),
                                version = character(),
-                               is_installed = character())
+                               is_installed = logical())
     } else {
         packages_df$is_base <- NA
         packages_df$source <- NA_character_
@@ -134,7 +134,10 @@ get_library_packages <- function(include_pattern, exclude_pattern) {
         dplyr::bind_rows(multiple_packages)
     
     if (nrow(all_library_packages) == 0) {
-        dplyr::as_data_frame( all_library_packages)
+        all_library_packages <- dplyr::data_frame(
+            package_name = character(),
+            requested_by = character())
+        add_packages_info(all_library_packages)
     } else {
         # rename columns, add requested_by column, select distinct rows taking 
         # into consideration "package_name" column
