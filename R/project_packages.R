@@ -40,7 +40,7 @@ add_packages_info <- function(packages_df) {
             } else {
                 packages_df$source[i] <- NA_character_
                 packages_df$is_base[i] <- FALSE
-                packages_df$version[i] <- NA
+                packages_df$version[i] <- NA_character_
             }
         }
     }

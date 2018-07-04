@@ -25,6 +25,22 @@ test_that("add_packages_info works with empty df as input", {
 })
 
 
+test_that("add_packages_info works with not installed package", {
+    packages_info <- add_packages_info(dplyr::data_frame(
+        package_name = "random_package",
+        requested_by = "reference"))
+    expected_df <- dplyr::data_frame(
+        package_name = "random_package",
+        requested_by = "reference",
+        is_base = FALSE,
+        source = NA_character_,
+        version = NA_character_,
+        is_installed = FALSE)
+    
+    expect_equal(packages_info, expected_df)
+})
+
+
 test_that("add_packages_info stops with invalid input", {
     expect_error(add_packages_info(NULL))
     expect_error(add_packages_info(NA))
