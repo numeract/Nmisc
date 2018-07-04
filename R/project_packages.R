@@ -52,7 +52,8 @@ get_file_text <- function(project_path, include_pattern, exclude_pattern) {
     
     # look in the files of interest only
     project_files <- list.files(
-        path = project_path, pattern = include_pattern, recursive = TRUE) %>%
+        path = project_path, pattern = include_pattern, 
+        full.names = TRUE, recursive = TRUE) %>%
         purrr::discard(~grepl(exclude_pattern, .))
     
     # read every line of text from each file, discard commented lines,
@@ -291,7 +292,12 @@ get_packages <- function(
     exclude_pattern = 'tests|^_', 
     package_options = c('library', 'required', 'referenced', 'description')) {
     
-    packages <- dplyr::data_frame()
+    packages <- dplyr::data_frame(package_name = character(),
+                                  requested_by = character(),
+                                  is_base = logical(),
+                                  source = character(),
+                                  version = character(),
+                                  is_installed = logical())
     
     if ("library" %in% package_options) {
         packages <- packages %>% 
@@ -316,7 +322,12 @@ get_packages <- function(
     }
     
     if ("description" %in% package_options) {
-        packages <- get_description_packages() %>%
+        if (project_path !=  ".") {
+            description_path <- paste0(project_path, "DESCRIPTION")
+        } else {
+            description_path <- "DESCRIPTION"
+        }
+        packages <- get_description_packages(description_path) %>%
             dplyr::union(packages) %>%
             dplyr::distinct(package_name, .keep_all = TRUE)
     }

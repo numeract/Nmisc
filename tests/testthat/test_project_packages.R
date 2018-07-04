@@ -114,33 +114,28 @@ test_that("get_description_packages stops with wrong description path", {
         options = c("Depends")))
 })
 
-# 
-# test_that("get_loaded_packages returns the same output", {
-#     detachAllPackages()
-# })
-# 
-# test_that("generate_install_file works", {
-#     
-#     needed_packages <- get_packages(
-#         project_path = "..//..//",
-#         ".R",
-#         package_options = c('referenced'))
-#    generate_install_file(needed_packages)
-#    expected_script <- "cran_packages <- c('rappdirs','stringr',
-#                                         'dplyr','rex','devtools') 
-#    github_packages <- c('') 
-#    tryCatch({
-#        if (!identical(github_packages, c(''))) {
-#            install.packages('devtools')
-#            devtools::install_github(github_packages, quiet = TRUE)
-#            install.packages(cran_packages, quiet = TRUE)
-#        } else {
-#            install.packages(cran_packages, quiet = TRUE)
-#        }
-#    },error = function(cond) { message(cond)})"
-#    
-#    install_packages_content <- readChar("install_packages.R",
-#                                         file.info("install_packages.R")$size)
-#    expect_equal(install_packages_content, expected_script)
-#    unlink("install_packages.R")
-# })
+
+test_that("get_packages works", {
+    packages <- get_packages("..//..//")
+    standard_package <- c("dplyr")
+    standard_packages_found <- standard_package %in% packages$package_name
+    all_found <- all(standard_packages_found)
+    expect_true(all_found)
+})
+
+
+test_that("generate_install_file works", {
+
+    needed_packages <- get_packages(
+        project_path = "..//..//",
+        ".R")
+   generate_install_file(needed_packages)
+   
+   nchar_expected <- nchar(paste0("cran_packages <- c('lubridate','dplyr'," ,
+                                  "'rex','rappdirs','devtools')\n"))
+   
+   install_packages_content <- readLines("install_packages.R", n = 1)
+   nchar_install_packages <- nchar(install_packages_content)
+   expect_equal(nchar_expected, nchar_install_packages)
+   unlink("install_packages.R")
+})
