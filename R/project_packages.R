@@ -78,12 +78,12 @@ get_file_text <- function(project_path, include_pattern, exclude_pattern) {
 get_loaded_packages <- function() {
     
     # get the names of the packages already loaded in the current session
-    packages <- dplyr::data_frame(
+    packages <- tibble::tibble(
         package_name = names(utils::sessionInfo()$loadedOnly), 
         stringsAsFactors = FALSE) %>%
         dplyr::mutate(requested_by = "loaded")
     if (nrow(packages) == 0) {
-        packages <- dplyr::data_frame(
+        packages <- tibble::tibble(
             package_name = character(),
             requested_by = character())
         add_packages_info(packages)
@@ -105,13 +105,13 @@ get_referenced_packages <- function(
         code_lines, regex_pattern) %>% 
         purrr::discard(~length(.) == 0) %>%
         unlist(use.names = FALSE) %>%
-        dplyr::as_data_frame() %>%
+        tibble::as_tibble() %>%
         dplyr::mutate(value = gsub('::$', '', value), 
                       requested_by  = "reference") %>%
         dplyr::rename(package_name = value) %>%
         dplyr::distinct(package_name, .keep_all = TRUE)
     if (nrow(referenced_packages) == 0) {
-        referenced_packages <- dplyr::data_frame(
+        referenced_packages <- tibble::tibble(
             package_name = character(),
             requested_by = character())
         add_packages_info(referenced_packages)
@@ -132,7 +132,7 @@ get_library_packages <- function(
         code_lines, regex_pattern_single) %>% 
         purrr::discard(~length(.) == 0) %>%
         unlist(use.names = FALSE) %>% 
-        dplyr::as_data_frame()
+        tibble::as_tibble()
     
     # create a data frame with multiple packages
     # loaded with a single "library" call
@@ -143,16 +143,17 @@ get_library_packages <- function(
         strsplit(",") %>%
         purrr::discard(~length(.) == 0) %>%
         unlist(use.names = FALSE) %>%
-        dplyr::as_data_frame()
+        tibble::as_tibble()
     
     # bind the two data frames 
     all_library_packages <- single_packages %>%
         dplyr::bind_rows(multiple_packages)
     
     if (nrow(all_library_packages) == 0) {
-        all_library_packages <- dplyr::data_frame(
+        all_library_packages <- tibble::tibble(
             package_name = character(),
-            requested_by = character())
+            requested_by = character()
+        )
         add_packages_info(all_library_packages)
     } else {
         # rename columns, add requested_by column, select distinct rows taking 
@@ -177,7 +178,7 @@ get_required_packages <- function(
         code_lines, regex_pattern_single) %>% 
         purrr::discard(~length(.) == 0) %>%
         unlist(use.names = FALSE) %>% 
-        dplyr::as_data_frame()
+        tibble::as_tibble()
     
     # create a data frame with multiple packages
     # loaded with a single "require" call
@@ -188,16 +189,17 @@ get_required_packages <- function(
         strsplit(",") %>%
         purrr::discard(~length(.) == 0) %>%
         unlist(use.names = FALSE) %>%
-        dplyr::as_data_frame()
+        dplyr::as_tibble()
     
     # bind the two data frames 
     all_required_packages <- single_packages %>%
         dplyr::bind_rows(multiple_packages)
     
     if (nrow(all_required_packages) == 0) {
-        all_required_packages <- dplyr::data_frame(
+        all_required_packages <- tibble::tibble(
             package_name = character(),
-            requested_by = character())
+            requested_by = character()
+        )
         add_packages_info(all_required_packages)
     } else {
         # rename columns, add requested_by column, select distinct rows taking 
@@ -228,14 +230,15 @@ get_description_packages <- function(
     
     desc_packages <- desc_packages[!grepl("^R [(]", desc_packages)]
     desc_packages <- desc_packages %>%
-        dplyr::as_data_frame() %>%
+        tibble::as_tibble() %>%
         dplyr::mutate(requested_by  = "description") %>%
         dplyr::rename(package_name = value) %>%
         dplyr::distinct(package_name, .keep_all = TRUE)
     if (nrow(desc_packages) == 0) {
-        desc_packages <- dplyr::data_frame(
+        desc_packages <- tibble::tibble(
             package_name = character(),
-            requested_by = character())
+            requested_by = character()
+        )
         add_packages_info(desc_packages)
     } else {
     add_packages_info(desc_packages)
@@ -301,12 +304,14 @@ get_packages <- function(
     exclude_pattern = 'tests|^_', 
     package_options = c('library', 'required', 'referenced', 'description')) {
     
-    packages <- dplyr::data_frame(package_name = character(),
-                                  requested_by = character(),
-                                  is_base = logical(),
-                                  source = character(),
-                                  version = character(),
-                                  is_installed = logical())
+    packages <- tibble::tibble(
+        package_name = character(),
+        requested_by = character(),
+        is_base = logical(),
+        source = character(),
+        version = character(),
+        is_installed = logical()
+    )
     
     if ("library" %in% package_options) {
         packages <- packages %>% 
