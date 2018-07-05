@@ -435,12 +435,10 @@ generate_install_file <- function(packages_df,
             vector_github_packages,
             "
 tryCatch({
+    install.packages(cran_packages, quiet = TRUE)
     if (!identical(github_packages, c(''))) {
         install.packages('devtools', quiet = TRUE)
-        install.packages(cran_packages, quiet = TRUE)
         devtools::install_github(github_packages, quiet = TRUE)
-    } else {
-        install.packages(cran_packages, quiet = TRUE)
     }
 }, error = function(cond) {message(cond)})", sep = "")  
         
