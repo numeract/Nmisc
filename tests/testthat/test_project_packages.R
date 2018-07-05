@@ -1,6 +1,5 @@
 context("Testing project_packages.R")
 
-skip('')
 
 test_that("add_packages_info works", {
     packages_df <- dplyr::data_frame(
@@ -16,6 +15,7 @@ test_that("add_packages_info works", {
         version = "0.7.6", 
         is_installed = TRUE
     )
+    expect_equal(packages_info[-5], expected_df[-5])
 })
 
 
@@ -99,8 +99,14 @@ test_that("get_required_packages returns the same output", {
 
 
 test_that("get_description_packages returns the same output", {
+    file_path <- "../../DESCRIPTION"
+    if (!file.exists(file_path)) {
+        file_path <- "../../Nmisc/DESCRIPTION"
+        stopifnot(file.exists(file_path))
+    }
+    
     description_packages <- get_description_packages(
-        description_path = "..//..//DESCRIPTION",
+        description_path = file_path,
         options = c("Depends"))
     expected_output <-  dplyr::data_frame(
         package_name = character(),
