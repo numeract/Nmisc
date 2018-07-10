@@ -4,14 +4,14 @@ if (getRversion() >= "2.15.1")
 
 
 # TODO: best practice: use singular instead of plural whare it makes sense
-# add_packages_info -> add_package_info
-# packages_df -> package_df
+# add_package_info -> add_package_info
+# package_df -> package_df
 # etc.
-add_packages_info <- function(packages_df) {
+add_package_info <- function(package_df) {
     
-    if (nrow(packages_df) == 0L){
-        packages_df <- 
-            packages_df %>%
+    if (nrow(package_df) == 0L){
+        package_df <- 
+            package_df %>%
             tibble::add_column(
                 is_base = logical(),
                 source = character(),
@@ -19,40 +19,40 @@ add_packages_info <- function(packages_df) {
                 is_installed = logical()
             )
     } else {
-        packages_df$is_base <- NA
-        packages_df$source <- NA_character_
-        packages_df$version <- NA_character_
+        package_df$is_base <- NA
+        package_df$source <- NA_character_
+        package_df$version <- NA_character_
         installed_packages <- rownames(utils::installed.packages())
-        packages_df$is_installed <- purrr::map_lgl(
-            packages_df$package_name, ~ . %in% installed_packages)
-        for (i in seq_nrow(packages_df)) {
+        package_df$is_installed <- purrr::map_lgl(
+            package_df$package_name, ~ . %in% installed_packages)
+        for (i in seq_nrow(package_df)) {
             # if the package is already installed, take information from
             # package description, otherwise look for package
             # only in CRAN repository
-            if (packages_df$is_installed[i]) {
+            if (package_df$is_installed[i]) {
                 desc <- utils::packageDescription(
-                    pkg = packages_df$package_name[i], 
+                    pkg = package_df$package_name[i], 
                     fields = c(
                         "Priority", "Version", "Repository",
                         "GithubRepo", "GithubUsername"))
                 desc <- unlist(desc)
-                packages_df$is_base[i] <- identical(desc[['Priority']], "base")
+                package_df$is_base[i] <- identical(desc[['Priority']], "base")
                 if (is.na(desc[['Repository']])) {
                     if (!is.na(desc[["GithubRepo"]])) {
-                        packages_df$source[i] <- paste0(
+                        package_df$source[i] <- paste0(
                             desc[["GithubUsername"]], "/", desc[["GithubRepo"]])
                     }  
                 } else {
-                    packages_df$source[i] <- desc[['Repository']]
+                    package_df$source[i] <- desc[['Repository']]
                 }
-                packages_df$version[i] <- desc[['Version']]
+                package_df$version[i] <- desc[['Version']]
             } else {
-                packages_df$is_base[i] <- FALSE
+                package_df$is_base[i] <- FALSE
             }
         }
     }
     
-    packages_df
+    package_df
 }
 
 
@@ -86,37 +86,37 @@ get_file_text <- function(project_path, include_pattern, exclude_pattern) {
 }
 
 
-get_loaded_packages <- function() {
+get_loaded_package <- function() {
     
-    # get the names of the packages already loaded in the current session
+    # get the names of the package already loaded in the current session
     
     nms <- names(utils::sessionInfo()$loadedOnly)
     if (length(nms) == 0L) {
-        packages <- tibble::tibble(
+        package <- tibble::tibble(
             package_name = character(),
             requested_by = character()
         )
     } else {
-        packages <- tibble::tibble(
+        package <- tibble::tibble(
             package_name = nms,
             requested_by = "loaded"
         )
     }
     
-    add_packages_info(packages)
+    add_package_info(package)
 }
 
 
-get_referenced_packages <- function(project_path, 
+get_referenced_package <- function(project_path, 
                                     include_pattern, 
                                     exclude_pattern) {
     
     code_lines <- get_file_text(project_path, include_pattern, exclude_pattern)
     
     regex_pattern <- '[_.a-zA-Z]+::'
-    # extract only the names of the packages used with "::" operator,
+    # extract only the names of the package used with "::" operator,
     # add the column requested by, select rows with distinct package names
-    referenced_packages <- 
+    referenced_package <- 
         stringr::str_extract_all(code_lines, regex_pattern) %>% 
         purrr::discard(~ length(.) == 0) %>%
         unlist(use.names = FALSE) %>%
@@ -127,35 +127,35 @@ get_referenced_packages <- function(project_path,
         ) %>%
         dplyr::rename(package_name = value) %>%
         dplyr::distinct(package_name, .keep_all = TRUE)
-    if (nrow(referenced_packages) == 0L) {
-        referenced_packages <- tibble::tibble(
+    if (nrow(referenced_package) == 0L) {
+        referenced_package <- tibble::tibble(
             package_name = character(),
             requested_by = character()
         )
     }
     
-    add_packages_info(referenced_packages)
+    add_package_info(referenced_package)
 }
 
 
-get_library_packages <- function(project_path, 
+get_library_package <- function(project_path, 
                                  include_pattern, 
                                  exclude_pattern) {
     
     code_lines <- get_file_text(project_path, include_pattern, exclude_pattern)
     
-    # create a data frame with the packages loaded individually with "library"
+    # create a data frame with the package loaded individually with "library"
     regex_pattern_single <- '(?<=library\\()([a-zA-Z1-9-_]+?)(?=\\))'
-    single_packages <- 
+    single_package <- 
         stringr::str_extract_all(code_lines, regex_pattern_single) %>% 
         purrr::discard(~ length(.) == 0) %>%
         unlist(use.names = FALSE) %>% 
         tibble::as_tibble()
     
-    # create a data frame with multiple packages
+    # create a data frame with multiple package
     # loaded with a single "library" call
     regex_pattern_multiple <- '(?<=library\\(c\\()(\\X+?)(?=\\)\\))'
-    multiple_packages <- 
+    multiple_package <- 
         stringr::str_extract_all(code_lines, regex_pattern_multiple) %>%
         unlist(use.names = FALSE) %>%
         strsplit(",") %>%
@@ -164,19 +164,19 @@ get_library_packages <- function(project_path,
         tibble::as_tibble()
     
     # bind the two data frames 
-    all_library_packages <- single_packages %>%
-        dplyr::bind_rows(multiple_packages)
+    all_library_package <- single_package %>%
+        dplyr::bind_rows(multiple_package)
     
-    if (nrow(all_library_packages) == 0) {
-        all_library_packages <- tibble::tibble(
+    if (nrow(all_library_package) == 0) {
+        all_library_package <- tibble::tibble(
             package_name = character(),
             requested_by = character()
         )
     } else {
         # rename columns, add requested_by column, select distinct rows taking 
         # into consideration "package_name" column
-        all_library_packages <-
-            all_library_packages %>%
+        all_library_package <-
+            all_library_package %>%
             dplyr::mutate(
                 package_name = value,
                 requested_by  = "library"
@@ -184,28 +184,28 @@ get_library_packages <- function(project_path,
             dplyr::distinct(package_name, .keep_all = TRUE) 
     }
     
-    add_packages_info(all_library_packages)
+    add_package_info(all_library_package)
 }
 
 
-get_required_packages <- function(project_path, 
+get_required_package <- function(project_path, 
                                   include_pattern, 
                                   exclude_pattern) {
     
     code_lines <- get_file_text(project_path, include_pattern, exclude_pattern)
     
-    # create a data frame with the packages loaded individually with "require"
+    # create a data frame with the package loaded individually with "require"
     regex_pattern_single <- '(?<=require\\()([a-zA-Z1-9-_]+?)(?=\\))'
-    single_packages <- stringr::str_extract_all(
+    single_package <- stringr::str_extract_all(
         code_lines, regex_pattern_single) %>% 
         purrr::discard(~ length(.) == 0) %>%
         unlist(use.names = FALSE) %>% 
         tibble::as_tibble()
     
-    # create a data frame with multiple packages
+    # create a data frame with multiple package
     # loaded with a single "require" call
     regex_pattern_multiple <- '(?<=require\\(c\\()(\\X+?)(?=\\)\\))'
-    multiple_packages <- stringr::str_extract_all(
+    multiple_package <- stringr::str_extract_all(
         code_lines, regex_pattern_multiple) %>%
         unlist(use.names = FALSE) %>%
         strsplit(",") %>%
@@ -214,20 +214,20 @@ get_required_packages <- function(project_path,
         dplyr::as_tibble()
     
     # bind the two data frames 
-    all_required_packages <- 
-        single_packages %>%
-        dplyr::bind_rows(multiple_packages)
+    all_required_package <- 
+        single_package %>%
+        dplyr::bind_rows(multiple_package)
     
-    if (nrow(all_required_packages) == 0) {
-        all_required_packages <- tibble::tibble(
+    if (nrow(all_required_package) == 0) {
+        all_required_package <- tibble::tibble(
             package_name = character(),
             requested_by = character()
         )
     } else {
         # rename columns, add requested_by column, select distinct rows taking 
         # into consideration "package_name" column
-        all_required_packages <- 
-            all_required_packages %>%
+        all_required_package <- 
+            all_required_package %>%
             dplyr::mutate(
                 package_name = value,
                 requested_by = "require"
@@ -235,11 +235,11 @@ get_required_packages <- function(project_path,
             dplyr::distinct(package_name, .keep_all = TRUE)
     }
     
-    add_packages_info(all_required_packages)
+    add_package_info(all_required_package)
 }
 
 
-get_description_packages <- function(description_path = "DESCRIPTION", 
+get_description_package <- function(description_path = "DESCRIPTION", 
                                      options = c("Depends", "Imports")) {
     
     if (!file.exists(description_path)) {
@@ -248,7 +248,7 @@ get_description_packages <- function(description_path = "DESCRIPTION",
     
     description_data <- read.dcf(description_path)
     col_names <- intersect(colnames(description_data), options)
-    desc_packages <- 
+    desc_package <- 
         description_data[, col_names, drop = FALSE] %>%
         gsub(pattern = "\n", replacement = "") %>%
         strsplit(",") %>%
@@ -256,30 +256,30 @@ get_description_packages <- function(description_path = "DESCRIPTION",
         stats::setNames(NULL) 
     
     # TODO: use a purrr functions? explain WHY (why do we care about R [(])
-    # TODO: is not a good practice to have the same name for diff data types (desc_packages)
-    desc_packages <- desc_packages[!grepl("^R [(]", desc_packages)]
+    # TODO: is not a good practice to have the same name for diff data types (desc_package)
+    desc_package <- desc_package[!grepl("^R [(]", desc_package)]
     
-    desc_packages <- 
-        tibble::as_tibble(list(package_name = desc_packages)) %>%
+    desc_package <- 
+        tibble::as_tibble(list(package_name = desc_package)) %>%
         dplyr::mutate(requested_by = "description") %>%
         dplyr::distinct(package_name, .keep_all = TRUE)
     # TODO: here and in above functions
     # TODO: at the end of the pipe the df should be of the right type
     # the zero rows case should be addressed before any tibble() calls, not as an afterthought
     # preferably, the pipeline works for zero rows as well
-    if (nrow(desc_packages) == 0) {
-        desc_packages <- tibble::tibble(
+    if (nrow(desc_package) == 0) {
+        desc_package <- tibble::tibble(
             package_name = character(),
             requested_by = character()
         )
     }
     
-    add_packages_info(desc_packages)
+    add_package_info(desc_package)
 }
 
 
 # check if a package is already installed as a dependency by comparing the
-# packages that depend on it with the list of packages to be installed
+# package that depend on it with the list of package to be installed
 installed_as_dependency <- function(package_name, package_list) {
     
     # TODO: package_list is a list or a vector?  
@@ -292,36 +292,36 @@ installed_as_dependency <- function(package_name, package_list) {
 }
 
 
-#' Get information about the packages used in the project
+#' Get information about the package used in the project
 #' 
 #' @description
 #' 
 #'  the function returns a data frame containing information regarding 
-#'  packages that are loaded with \code{library()}, \code{require()}, used
-#'  with \code{::} operator and/or already loaded packages
+#'  package that are loaded with \code{library()}, \code{require()}, used
+#'  with \code{::} operator and/or already loaded package
 #'  
 #' @param project_path A string representing the path of the project root 
 #' in which the function will look recursively in order to find files that
 #' fit \code{include_pattern}
 #' @param include_pattern A string representing a regex that matches 
-#' project files in which to look for packages. By default, \code{get_packages}
+#' project files in which to look for package. By default, \code{get_packages}
 #' includes all .R files in the current project
 #' @param exclude_pattern A string representing a regex that matches 
-#' project files in which not to look for packages. By default, 
+#' project files in which not to look for package. By default, 
 #' \code{get_packages} excludes all files found in "tests" folder.
 #' @param package_options A character vector that represents the method through
-#' which packages are loaded or referenced. The options are: \code{libray} for 
-#' packages loaded using \code{libray()}, \code{required} for 
-#' packages loaded using \code{require()}, \code{referenced} for 
-#' packages referenced using \code{::} operator, \code{loaded}, used to 
-#' include packages already loaded in the current session and \code{description}
-#' used to include packages mentioned in \code{DESCRIPTION} file
+#' which package are loaded or referenced. The options are: \code{libray} for 
+#' package loaded using \code{libray()}, \code{required} for 
+#' package loaded using \code{require()}, \code{referenced} for 
+#' package referenced using \code{::} operator, \code{loaded}, used to 
+#' include package already loaded in the current session and \code{description}
+#' used to include package mentioned in \code{DESCRIPTION} file
 #' 
 #' @return A data frame containing package information.
 #' 
 #' @examples
 #' \dontrun{
-#' packages_df <- get_packages(
+#' package_df <- get_packages(
 #'     project_path = '.',
 #'     include_pattern = '\\.R(md)?$', 
 #'     exclude_pattern = '', 
@@ -338,7 +338,7 @@ get_packages <- function(
     # TODO: use " instead of '
     # TODO: @return describe each column in the output df (e.g. ce inseamna source = NA?)
     
-    packages <- tibble::tibble(
+    package <- tibble::tibble(
         package_name = character(),
         requested_by = character(),
         is_base = logical(),
@@ -348,28 +348,28 @@ get_packages <- function(
     )
     
     if ("library" %in% package_options) {
-        packages <- 
-            packages %>% 
-            dplyr::bind_rows(get_library_packages(
+        package <- 
+            package %>% 
+            dplyr::bind_rows(get_library_package(
                 project_path, include_pattern, exclude_pattern))
     }
     if ("required" %in% package_options) {
-        packages <- 
-            packages %>% 
-            dplyr::bind_rows(get_required_packages(
+        package <- 
+            package %>% 
+            dplyr::bind_rows(get_required_package(
                 project_path, include_pattern, exclude_pattern))
     }
     if ("referenced" %in% package_options) {
-        packages <- 
-            packages %>% 
-            dplyr::bind_rows(get_referenced_packages(
+        package <- 
+            package %>% 
+            dplyr::bind_rows(get_referenced_package(
                 project_path, include_pattern, exclude_pattern))
     }
     
     if ("loaded" %in% package_options) {
-        packages <- 
-            packages %>% 
-            dplyr::bind_rows(get_loaded_packages())
+        package <- 
+            package %>% 
+            dplyr::bind_rows(get_loaded_package())
     }
     
     if ("description" %in% package_options) {
@@ -378,19 +378,19 @@ get_packages <- function(
         } else {
             description_path <- "DESCRIPTION"
         }
-        packages <- get_description_packages(description_path) %>%
-            dplyr::union(packages) %>%
+        package <- get_description_package(description_path) %>%
+            dplyr::union(package) %>%
             dplyr::distinct(package_name, .keep_all = TRUE)
     }
     
     # keep distinct rows taking into account "package_name" and "version" cols
-    if (nrow(packages) != 0) {
-        packages <- 
-            packages %>%
+    if (nrow(package) != 0) {
+        package <- 
+            package %>%
             dplyr::distinct(package_name, version, .keep_all = TRUE)
     }
     
-    packages
+    package
 }
 
 
@@ -401,74 +401,74 @@ get_packages <- function(
 #' 
 #'  the function takes the output of \code{get_packages} and
 #'  writes in a file the commands needed to install
-#'  packages used throughout the project that are not already installed.
+#'  package used throughout the project that are not already installed.
 #'   
-#' @param packages_df A data frame obtained with \code{get_packages} that 
+#' @param package_df A data frame obtained with \code{get_packages} that 
 #' contains information regarding the name, version and source of the package.
-#' @param include_core_packages Logical, whether or not to include in the 
-#' generated install file packages which come with R by default
+#' @param include_core_package Logical, whether or not to include in the 
+#' generated install file package which come with R by default
 #' @param file Tle name of the file to be created.
 #' 
 #' @return Nothing
 #' 
 #' @examples
 #' \dontrun{
-#' packages_df <- get_packages(package_options = c("library"))
-#' generate_install_file(packages_df)
+#' package_df <- get_packages(package_options = c("library"))
+#' generate_install_file(package_df)
 #' }
 #' 
 #' @seealso \code{\link{get_packages}}
 #' 
 #' @export
-generate_install_file <- function(packages_df, 
-                                  include_core_packages = FALSE, 
-                                  file = "install_packages.R") {
+generate_install_file <- function(package_df, 
+                                  include_core_package = FALSE, 
+                                  file = "install_package.R") {
     
-    packages_df <- packages_df[!(packages_df$package_name == "base"), ]
+    package_df <- package_df[!(package_df$package_name == "base"), ]
     is_dependency <- purrr::map_lgl(
-        packages_df$package_name,
-        ~ installed_as_dependency(., packages_df$package_name))
+        package_df$package_name,
+        ~ installed_as_dependency(., package_df$package_name))
     
-    packages_df <- packages_df[!is_dependency, ]
+    package_df <- package_df[!is_dependency, ]
     
-    if (!include_core_packages) {
-        packages_df <- dplyr::filter(packages_df, !is_base)
+    if (!include_core_package) {
+        package_df <- dplyr::filter(package_df, !is_base)
     }
     
-    if (nrow(packages_df) == 0) {
+    if (nrow(package_df) == 0) {
         # TODO: wrong message: no package to install
-        print("All necessary packages are already installed!")
+        print("All necessary package are already installed!")
     } else {
-        packages_df_cran <- 
-            packages_df %>%
+        package_df_cran <- 
+            package_df %>%
             dplyr::filter(source == "CRAN")
         # TODO: all NAs are from github? what if it is a local package?
-        # TODO: error for packages without source?
+        # TODO: error for package without source?
         # TODO: print message if write sucessful
-        packages_df_github <- 
-            packages_df %>%
+        package_df_github <- 
+            package_df %>%
             dplyr::filter(is.na(source))
-        cran_packages <- paste(
-            packages_df_cran$package_name, collapse = "','")
-        github_packages <- paste(
-            packages_df_github$package_name, collapse = "','")
-        vector_cran_packages <- paste0(
-            "cran_packages <- ","c('", cran_packages, "') \n")
-        vector_github_packages <-  paste0(
-            "github_packages <- ", "c('", github_packages, "') \n")
+        cran_package <- paste(
+            package_df_cran$package_name, collapse = "','")
+        github_package <- paste(
+            package_df_github$package_name, collapse = "','")
+        vector_cran_package <- paste0(
+            "cran_package <- ","c('", cran_package, "') \n")
+        vector_github_package <-  paste0(
+            "github_package <- ", "c('", github_package, "') \n")
         
-        # if there are github packages that are not already installed
+        # if there are github package that are not already installed
         # first install 'devtools' package and then use it to 
-        # install other packages
+        # install other package
         install_all_statement <- paste(
-            vector_cran_packages,
-            vector_github_packages,
+            vector_cran_package,
+            vector_github_package,
             "
 tryCatch({
-    install.packages(cran_packages, quiet = TRUE)
-    if (!identical(github_packages, c(''))) {
-        install.packages('devtools', quiet = TRUE)
-        devtools::install_github(github_packages, quiet = TRUE)
+    install.package(cran_package, quiet = TRUE)
+    if (!identical(github_package, c(''))) {
+        install.package('devtools', quiet = TRUE)
+        devtools::install_github(github_package, quiet = TRUE)
     }
 }, error = function(cond) {message(cond)})", sep = "")  
         
