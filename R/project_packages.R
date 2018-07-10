@@ -221,8 +221,10 @@ get_description_package <- function(description_path = "DESCRIPTION",
     desc_package <- desc_package[!grepl("^R [(]", desc_package)]
     if (length(desc_package) != 0) {
         desc_package_df <- 
-            tibble::as_tibble(list(package_name = desc_package)) %>%
-            dplyr::mutate(requested_by = "description") %>%
+            desc_package %>%
+            tibble::as_tibble() %>%
+            dplyr::mutate(requested_by = "description",
+                          package_name = .data$value) %>%
             dplyr::distinct(.data$package_name, .keep_all = TRUE)
         
     } else {
