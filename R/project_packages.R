@@ -246,26 +246,22 @@ get_description_package <- function(description_path = "DESCRIPTION",
         unlist() %>%
         stats::setNames(NULL) 
     
-    # TODO: use a purrr functions? explain WHY (why do we care about R [(])
-    # TODO: is not a good practice to have the same name for diff data types (desc_package)
+    # eliminate dependency on specified R version
+    # keep only package dependencies in description
     desc_package <- desc_package[!grepl("^R [(]", desc_package)]
-    
-    desc_package <- 
-        tibble::as_tibble(list(package_name = desc_package)) %>%
-        dplyr::mutate(requested_by = "description") %>%
-        dplyr::distinct(.data$package_name, .keep_all = TRUE)
-    # TODO: here and in above functions
-    # TODO: at the end of the pipe the df should be of the right type
-    # the zero rows case should be addressed before any tibble() calls, not as an afterthought
-    # preferably, the pipeline works for zero rows as well
-    if (nrow(desc_package) == 0) {
-        desc_package <- tibble::tibble(
+    if (length(desc_package) != 0) {
+        desc_package_df <- 
+            tibble::as_tibble(list(package_name = desc_package)) %>%
+            dplyr::mutate(requested_by = "description") %>%
+            dplyr::distinct(.data$package_name, .keep_all = TRUE)
+        
+    } else {
+        desc_package_df <- tibble::tibble(
             package_name = character(),
             requested_by = character()
         )
     }
-    
-    add_package_info(desc_package)
+    add_package_info(desc_package_df)
 }
 
 
@@ -437,10 +433,7 @@ generate_install_file <- function(package_df,
         package_df_cran <- 
             package_df %>%
             dplyr::filter(source == "CRAN")
-        # TODO: all NAs are from github? what if it is a local package?
-        # TODO: error for package without source?
-        # TODO: print message if write sucessful
-      
+
         package_df_github <- 
             package_df %>%
             dplyr::filter(stringr::str_detect(source, "[\\w\\.]+/"))
