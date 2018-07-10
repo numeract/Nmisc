@@ -258,8 +258,9 @@ get_description_packages <- function(description_path = "DESCRIPTION",
     # TODO: use a purrr functions? explain WHY (why do we care about R [(])
     # TODO: is not a good practice to have the same name for diff data types (desc_packages)
     desc_packages <- desc_packages[!grepl("^R [(]", desc_packages)]
+    
     desc_packages <- 
-        tibble::as_tibble(package_name = desc_packages) %>%
+        tibble::as_tibble(list(package_name = desc_packages)) %>%
         dplyr::mutate(requested_by = "description") %>%
         dplyr::distinct(package_name, .keep_all = TRUE)
     # TODO: here and in above functions
