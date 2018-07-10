@@ -2,7 +2,7 @@
 % Please edit documentation in R/project_packages.R
 \name{get_packages}
 \alias{get_packages}
-\title{Get information about the packages used in the project}
+\title{Get information about the package used in the project}
 \usage{
 get_packages(project_path = ".", include_pattern = "\\\\.R(md)?$",
   exclude_pattern = "tests|^_", package_options = c("library", "required",
@@ -14,36 +14,45 @@ in which the function will look recursively in order to find files that
 fit \code{include_pattern}}
 
 \item{include_pattern}{A string representing a regex that matches 
-project files in which to look for packages. By default, \code{get_packages}
+project files in which to look for package. By default, \code{get_packages}
 includes all .R files in the current project}
 
 \item{exclude_pattern}{A string representing a regex that matches 
-project files in which not to look for packages. By default, 
+project files in which not to look for package. By default, 
 \code{get_packages} excludes all files found in "tests" folder.}
 
 \item{package_options}{A character vector that represents the method through
-which packages are loaded or referenced. The options are: \code{libray} for 
-packages loaded using  \code{libray()}, \code{required} for 
-packages loaded using  \code{require()}, \code{referenced} for 
-packages referenced using  \code{::} operator, \code{loaded}, used to 
-include packages already loaded in the current session and \code{description}
-used to include packages mentioned in \code{DESCRIPTION} file}
+which package are loaded or referenced. The options are: \code{libray} for 
+package loaded using \code{libray()}, \code{required} for 
+package loaded using \code{require()}, \code{referenced} for 
+package referenced using \code{::} operator, \code{loaded}, used to 
+include package already loaded in the current session and \code{description}
+used to include package mentioned in \code{DESCRIPTION} file}
 }
 \value{
-A data frame containing package information.
+A data frame containing package information. 
+Column \code{package_name} contains the name of the package, column 
+\code{requested_by} contains the name of the context in which the package
+was loaded (with \code{library} or \code{require}) or called (by reference).
+Column \code{is_base} is logical, TRUE meaning that the package is part of
+the core R packages installed by default with R. 
+Column \code{source} specifies the source from which the package was 
+installed. Colunmn \code{version} specifies the version of the package, and
+the column \code{is_installed} contains a logical determining whether or not
+the package is installed on the machine from which the function is called.
 }
 \description{
 the function returns a data frame containing information regarding 
- packages that are loaded with \code{library()}, \code{require()}, used
- with \code{::} operator and/or already loaded packages
+ package that are loaded with \code{library()}, \code{require()}, used
+ with \code{::} operator and/or already loaded package
 }
 \examples{
 \dontrun{
-packages_df <- get_packages(
-                project_path = '.',
-               include_pattern = '\\\\.R(md)?$', 
-               exclude_pattern = '', 
-               package_options = c('referenced'))
+package_df <- get_packages(
+    project_path = '.',
+    include_pattern = '\\\\.R(md)?$', 
+    exclude_pattern = '', 
+    package_options = c('referenced'))
 }
 
 }

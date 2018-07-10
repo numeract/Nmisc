@@ -5,27 +5,30 @@
 \title{Takes a data frame containing package information and generates an install
 file based on it}
 \usage{
-generate_install_file(packages_df, include_core_packages = FALSE)
+generate_install_file(package_df, include_core_package = FALSE,
+  file = "install_package.R")
 }
 \arguments{
-\item{packages_df}{A data frame obtained with \code{get_packages} that 
+\item{package_df}{A data frame obtained with \code{get_packages} that 
 contains information regarding the name, version and source of the package.}
 
-\item{include_core_packages}{Logical, whether or not to include in the 
-generated install file packages which come with R by default}
+\item{include_core_package}{Logical, whether or not to include in the 
+generated install file package which come with R by default}
+
+\item{file}{Tle name of the file to be created.}
 }
 \value{
 Nothing
 }
 \description{
 the function takes the output of \code{get_packages} and
- writes in a file the commands needed in order to install
- packages used through the project that are not already installed.
+ writes in a file the commands needed to install
+ package used throughout the project that are not already installed.
 }
 \examples{
 \dontrun{
-packages_df <- get_packages(package_options = c("library"))
-generate_install_file(packages_df)
+package_df <- get_packages(package_options = c("library"))
+generate_install_file(package_df)
 }
 
 }

@@ -1,8 +1,3 @@
-# quiets concerns of R CMD check
-if (getRversion() >= "2.15.1")
-    utils::globalVariables(c("value", "package_name", "is_base"))
-
-
 add_package_info <- function(package_df) {
     
     if (nrow(package_df) == 0L) {
@@ -103,34 +98,34 @@ get_loaded_package <- function() {
 }
 
 
-get_referenced_package <- function(project_path, 
-                                   include_pattern, 
-                                   exclude_pattern) {
+get_referenced_package <- function(
+    project_path, include_pattern, exclude_pattern) {
     
     code_lines <- get_file_text(project_path, include_pattern, exclude_pattern)
     
     regex_pattern <- '[_.a-zA-Z]+::'
     # extract only the names of the package used with "::" operator,
     # add the column requested by, select rows with distinct package names
-    referenced_package <- 
-        stringr::str_extract_all(code_lines, regex_pattern) %>% 
-        purrr::discard(~ length(.) == 0) %>%
+    referenced_package <- stringr::str_extract_all(
+        code_lines, regex_pattern) %>% 
+        purrr::discard(~length(.) == 0) %>%
         unlist(use.names = FALSE) %>%
-        tibble::as_tibble() %>%
-        dplyr::mutate(
-            value = gsub('::$', '', value), 
-            requested_by = "reference"
-        ) %>%
-        dplyr::rename(package_name = value) %>%
-        dplyr::distinct(package_name, .keep_all = TRUE)
-    if (nrow(referenced_package) == 0L) {
-        referenced_package <- tibble::tibble(
-            package_name = character(),
-            requested_by = character()
-        )
-    }
+        tibble::as.tibble()
     
-    add_package_info(referenced_package)
+    if (nrow(referenced_package) != 0) {
+        referenced_package <- referenced_package %>%
+            dplyr::mutate(value = gsub('::$', '', .data$value), 
+                          requested_by  = "reference") %>%
+            dplyr::rename(package_name = .data$value) %>%
+            dplyr::distinct(.data$package_name, .keep_all = TRUE)
+        
+        add_package_info(referenced_package)
+    } else {
+        referenced_package <- dplyr::data_frame(
+            package_name = character(),
+            requested_by = character())
+        add_package_info(referenced_package)
+    }
 }
 
 
@@ -174,10 +169,10 @@ get_library_package <- function(project_path,
         all_library_package <-
             all_library_package %>%
             dplyr::mutate(
-                package_name = value,
+                package_name = .data$value,
                 requested_by  = "library"
             ) %>%
-            dplyr::distinct(package_name, .keep_all = TRUE) 
+            dplyr::distinct(.data$package_name, .keep_all = TRUE) 
     }
     
     add_package_info(all_library_package)
@@ -225,10 +220,10 @@ get_required_package <- function(project_path,
         all_required_package <- 
             all_required_package %>%
             dplyr::mutate(
-                package_name = value,
+                package_name = .data$value,
                 requested_by = "require"
             ) %>%
-            dplyr::distinct(package_name, .keep_all = TRUE)
+            dplyr::distinct(.data$package_name, .keep_all = TRUE)
     }
     
     add_package_info(all_required_package)
@@ -258,7 +253,7 @@ get_description_package <- function(description_path = "DESCRIPTION",
     desc_package <- 
         tibble::as_tibble(list(package_name = desc_package)) %>%
         dplyr::mutate(requested_by = "description") %>%
-        dplyr::distinct(package_name, .keep_all = TRUE)
+        dplyr::distinct(.data$package_name, .keep_all = TRUE)
     # TODO: here and in above functions
     # TODO: at the end of the pipe the df should be of the right type
     # the zero rows case should be addressed before any tibble() calls, not as an afterthought
@@ -381,14 +376,14 @@ get_packages <- function(
         }
         package <- get_description_package(description_path) %>%
             dplyr::union(package) %>%
-            dplyr::distinct(package_name, .keep_all = TRUE)
+            dplyr::distinct(.data$package_name, .keep_all = TRUE)
     }
     
     # keep distinct rows taking into account "package_name" and "version" cols
     if (nrow(package) != 0) {
         package <- 
             package %>%
-            dplyr::distinct(package_name, version, .keep_all = TRUE)
+            dplyr::distinct(.data$package_name, version, .keep_all = TRUE)
     }
     
     package
@@ -433,7 +428,7 @@ generate_install_file <- function(package_df,
     package_df <- package_df[!is_dependency, ]
     
     if (!include_core_package) {
-        package_df <- dplyr::filter(package_df, !is_base)
+        package_df <- dplyr::filter(package_df, !.data$is_base)
     }
     
     if (nrow(package_df) == 0) {
