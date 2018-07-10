@@ -187,46 +187,30 @@ get_required_package <- function(project_path,
     
     # create a data frame with the package loaded individually with "require"
     regex_pattern_single <- '(?<=require\\()([a-zA-Z1-9-_]+?)(?=\\))'
-    single_package <- stringr::str_extract_all(
+    required_package_lst <- stringr::str_extract_all(
         code_lines, regex_pattern_single) %>% 
         purrr::discard(~ length(.) == 0) %>%
-        unlist(use.names = FALSE) %>% 
-        tibble::as_tibble()
+        unlist(use.names = FALSE) 
     
-    # create a data frame with multiple package
-    # loaded with a single "require" call
-    regex_pattern_multiple <- '(?<=require\\(c\\()(\\X+?)(?=\\)\\))'
-    multiple_package <- stringr::str_extract_all(
-        code_lines, regex_pattern_multiple) %>%
-        unlist(use.names = FALSE) %>%
-        strsplit(",") %>%
-        purrr::discard(~ length(.) == 0) %>%
-        unlist(use.names = FALSE) %>%
-        dplyr::as_tibble()
-    
-    # bind the two data frames 
-    all_required_package <- 
-        single_package %>%
-        dplyr::bind_rows(multiple_package)
-    
-    if (nrow(all_required_package) == 0) {
-        all_required_package <- tibble::tibble(
-            package_name = character(),
-            requested_by = character()
-        )
-    } else {
+    if (length(required_package_lst) != 0) {
         # rename columns, add requested_by column, select distinct rows taking 
         # into consideration "package_name" column
-        all_required_package <- 
-            all_required_package %>%
+        required_package_df <- 
+            required_package_lst %>%
+            tibble::as_tibble() %>%
             dplyr::mutate(
                 package_name = .data$value,
                 requested_by = "require"
             ) %>%
             dplyr::distinct(.data$package_name, .keep_all = TRUE)
+        
+    } else {
+        required_package_df <- tibble::tibble(
+            package_name = character(),
+            requested_by = character()
+        )
     }
-    
-    add_package_info(all_required_package)
+    add_package_info(required_package_df)
 }
 
 
