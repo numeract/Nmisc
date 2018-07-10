@@ -276,13 +276,11 @@ get_description_package <- function(description_path = "DESCRIPTION",
 
 # check if a package is already installed as a dependency by comparing the
 # package that depend on it with the list of package to be installed
-installed_as_dependency <- function(package_name, package_list) {
+installed_as_dependency <- function(package_name, package_vector) {
     
-    # TODO: package_list is a list or a vector?  
-    # TODO _list is not a good data type, do you mean _lst? see purrr::map_
     depend_on_package <- tools::dependsOnPkgs(package_name)
     common_deps_length <- length(
-        intersect(depend_on_package, package_list))
+        intersect(depend_on_package, package_vector))
     
     common_deps_length > 0
 }
@@ -447,9 +445,10 @@ generate_install_file <- function(package_df,
         # TODO: all NAs are from github? what if it is a local package?
         # TODO: error for package without source?
         # TODO: print message if write sucessful
+      
         package_df_github <- 
             package_df %>%
-            dplyr::filter(is.na(source))
+            dplyr::filter(stringr::str_detect(source, "[\\w\\.]+/"))
         cran_package <- paste(
             package_df_cran$package_name, collapse = "','")
         github_package <- paste(
@@ -475,5 +474,7 @@ tryCatch({
 }, error = function(cond) {message(cond)})", sep = "")  
         
         write(install_all_statement, file) 
+        cat("Succesfully created install_packages.R file")
     }
+  
 }
