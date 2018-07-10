@@ -3,13 +3,9 @@ if (getRversion() >= "2.15.1")
     utils::globalVariables(c("value", "package_name", "is_base"))
 
 
-# TODO: best practice: use singular instead of plural whare it makes sense
-# add_package_info -> add_package_info
-# package_df -> package_df
-# etc.
 add_package_info <- function(package_df) {
     
-    if (nrow(package_df) == 0L){
+    if (nrow(package_df) == 0L) {
         package_df <- 
             package_df %>%
             tibble::add_column(
@@ -108,8 +104,8 @@ get_loaded_package <- function() {
 
 
 get_referenced_package <- function(project_path, 
-                                    include_pattern, 
-                                    exclude_pattern) {
+                                   include_pattern, 
+                                   exclude_pattern) {
     
     code_lines <- get_file_text(project_path, include_pattern, exclude_pattern)
     
@@ -139,8 +135,8 @@ get_referenced_package <- function(project_path,
 
 
 get_library_package <- function(project_path, 
-                                 include_pattern, 
-                                 exclude_pattern) {
+                                include_pattern, 
+                                exclude_pattern) {
     
     code_lines <- get_file_text(project_path, include_pattern, exclude_pattern)
     
@@ -189,8 +185,8 @@ get_library_package <- function(project_path,
 
 
 get_required_package <- function(project_path, 
-                                  include_pattern, 
-                                  exclude_pattern) {
+                                 include_pattern, 
+                                 exclude_pattern) {
     
     code_lines <- get_file_text(project_path, include_pattern, exclude_pattern)
     
