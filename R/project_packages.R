@@ -137,45 +137,30 @@ get_library_package <- function(project_path,
     
     # create a data frame with the package loaded individually with "library"
     regex_pattern_single <- '(?<=library\\()([a-zA-Z1-9-_]+?)(?=\\))'
-    single_package <- 
+    library_package_lst <- 
         stringr::str_extract_all(code_lines, regex_pattern_single) %>% 
         purrr::discard(~ length(.) == 0) %>%
-        unlist(use.names = FALSE) %>% 
-        tibble::as_tibble()
+        unlist(use.names = FALSE) 
     
-    # create a data frame with multiple package
-    # loaded with a single "library" call
-    regex_pattern_multiple <- '(?<=library\\(c\\()(\\X+?)(?=\\)\\))'
-    multiple_package <- 
-        stringr::str_extract_all(code_lines, regex_pattern_multiple) %>%
-        unlist(use.names = FALSE) %>%
-        strsplit(",") %>%
-        purrr::discard(~ length(.) == 0) %>%
-        unlist(use.names = FALSE) %>%
-        tibble::as_tibble()
-    
-    # bind the two data frames 
-    all_library_package <- single_package %>%
-        dplyr::bind_rows(multiple_package)
-    
-    if (nrow(all_library_package) == 0) {
-        all_library_package <- tibble::tibble(
+    if (length(library_package_lst) != 0) {
+        # rename columns, add requested_by column, select distinct rows taking 
+        # into consideration "package_name" column
+        library_package_df <- 
+            library_package_lst %>%
+            tibble::as_tibble() %>%
+            dplyr::mutate(
+                package_name = .data$value,
+                requested_by = "library"
+            ) %>%
+            dplyr::distinct(.data$package_name, .keep_all = TRUE)
+        
+    } else {
+        library_package_df <- tibble::tibble(
             package_name = character(),
             requested_by = character()
         )
-    } else {
-        # rename columns, add requested_by column, select distinct rows taking 
-        # into consideration "package_name" column
-        all_library_package <-
-            all_library_package %>%
-            dplyr::mutate(
-                package_name = .data$value,
-                requested_by  = "library"
-            ) %>%
-            dplyr::distinct(.data$package_name, .keep_all = TRUE) 
     }
-    
-    add_package_info(all_library_package)
+    add_package_info(library_package_df)
 }
 
 
