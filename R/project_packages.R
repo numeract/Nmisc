@@ -106,14 +106,15 @@ get_referenced_package <- function(
     regex_pattern <- '[_.a-zA-Z]+::'
     # extract only the names of the package used with "::" operator,
     # add the column requested by, select rows with distinct package names
-    referenced_package <- stringr::str_extract_all(
+    referenced_package_lst <- stringr::str_extract_all(
         code_lines, regex_pattern) %>% 
         purrr::discard(~length(.) == 0) %>%
-        unlist(use.names = FALSE) %>%
-        tibble::as.tibble()
+        unlist(use.names = FALSE)
     
-    if (nrow(referenced_package) != 0) {
-        referenced_package <- referenced_package %>%
+    if (length(referenced_package_lst) != 0) {
+        referenced_package <- 
+            referenced_package_lst %>%
+            tibble::as.tibble() %>%
             dplyr::mutate(value = gsub('::$', '', .data$value), 
                           requested_by  = "reference") %>%
             dplyr::rename(package_name = .data$value) %>%
