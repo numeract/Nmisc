@@ -313,7 +313,16 @@ installed_as_dependency <- function(package_name, package_list) {
 #' include package already loaded in the current session and \code{description}
 #' used to include package mentioned in \code{DESCRIPTION} file
 #' 
-#' @return A data frame containing package information.
+#' @return A data frame containing package information. 
+#' Column \code{package_name} contains the name of the package, column 
+#' \code{requested_by} contains the name of the context in which the package
+#' was loaded (with \code{library} or \code{require}) or called (by reference).
+#' Column \code{is_base} is logical, TRUE meaning that the package is part of
+#' the core R packages installed by default with R. 
+#' Column \code{source} specifies the source from which the package was 
+#' installed. Colunmn \code{version} specifies the version of the package, and
+#' the column \code{is_installed} contains a logical determining whether or not
+#' the package is installed on the machine from which the function is called.
 #' 
 #' @examples
 #' \dontrun{
@@ -327,12 +336,10 @@ installed_as_dependency <- function(package_name, package_list) {
 #' @export
 get_packages <- function(
         project_path = ".",
-        include_pattern = '\\.R(md)?$', 
-        exclude_pattern = 'tests|^_', 
-        package_options = c('library', 'required', 'referenced', 'description')
+        include_pattern = "\\.R(md)?$", 
+        exclude_pattern = "tests|^_", 
+        package_options = c("library", "required", "referenced", "description")
 ) {
-    # TODO: use " instead of '
-    # TODO: @return describe each column in the output df (e.g. ce inseamna source = NA?)
     
     package <- tibble::tibble(
         package_name = character(),
@@ -432,8 +439,7 @@ generate_install_file <- function(package_df,
     }
     
     if (nrow(package_df) == 0) {
-        # TODO: wrong message: no package to install
-        print("All necessary package are already installed!")
+        print("No package to install")
     } else {
         package_df_cran <- 
             package_df %>%
