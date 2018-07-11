@@ -153,7 +153,7 @@ test_that("get_packages works", {
         stopifnot(dir.exists(project_path))
     }
     package <- get_packages(project_path = project_path, 
-                             package_options = c('description'))
+                            package_options = c('description'))
     standard_package <- c("dplyr")
     standard_package_found <- standard_package %in% package$package_name
     all_found <- all(standard_package_found)

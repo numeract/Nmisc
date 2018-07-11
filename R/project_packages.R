@@ -223,8 +223,8 @@ get_description_package <- function(description_path = "DESCRIPTION",
         desc_package_df <- 
             desc_package %>%
             tibble::as_tibble() %>%
-            dplyr::mutate(requested_by = "description",
-                          package_name = .data$value) %>%
+            dplyr::mutate(requested_by = "description") %>%
+            dplyr::rename(package_name = .data$value) %>%
             dplyr::distinct(.data$package_name, .keep_all = TRUE)
         
     } else {
