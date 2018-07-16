@@ -6,12 +6,14 @@ add_package_info <- function(package_df) {
             tibble::add_column(
                 is_base = logical(),
                 source = character(),
+                source_path = character(),
                 version = character(),
                 is_installed = logical()
             )
     } else {
         package_df$is_base <- NA
         package_df$source <- NA_character_
+        package_df$source_path <- NA_character_
         package_df$version <- NA_character_
         installed_packages <- rownames(utils::installed.packages())
         package_df$is_installed <- purrr::map_lgl(
@@ -30,11 +32,13 @@ add_package_info <- function(package_df) {
                 package_df$is_base[i] <- identical(desc[['Priority']], "base")
                 if (is.na(desc[['Repository']])) {
                     if (!is.na(desc[["GithubRepo"]])) {
-                        package_df$source[i] <- paste0(
+                        package_df$source[i] <- "github"
+                        package_df$source_path[i] <- paste0(
                             desc[["GithubUsername"]], "/", desc[["GithubRepo"]])
                     }  
                 } else {
                     package_df$source[i] <- desc[['Repository']]
+                    package_df$source_path[i] <- NA
                 }
                 package_df$version[i] <- desc[['Version']]
             } else {
@@ -309,6 +313,7 @@ get_packages <- function(
         requested_by = character(),
         is_base = logical(),
         source = character(),
+        source_path = character(),
         version = character(),
         is_installed = logical()
     )
@@ -407,14 +412,14 @@ generate_install_file <- function(package_df,
         package_df_cran <- 
             package_df %>%
             dplyr::filter(source == "CRAN")
-
-        package_df_github <- 
-            package_df %>%
-            dplyr::filter(stringr::str_detect(source, "[\\w\\.]+/"))
+        
+        package_df_github <-  package_df %>%
+            dplyr::filter(source == "github")
+            
         cran_package <- paste(
             package_df_cran$package_name, collapse = "','")
         github_package <- paste(
-            package_df_github$package_name, collapse = "','")
+            package_df_github$source_path, collapse = "','")
         vector_cran_package <- paste0(
             "cran_package <- ","c('", cran_package, "') \n")
         vector_github_package <-  paste0(
