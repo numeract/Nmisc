@@ -35,10 +35,9 @@ add_package_info <- function(package_df) {
                         package_df$source[i] <- "github"
                         package_df$source_path[i] <- paste0(
                             desc[["GithubUsername"]], "/", desc[["GithubRepo"]])
-                    }  
-                } else {
+                    }    
+                } else if (!is.na(desc[['Repository']])) {
                     package_df$source[i] <- desc[['Repository']]
-                    package_df$source_path[i] <- NA
                 }
                 package_df$version[i] <- desc[['Version']]
             } else {
@@ -208,7 +207,7 @@ get_required_package <- function(project_path,
 
 get_description_package <- function(description_path = "DESCRIPTION", 
                                      options = c("Depends", "Imports")) {
-    
+ 
     if (!file.exists(description_path)) {
         stop(paste("File", description_path, "does not exist!"))
     }
@@ -317,7 +316,6 @@ get_packages <- function(
         version = character(),
         is_installed = logical()
     )
-    
     if ("library" %in% package_options) {
         package <- 
             package %>% 
@@ -342,7 +340,6 @@ get_packages <- function(
             package %>% 
             dplyr::bind_rows(get_loaded_package())
     }
-    
     if ("description" %in% package_options) {
         if (project_path !=  ".") {
             description_path <- paste0(project_path, "DESCRIPTION")
