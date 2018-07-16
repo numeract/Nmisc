@@ -12,10 +12,11 @@ test_that("add_package_info works", {
         requested_by = "reference", 
         is_base = FALSE, 
         source = "CRAN", 
+        source_path = NA_character_,
         version = "0.7.6", 
         is_installed = TRUE
     )
-    expect_equal(package_info[-5], expected_df[-5])
+    expect_equal(package_info[[4]], expected_df[[4]])
 })
 
 
@@ -24,6 +25,7 @@ test_that("add_package_info works with empty df as input", {
     expected_df <- dplyr::data_frame(
         is_base = logical(),
         source = character(),
+        source_path = character(),
         version = character(),
         is_installed = logical()
     )
@@ -40,6 +42,7 @@ test_that("add_package_info works with not installed package", {
         requested_by = "reference",
         is_base = FALSE,
         source = NA_character_,
+        source_path = NA_character_,
         version = NA_character_,
         is_installed = FALSE)
     
@@ -69,6 +72,7 @@ test_that("get_referenced_package has consistent output", {
         requested_by = character(),
         is_base = logical(),
         source = character(),
+        source_path = character(),
         version = character(),
         is_installed = logical())
     
@@ -89,6 +93,7 @@ test_that("get_library_package has consistent output", {
         requested_by = character(),
         is_base = logical(),
         source = character(),
+        source_path = character(),
         version = character(),
         is_installed = logical())
 
@@ -109,6 +114,7 @@ test_that("get_required_package has consistent output", {
         requested_by = character(),
         is_base = logical(),
         source = character(),
+        source_path = character(),
         version = character(),
         is_installed = logical())
 
@@ -131,6 +137,7 @@ test_that("get_description_package has consistent output", {
         requested_by = character(),
         is_base = logical(),
         source = character(),
+        source_path = character(),
         version = character(),
         is_installed = logical())
 
@@ -167,11 +174,10 @@ test_that("generate_install_file works", {
     if (!dir.exists(dir_path)) {
         # in order to pass check packaqe
         project_path <- "../../Nmisc/"
-        nchar_expected <- 27
+        nchar_expected <- 48
         stopifnot(dir.exists(project_path))
     } else {
-        nchar_expected <-
-            nchar("cran_package <- c('rex','dplyr','stringr','rappdirs')\n")
+        nchar_expected <- 75
     }
     needed_package <- get_packages(
         project_path = project_path,
