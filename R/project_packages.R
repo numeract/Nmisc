@@ -119,14 +119,14 @@ get_referenced_package <- function(
                           requested_by  = "reference") %>%
             dplyr::rename(package_name = .data$value) %>%
             dplyr::distinct(.data$package_name, .keep_all = TRUE)
-        
-        add_package_info(referenced_package)
     } else {
-        referenced_package <- dplyr::data_frame(
+        referenced_package <- tibble::tibble(
             package_name = character(),
-            requested_by = character())
-        add_package_info(referenced_package)
+            requested_by = character()
+        )
     }
+    
+    add_package_info(referenced_package)
 }
 
 
@@ -161,6 +161,7 @@ get_library_package <- function(project_path,
             requested_by = character()
         )
     }
+    
     add_package_info(library_package_df)
 }
 
@@ -196,6 +197,7 @@ get_required_package <- function(project_path,
             requested_by = character()
         )
     }
+    
     add_package_info(required_package_df)
 }
 
@@ -216,7 +218,7 @@ get_description_package <- function(description_path = "DESCRIPTION",
         unlist() %>%
         stats::setNames(NULL) 
     
-    # eliminate dependency on specified R version
+    # ignore line specifying R version dependency
     # keep only package dependencies in description
     desc_package <- desc_package[!grepl("^R [(]", desc_package)]
     if (length(desc_package) != 0) {
@@ -226,13 +228,13 @@ get_description_package <- function(description_path = "DESCRIPTION",
             dplyr::mutate(requested_by = "description") %>%
             dplyr::rename(package_name = .data$value) %>%
             dplyr::distinct(.data$package_name, .keep_all = TRUE)
-        
     } else {
         desc_package_df <- tibble::tibble(
             package_name = character(),
             requested_by = character()
         )
     }
+    
     add_package_info(desc_package_df)
 }
 
