@@ -413,22 +413,12 @@ generate_install_file <- function(package_df,
         package_df_github <-  package_df %>%
             dplyr::filter(source == "github")
             
-        cran_package_name <- paste(
+        cran_package <- paste(
             package_df_cran$package_name, collapse = "','")
-        cran_package_version <- paste(
-            package_df_cran$version, collapse = "','")
-        vector_cran_package_name <- paste0(
-            "c('", cran_package_name, "') \n")
-        vector_cran_package_vs <- paste0(
-            "c('", cran_package_version, "') \n")
-        cran_df <- paste0(
-            "cran_df <- ","data.frame(",
-            "package_name = ", vector_cran_package_name, ", ",
-            "version = ", vector_cran_package_vs, ", ",
-            "stringsAsFactors = FALSE) \n")
-        
         github_package <- paste(
-            package_df_github$source_path, collapse = "','")
+            package_df_github$package_name, collapse = "','")
+        vector_cran_package <- paste0(
+            "cran_package <- ","c('", cran_package, "') \n")
         vector_github_package <-  paste0(
             "github_package <- ", "c('", github_package, "') \n")
         
@@ -436,38 +426,22 @@ generate_install_file <- function(package_df,
         # first install 'devtools' package and then use it to 
         # install other package
         install_all_statement <- paste(
-            cran_df,
+            vector_cran_package,
             vector_github_package,
             "
-tryCatch({
-    cran_df$is_installed <- NA 
-    installed_packages <- rownames(utils::installed.packages())
-
-    for (i in 1:length(cran_df$package_name)) {
-        cran_df$is_installed[i] <- 
-            cran_df$package_name[i] %in% installed_packages
-        local_package_version <- utils::packageDescription(
-            pkg = cran_df$package_name[i],
-            fields = c('Version'))
-        if (compareVersion(
-            local_package_version, cran_df$version[i]) == -1) {
-            install.packages(
-                c(cran_df$package_name[i]), quiet = TRUE)
-        }
-    }
-    if (length(cran_df[!cran_df$is_installed, 'package_name']) != 0) {
-        install.packages(
-            cran_df[!cran_df$is_installed, 'package_name'], quiet = TRUE)
-    }
-    if (!identical(github_package, c(''))) {
-        install.packages('devtools', quiet = TRUE)
-        devtools::install_github(github_package, quiet = TRUE)
-    }
-}, error = function(cond) {message(cond)})
-", sep = "")  
+            tryCatch({
+            installed_packages <- rownames(utils::installed.packages())
+            if (length(setdiff(cran_package, installed_packages)) > 0) {
+            install.packages(setdiff(cran_package, installed_packages)) 
+            }        
+            utils::update.packages(oldPkgs = cran_package, ask = FALSE)
+            if (!identical(github_package, c(''))) {
+            install.packages('devtools', quiet = TRUE)
+            devtools::install_github(github_package, quiet = TRUE)
+            }
+            }, error = function(cond) {message(cond)})", sep = "")  
         
         write(install_all_statement, file) 
         cat("Succesfully created install_packages.R file")
     }
-  
 }

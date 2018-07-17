@@ -174,10 +174,11 @@ test_that("generate_install_file works", {
     if (!dir.exists(dir_path)) {
         # in order to pass check packaqe
         project_path <- "../../Nmisc/"
-        nchar_expected <- 48
+        nchar_expected <- 27
         stopifnot(dir.exists(project_path))
     } else {
-        nchar_expected <- 75
+        nchar_expected <-
+            nchar("cran_package <- c('rex','dplyr','stringr','rappdirs')\n")
     }
     needed_package <- get_packages(
         project_path = project_path,
