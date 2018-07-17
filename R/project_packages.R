@@ -412,16 +412,23 @@ generate_install_file <- function(package_df,
         
         package_df_github <-  package_df %>%
             dplyr::filter(source == "github")
-            
-        cran_package <- paste(
-            package_df_cran$package_name, collapse = "','")
-        github_package <- paste(
-            package_df_github$package_name, collapse = "','")
-        vector_cran_package <- paste0(
-            "cran_package <- ","c('", cran_package, "') \n")
-        vector_github_package <-  paste0(
-            "github_package <- ", "c('", github_package, "') \n")
+        if (nrow(package_df_cran) == 0) { 
+            vector_cran_package <- "cran_package <- c() \n"
+        } else {
+            cran_package <- paste(
+                package_df_cran$package_name, collapse = "','")
+            vector_cran_package <- paste0(
+                "cran_package <- ","c('", cran_package, "') \n")
+        }
         
+        if (nrow(package_df_github) == 0) {
+            vector_github_package <- "github_package <- c() \n"
+        } else {
+            github_package <- paste(
+                package_df_github$package_name, collapse = "','")
+            vector_github_package <-  paste0(
+                "github_package <- ", "c('", github_package, "') \n")
+        }
         # if there are github package that are not already installed
         # first install 'devtools' package and then use it to 
         # install other package

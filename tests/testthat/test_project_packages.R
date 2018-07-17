@@ -1,6 +1,5 @@
 context("Testing project_package.R")
 
-
 test_that("add_package_info works", {
     package_df <- dplyr::data_frame(
         package_name = "dplyr",
