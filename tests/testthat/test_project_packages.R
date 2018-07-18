@@ -129,7 +129,7 @@ test_that("get_description_packages warns if wrong description path", {
     
     expect_warning(
         description_package <- get_description_packages(
-            description_path = file.path(prj_path, "LICENSE"),
+            description_path = file.path(prj_path, "NAMESPACE"),
             options = c("Depends")
         ),
         regexp = "is not a dcf file!$"

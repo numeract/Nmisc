@@ -39,3 +39,8 @@ vignettes/*.pdf
 # macOS generated files
 .DS_Store
 .DS_Store?
+
+
+# use full LICENSE for GitHub and LICENCE template for CRAN
+# https://stackoverflow.com/a/43567017
+LICENCE

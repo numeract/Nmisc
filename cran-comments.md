@@ -19,4 +19,5 @@
 
 ## Resubmit comments
 
-- this is the first submission
+- using the CRAN template for the MIT license
+
