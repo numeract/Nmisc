@@ -1,4 +1,3 @@
-
 #' Pull out a single column
 #' 
 #' Pull out a single column by using its name or its position

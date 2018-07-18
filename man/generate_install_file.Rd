@@ -2,28 +2,27 @@
 % Please edit documentation in R/project_packages.R
 \name{generate_install_file}
 \alias{generate_install_file}
-\title{Takes a data frame containing package information and generates an install
-file based on it}
+\title{Generates an R file to install packages used by the project.}
 \usage{
-generate_install_file(package_df, include_core_package = FALSE,
-  file = "install_package.R")
+generate_install_file(package_df = get_packages(),
+  include_core_package = FALSE, file = "install_packages.R")
 }
 \arguments{
 \item{package_df}{A data frame obtained with \code{get_packages} that 
 contains information regarding the name, version and source of the package.}
 
-\item{include_core_package}{Logical, whether or not to include in the 
+\item{include_core_package}{Logical, whether to include in the 
 generated install file package which come with R by default}
 
-\item{file}{Tle name of the file to be created.}
+\item{file}{The name of the file to be created.}
 }
 \value{
 Nothing
 }
 \description{
-the function takes the output of \code{get_packages} and
- writes in a file the commands needed to install
- package used throughout the project that are not already installed.
+The function takes the output of \code{get_packages} and
+  writes in a file the commands needed to install and update
+  package used throughout the project.
 }
 \examples{
 \dontrun{

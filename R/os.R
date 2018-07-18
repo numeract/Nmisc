@@ -7,4 +7,4 @@
 #'  \code{"Unknown OS"}.
 #' 
 #' @export
-get_os <- getFromNamespace("get_os", "rappdirs")
+get_os <- utils::getFromNamespace("get_os", ns = "rappdirs")

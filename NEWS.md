@@ -1,6 +1,7 @@
-# Nmisc 0.2.2
+# Nmisc 0.3.0
 
-- 100% coverage
+- added package related functions
+- increase coverage
 
 
 # Nmisc 0.2.1
