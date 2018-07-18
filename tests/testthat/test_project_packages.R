@@ -1,12 +1,37 @@
 context("Testing project_package.R")
 
+setup({
+    
+    prj_path <- "../.."
+    if (dir.exists(file.path(prj_path, "00_pkg_src"))) {
+        # local R CMD check
+        prj_path <- "../../00_pkg_src/Nmisc"
+    }
+    stopifnot(dir.exists(prj_path))
+    
+    empty_output <- tibble::tibble(
+        package_name = character(),
+        requested_by = character(),
+        is_base = logical(),
+        source = character(),
+        source_path = character(),
+        version = character(),
+        is_installed = logical()
+    )
+    
+    assign("prj_path", prj_path, envir = .GlobalEnv)
+    assign("empty_output", empty_output, envir = .GlobalEnv)
+})
+
+
 test_that("add_package_info works", {
-    package_df <- dplyr::data_frame(
+    package_df <- tibble::tibble(
         package_name = "dplyr",
-        requested_by = "reference")
+        requested_by = "reference"
+    )
     
     package_info <- add_package_info(package_df)
-    expected_df <- dplyr::data_frame(
+    expected_df <- tibble::tibble(
         package_name = "dplyr", 
         requested_by = "reference", 
         is_base = FALSE, 
@@ -20,8 +45,9 @@ test_that("add_package_info works", {
 
 
 test_that("add_package_info works with empty df as input", {
-    package_info <- add_package_info(dplyr::data_frame())
-    expected_df <- dplyr::data_frame(
+    
+    package_info <- add_package_info(tibble::tibble())
+    expected_df <- tibble::tibble(
         is_base = logical(),
         source = character(),
         source_path = character(),
@@ -33,10 +59,13 @@ test_that("add_package_info works with empty df as input", {
 
 
 test_that("add_package_info works with not installed package", {
-    package_info <- add_package_info(dplyr::data_frame(
+    
+    package_info <- add_package_info(tibble::tibble(
         package_name = "random_package",
-        requested_by = "reference"))
-    expected_df <- dplyr::data_frame(
+        requested_by = "reference")
+    )
+    
+    expected_df <- tibble::tibble(
         package_name = "random_package",
         requested_by = "reference",
         is_base = FALSE,
@@ -50,6 +79,7 @@ test_that("add_package_info works with not installed package", {
 
 
 test_that("add_package_info stops with invalid input", {
+    
     expect_error(add_package_info(NULL))
     expect_error(add_package_info(NA))
     expect_error(add_package_info(NA_character_))
@@ -58,108 +88,58 @@ test_that("add_package_info stops with invalid input", {
 })
 
 
-test_that("get_referenced_package has consistent output", {
-    file_path <- "../../R/os.R"
-    project_path <- "../../"
-    if (!file.exists(file_path)) {
-        project_path <- "../../Nmisc/"
-        stopifnot(dir.exists(project_path))
-    }
-    referenced_package <- get_library_package(project_path, "os.R", "")
-    expected_output <-  dplyr::data_frame(
-        package_name = character(),
-        requested_by = character(),
-        is_base = logical(),
-        source = character(),
-        source_path = character(),
-        version = character(),
-        is_installed = logical())
+test_that("get_referenced_packages has consistent output", {
     
-    expect_equal(referenced_package, expected_output)
+    referenced_package <- get_library_packages(prj_path, "os.R", "")
+    expect_equal(referenced_package, empty_output)
 })
 
 
-test_that("get_library_package has consistent output", {
-    file_path <- "../../R/os.R"
-    project_path <- "../../"
-    if (!file.exists(file_path)) {
-        project_path <- "../../Nmisc/"
-        stopifnot(dir.exists(project_path))
-    }
-    library_package <- get_library_package(project_path, "os.R", "")
-    expected_output <-  dplyr::data_frame(
-        package_name = character(),
-        requested_by = character(),
-        is_base = logical(),
-        source = character(),
-        source_path = character(),
-        version = character(),
-        is_installed = logical())
-
-    expect_equal(library_package, expected_output)
+test_that("get_library_packages has consistent output", {
+    
+    library_package <- get_library_packages(prj_path, "os.R", "")
+    expect_equal(library_package, empty_output)
 })
 
 
-test_that("get_required_package has consistent output", {
-    file_path <- "../../R/os.R"
-    project_path <- "../../"
-    if (!file.exists(file_path)) {
-        project_path <- "../../Nmisc/"
-        stopifnot(dir.exists(project_path))
-    }
-    required_package <- get_required_package(project_path, "os.R", "")
-    expected_output <-  dplyr::data_frame(
-        package_name = character(),
-        requested_by = character(),
-        is_base = logical(),
-        source = character(),
-        source_path = character(),
-        version = character(),
-        is_installed = logical())
-
-    expect_equal(required_package, expected_output)
+test_that("get_description_packages has consistent output", {
+    
+    description_package <- get_description_packages(
+        description_path = file.path(prj_path, "DESCRIPTION"),
+        options = c("Depends")
+    )
+    expect_equal(description_package, empty_output)
 })
 
 
-test_that("get_description_package has consistent output", {
-    file_path <- "../../DESCRIPTION"
-    if (!file.exists(file_path)) {
-        file_path <- "../../Nmisc/DESCRIPTION"
-        stopifnot(file.exists(file_path))
-    }
-
-    description_package <- get_description_package(
-        description_path = file_path,
-        options = c("Depends"))
-    expected_output <-  dplyr::data_frame(
-        package_name = character(),
-        requested_by = character(),
-        is_base = logical(),
-        source = character(),
-        source_path = character(),
-        version = character(),
-        is_installed = logical())
-
-    expect_equal(description_package, expected_output)
-})
-
-
-test_that("get_description_package stops with wrong description path", {
-    expect_error(description_package <- get_description_package(
-        description_path = "../../R/os.R",
-        options = c("Depends")))
+test_that("get_description_packages warns if wrong description path", {
+    
+    expect_warning(
+        description_package <- get_description_packages(
+            description_path = file.path(prj_path, "DESCRIPTIONx"),
+            options = c("Depends")
+        ),
+        regexp = "does not exist!$"
+    )
+    expect_equal(description_package, empty_output)
+    
+    expect_warning(
+        description_package <- get_description_packages(
+            description_path = file.path(prj_path, "LICENSE"),
+            options = c("Depends")
+        ),
+        regexp = "is not a dcf file!$"
+    )
+    expect_equal(description_package, empty_output)
 })
 
 
 test_that("get_packages works", {
-    dir_path <- "../../R/"
-    project_path <- "../../"
-    if (!dir.exists(dir_path)) {
-        project_path <- "../../Nmisc/"
-        stopifnot(dir.exists(project_path))
-    }
-    package <- get_packages(project_path = project_path, 
-                            package_options = c('description'))
+    
+    package <- get_packages(
+        project_path = prj_path, 
+        package_options = c('description')
+    )
     standard_package <- c("dplyr")
     standard_package_found <- standard_package %in% package$package_name
     all_found <- all(standard_package_found)
@@ -168,27 +148,19 @@ test_that("get_packages works", {
 
 
 test_that("generate_install_file works", {
-    dir_path <- "../../R/"
-    project_path <- "../../"
-    if (!dir.exists(dir_path)) {
-        # in order to pass check packaqe
-        project_path <- "../../Nmisc/"
-        nchar_expected <- 27
-        stopifnot(dir.exists(project_path))
-    } else {
-        nchar_expected <-
-            nchar("cran_package <- c('rex','dplyr','stringr','rappdirs')\n")
-    }
+    
+    nchar_expected <- nchar(paste0(
+        "cran_packages <- c('magrittr','purrr',",
+        "'rappdirs','dplyr','stringr','tibble','rlang')"))
+    
     needed_package <- get_packages(
-        project_path = project_path,
-        ".R",
+        project_path = prj_path,
+        include_pattern = ".R",
         package_options = c("description"))
     generate_install_file(needed_package)
-
-   
-
-    install_package_content <- readLines("install_package.R", n = 1)
+    
+    install_package_content <- readLines("install_packages.R", n = 1)
     nchar_install_package <- nchar(install_package_content)
     expect_equal(nchar_expected, nchar_install_package)
-    unlink("install_package.R")
+    unlink("install_packages.R")
 })
