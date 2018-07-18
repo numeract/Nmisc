@@ -13,7 +13,7 @@ only the first element is taken into account.}
 }
 \value{
 A POSIXct vector of size \code{length} with the \code{tzone}
-  atribute set to "UTC".
+  attribute set to "UTC".
 }
 \description{
 Returns a vector with the current date and time in the UTC time zone.
