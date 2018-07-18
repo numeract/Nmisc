@@ -1,4 +1,4 @@
-#' Avoid R’s warning feature
+#' Avoid repeated warnings
 #' 
 #' Clear warnings for production code.
 #' 

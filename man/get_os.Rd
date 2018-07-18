@@ -2,7 +2,7 @@
 % Please edit documentation in R/os.R
 \name{get_os}
 \alias{get_os}
-\title{Returns the name of the Operating Sytem}
+\title{Returns the name of the Operating System}
 \usage{
 get_os()
 }
@@ -11,6 +11,6 @@ One of \code{"win"}, \code{"mac"}, \code{"unix"},
  \code{"Unknown OS"}.
 }
 \description{
-A simple wrapper arround \code{rappdirs:::get_os},
+A simple wrapper around \code{rappdirs:::get_os},
  allowing it to be exported.
 }

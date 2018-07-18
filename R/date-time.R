@@ -55,7 +55,7 @@ format_utc <- function(x, format = NULL, usetz = TRUE) {
 #' only the first element is taken into account.
 #' 
 #' @return A POSIXct vector of size \code{length} with the \code{tzone}
-#'   atribute set to "UTC".
+#'   attribute set to "UTC".
 #' 
 #' @seealso \code{\link{Sys.time}}, \code{\link[lubridate:now]{lubridate::now}}
 #' 

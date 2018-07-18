@@ -1,6 +1,6 @@
-#' Returns the name of the Operating Sytem
+#' Returns the name of the Operating System
 #' 
-#' A simple wrapper arround \code{rappdirs:::get_os},
+#' A simple wrapper around \code{rappdirs:::get_os},
 #'  allowing it to be exported.
 #' 
 #' @return One of \code{"win"}, \code{"mac"}, \code{"unix"},

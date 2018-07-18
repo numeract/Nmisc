@@ -2,7 +2,7 @@
 % Please edit documentation in R/warnings.R
 \name{clear_warnings}
 \alias{clear_warnings}
-\title{Avoid R’s warning feature}
+\title{Avoid repeated warnings}
 \usage{
 clear_warnings()
 }
