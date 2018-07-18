@@ -7,7 +7,11 @@ setup({
         # local R CMD check
         prj_path <- "../../00_pkg_src/Nmisc"
     }
-    stopifnot(dir.exists(prj_path))
+    if (!dir.exists(prj_path) || 
+        !file.exists(file.path(prj_path, "DESCRIPTION"))
+    ) {
+        skip("Package source not found")
+    }
     
     empty_output <- tibble::tibble(
         package_name = character(),
