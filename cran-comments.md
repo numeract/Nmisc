@@ -20,4 +20,4 @@
 ## Resubmit comments
 
 - using the CRAN template for the MIT license
-
+- updated Title and Description fields in DESCRIPTION file (thank you)
