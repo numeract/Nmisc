@@ -1,18 +1,20 @@
 Package: Nmisc
 Type: Package
-Title: Miscellaneous R Functions Used at Numeract
-Version: 0.3.0
-Date: 2018-07-17
+Title: Miscellaneous Functions Used at 'Numeract LLC'
+Version: 0.3.1
 Author: c(
     person("Mike", "Badescu", email = "mike.badescu@numeract.com", role = c("aut", "cre")),
     person("Ana-Maria", "Niculescu", role = "aut"),
-    person("Teodor", "Ciuraru", role = "aut"),
+    person("Teodor", "Ciuraru", role = "ctb"),
     person("Numeract LLC", role = "cph")
     )
 Maintainer: Mike Badescu <mike.badescu@numeract.com>
-Description: Miscellaneous R functions used at Numeract. 
-    The functions are expected to be used in other packages and projects.
-    The functions mostly extend base and tidyverse packages.
+Description: Contains functions useful for debugging, set operations on vectors,
+    and 'UTC' date and time functionality. It adds a few vector manipulation 
+    verbs to 'purrr' and 'dplyr' packages. It can also generate an R file to 
+    install and update packages to simplify deployment into production. The 
+    functions were developed at the data science firm 'Numeract LLC' and are 
+    used in several packages and projects.
 URL: https://github.com/numeract/Nmisc
 BugReports: https://github.com/numeract/Nmisc/issues
 License: MIT + file LICENCE

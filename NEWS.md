@@ -1,7 +1,8 @@
-# Nmisc 0.3.0
+# Nmisc 0.3.1
 
 - added package related functions
 - increase coverage
+- submittion to CRAN
 
 
 # Nmisc 0.2.1
@@ -19,4 +20,4 @@
 
 # Nmisc 0.1.0
 
-First release
+- first release

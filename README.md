@@ -5,11 +5,12 @@
 [![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 
 
-Miscellaneous R functions used at Numeract. 
-
-The functions are expected to be used in other packages and projects.
-
-The functions mostly extend base and tidyverse packages.
+Contains functions useful for debugging, set operations on vectors,
+and 'UTC' date and time functionality. It adds a few vector manipulation 
+verbs to 'purrr' and 'dplyr' packages. It can also generate an R file to 
+install and update packages to simplify deployment into production. The 
+functions were developed at the data science firm 'Numeract LLC' and are 
+used in several packages and projects.
 
 
 ## Installation
