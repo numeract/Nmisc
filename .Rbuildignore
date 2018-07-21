@@ -2,6 +2,6 @@
 ^\.Rproj\.user$
 ^\.travis\.yml$
 ^codecov\.yml$
-^.lintr$
-^cran-comments.md$
+^\.lintr$
+^cran-comments\.md$
 ^LICENSE$
