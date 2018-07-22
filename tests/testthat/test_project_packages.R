@@ -162,7 +162,7 @@ test_that("generate_install_file works", {
         include_pattern = ".R",
         package_options = c("description"))
     tmp_inst_file <- tempfile()
-    generate_install_file(needed_package, file = tmp_inst_file)
+    generate_install_file(tmp_inst_file, needed_package)
     
     install_package_content <- readLines(tmp_inst_file, n = 1)
     nchar_install_package <- nchar(install_package_content)

@@ -333,26 +333,26 @@ get_packages <- function(
 #'   writes in a file the commands needed to install and update
 #'   package used throughout the project.
 #' 
+#' @param file The name of the file to be created.
 #' @param package_df A data frame obtained with \code{get_packages} that 
 #'   contains information regarding the name, version and source of the package.
 #' @param include_core_package Logical, whether to include in the 
 #'   generated install file package which come with R by default
-#' @param file The name of the file to be created.
 #' 
 #' @return Nothing
 #' 
 #' @examples
 #' \dontrun{
 #' package_df <- get_packages(package_options = c("library"))
-#' generate_install_file(package_df)
+#' generate_install_file("install_packages.R", package_df)
 #' }
 #' 
 #' @seealso \code{\link{get_packages}}
 #' 
 #' @export
-generate_install_file <- function(package_df = get_packages(), 
-                                  include_core_package = FALSE, 
-                                  file = "install_packages.R") {
+generate_install_file <- function(file,
+                                  package_df = get_packages(), 
+                                  include_core_package = FALSE) {
     
     # always exclude base package
     package_df <- 
@@ -405,19 +405,17 @@ generate_install_file <- function(package_df = get_packages(),
     code_text <- paste0(
         cran_packages_line,
         github_packages_line,
-"tryCatch({
-    installed_packages <- rownames(utils::installed.packages())
-    missing_packages <- base::setdiff(cran_packages, installed_packages)
-    if (length(missing_packages) > 0) {
-        utils::install.packages(missing_packages)
-    }
-    utils::update.packages(oldPkgs = cran_packages, ask = FALSE)
-    
-    if (length(github_packages) > 0) {
-        utils::install.packages('devtools', quiet = TRUE)
-        devtools::install_github(github_packages, quiet = TRUE)
-    }
-}, error = function(cond) {message(cond)})")
+"installed_packages <- rownames(utils::installed.packages())
+missing_packages <- base::setdiff(cran_packages, installed_packages)
+if (length(missing_packages) > 0) {
+    utils::install.packages(missing_packages)
+}
+utils::update.packages(oldPkgs = cran_packages, ask = FALSE)
+
+if (length(github_packages) > 0) {
+    utils::install.packages('devtools', quiet = TRUE)
+    devtools::install_github(github_packages, quiet = TRUE)
+}")
     
     write(code_text, file)
     

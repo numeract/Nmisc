@@ -4,17 +4,17 @@
 \alias{generate_install_file}
 \title{Generates an R file to install packages used by the project.}
 \usage{
-generate_install_file(package_df = get_packages(),
-  include_core_package = FALSE, file = "install_packages.R")
+generate_install_file(file, package_df = get_packages(),
+  include_core_package = FALSE)
 }
 \arguments{
+\item{file}{The name of the file to be created.}
+
 \item{package_df}{A data frame obtained with \code{get_packages} that 
 contains information regarding the name, version and source of the package.}
 
 \item{include_core_package}{Logical, whether to include in the 
 generated install file package which come with R by default}
-
-\item{file}{The name of the file to be created.}
 }
 \value{
 Nothing
@@ -27,7 +27,7 @@ The function takes the output of \code{get_packages} and
 \examples{
 \dontrun{
 package_df <- get_packages(package_options = c("library"))
-generate_install_file(package_df)
+generate_install_file("install_packages.R", package_df)
 }
 
 }

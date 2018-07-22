@@ -20,5 +20,8 @@
 ## Resubmit comments
 
 - updated Authors@R field in DESCRIPTION file (thank you)
-- updated tests for generate_install_file() to write only to a temp file;
-  generate_install_file examples use \dontrun; there are no vignettes
+- updated generate_install_file()
+  + no default file argument, it has to be supplied by the user each time
+  + tests write only to a temp file
+  + examples use \dontrun
+  + there are no vignettes
