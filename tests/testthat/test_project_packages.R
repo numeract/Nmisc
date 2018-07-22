@@ -161,10 +161,11 @@ test_that("generate_install_file works", {
         project_path = prj_path,
         include_pattern = ".R",
         package_options = c("description"))
-    generate_install_file(needed_package)
+    tmp_inst_file <- tempfile()
+    generate_install_file(needed_package, file = tmp_inst_file)
     
-    install_package_content <- readLines("install_packages.R", n = 1)
+    install_package_content <- readLines(tmp_inst_file, n = 1)
     nchar_install_package <- nchar(install_package_content)
     expect_equal(nchar_expected, nchar_install_package)
-    unlink("install_packages.R")
+    unlink(tmp_inst_file)
 })

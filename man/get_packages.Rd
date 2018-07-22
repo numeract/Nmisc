@@ -5,8 +5,8 @@
 \title{Get information about the package used in the project}
 \usage{
 get_packages(project_path = ".", include_pattern = "\\\\.R(md)?$",
-  exclude_pattern = "tests/", package_options = c("referenced", "library",
-  "description"))
+  exclude_pattern = "tests/", package_options = c("referenced",
+  "library", "description"))
 }
 \arguments{
 \item{project_path}{A string representing the path of the project root 

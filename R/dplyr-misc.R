@@ -12,7 +12,7 @@
 #' 
 #' @return A named vector.
 #' 
-#' @examples pull_with_names(iris, 4, "Species")
+#' @examples head(pull_with_names(iris, 4, "Species"))
 #' 
 #' @export
 pull_with_names <- function(.data, var = -1, name_col) {

@@ -24,6 +24,6 @@ Pull out a single column by using its name or its position
   and name the obtained vector using values from another column.
 }
 \examples{
-pull_with_names(iris, 4, "Species")
+head(pull_with_names(iris, 4, "Species"))
 
 }
