@@ -1,8 +1,8 @@
-# Nmisc 0.3.1
+# Nmisc 0.3.2
 
 - added package related functions
 - increase coverage
-- submittion to CRAN
+- fixes for submittion to CRAN
 
 
 # Nmisc 0.2.1

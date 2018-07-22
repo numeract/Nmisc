@@ -1,14 +1,13 @@
 Package: Nmisc
 Type: Package
 Title: Miscellaneous Functions Used at 'Numeract LLC'
-Version: 0.3.1
-Author: c(
+Version: 0.3.2
+Authors@R: c(
     person("Mike", "Badescu", email = "mike.badescu@numeract.com", role = c("aut", "cre")),
     person("Ana-Maria", "Niculescu", role = "aut"),
     person("Teodor", "Ciuraru", role = "ctb"),
     person("Numeract LLC", role = "cph")
     )
-Maintainer: Mike Badescu <mike.badescu@numeract.com>
 Description: Contains functions useful for debugging, set operations on vectors,
     and 'UTC' date and time functionality. It adds a few vector manipulation 
     verbs to 'purrr' and 'dplyr' packages. It can also generate an R file to 
