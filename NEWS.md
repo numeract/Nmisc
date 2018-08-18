@@ -1,8 +1,12 @@
+# Nmisc 0.3.3
+
+- fix generate_install_file test (#8)
+
 # Nmisc 0.3.2
 
 - added package related functions
 - increase coverage
-- fixes for submittion to CRAN
+- fixes for submission to CRAN
 
 
 # Nmisc 0.2.1

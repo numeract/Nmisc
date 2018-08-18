@@ -153,10 +153,6 @@ test_that("get_packages works", {
 
 test_that("generate_install_file works", {
     
-    nchar_expected <- nchar(paste0(
-        "cran_packages <- c('magrittr','purrr',",
-        "'rappdirs','dplyr','stringr','tibble','rlang')"))
-    
     needed_package <- get_packages(
         project_path = prj_path,
         include_pattern = ".R",
@@ -164,8 +160,22 @@ test_that("generate_install_file works", {
     tmp_inst_file <- tempfile()
     generate_install_file(tmp_inst_file, needed_package)
     
-    install_package_content <- readLines(tmp_inst_file, n = 1)
-    nchar_install_package <- nchar(install_package_content)
-    expect_equal(nchar_expected, nchar_install_package)
+    cran_expected <- 
+        needed_package %>%
+        dplyr::filter(!.data$is_base & source == "CRAN") %>%
+        dplyr::pull(.data$package_name)
+    git_expected <- 
+        needed_package %>%
+        dplyr::filter(!.data$is_base & source == "GitHub") %>%
+        dplyr::pull(.data$package_name)
+    
+    install_package_content <- readLines(tmp_inst_file, n = 2)
+    
+    eval(parse(text = install_package_content[1])) # cran_packages
+    eval(parse(text = install_package_content[2])) # github_packages
+    
+    expect_setequal(cran_expected, cran_packages)
+    expect_setequal(git_expected, github_packages)
+    
     unlink(tmp_inst_file)
 })
