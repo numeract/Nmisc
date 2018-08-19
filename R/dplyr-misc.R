@@ -7,8 +7,9 @@
 #' @param var 	The name of the column of interest,
 #'   or a positive integer, giving the position counting from the left,
 #'   or a negative integer, giving the position counting from the right.
+#'   This argument supports tidyeval.
 #' @param name_col The column whose values will be used to
-#'   name the pulled column.
+#'   name the pulled column. This argument supports tidyeval.
 #' 
 #' @return A named vector.
 #' 
@@ -17,10 +18,10 @@
 #' @export
 pull_with_names <- function(.data, var = -1, name_col) {
     
-    if (!rlang::is_scalar_character(name_col) || is.na(name_col)) {
-        stop("`name_col` must be a valid character of length 1")
-    }
+    var <- rlang::enquo(var)
+    name_col <- rlang::enquo(name_col)
     
-    dplyr::pull(.data, var) %>%
-        rlang::set_names(.data[[name_col]])
+    x <- dplyr::pull(.data, !! var)
+    nm <- dplyr::pull(.data, !! name_col)
+    rlang::set_names(x, nm)
 }

@@ -1,6 +1,13 @@
+# Nmisc 0.3.4
+
+- improve `purrr` related functions
+- tidyeval for `dplyr` related function
+
+
 # Nmisc 0.3.3
 
 - fix generate_install_file test (#8)
+
 
 # Nmisc 0.3.2
 

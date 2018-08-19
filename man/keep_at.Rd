@@ -12,7 +12,7 @@ discard_at(.x, .at)
 \arguments{
 \item{.x}{A list or vector.}
 
-\item{.at}{Character (column names) or a numeric (positions).}
+\item{.at}{A character vector (names) or a numeric vector (positions).}
 }
 \value{
 A list or vector.

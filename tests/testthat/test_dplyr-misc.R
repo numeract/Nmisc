@@ -1,8 +1,16 @@
 context("Testing dplyr-misc")
 
 test_that("pull_with_names works", {
-    result <- pull_with_names(iris, 4, "Species")
-    expect_equal(names(result), as.character(iris[["Species"]]))
+    result1 <- pull_with_names(iris, "Petal.Width", "Species")
+    result2 <- pull_with_names(iris, 4, "Species")
+    result3 <- pull_with_names(iris, Petal.Width, "Species")
+    
+    expected <- iris[["Petal.Width"]]
+    names(expected) <- as.character(iris[["Species"]])
+    
+    expect_equal(result1, expected)
+    expect_equal(result2, expected)
+    expect_equal(result3, expected)
 })
 
 

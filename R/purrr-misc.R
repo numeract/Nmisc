@@ -8,7 +8,7 @@
 #'   \code{purrr::discard}, respectively.
 #' 
 #' @param .x A list or vector.
-#' @param .at Character (column names) or a numeric (positions).
+#' @param .at A character vector (names) or a numeric vector (positions).
 #' 
 #' @return A list or vector.
 #' 
@@ -28,16 +28,8 @@
 keep_at <- function(.x, .at) {
     
     if (length(.at) == 0L) return(.x[0L])
-    if (any(is.na(.at))) stop("`.at`` must not contain NA's")
-    
-    .p <- if (is.character(.at)) {
-        names(.x) %in% .at
-    } else if (is.numeric(.at)) {
-        seq_along(.x) %in% as.integer(.at)
-    } else {
-        stop("`.at` must be character (names) or a numeric (positions)")
-    }
-    
+
+    .p <- probe_at(.x, .at)
     purrr::keep(.x, .p)
 }
 
@@ -47,15 +39,21 @@ keep_at <- function(.x, .at) {
 discard_at <- function(.x, .at) {
     
     if (length(.at) == 0L) return(.x)
-    if (any(is.na(.at))) stop("`.at` must not contain NA's")
     
-    .p <- if (is.character(.at)) {
+    .p <- probe_at(.x, .at)
+    purrr::discard(.x, .p)
+}
+
+
+probe_at <- function(.x, .at) {
+ 
+    if (anyNA(.at)) stop("`.at` must not contain any NA's")
+    
+    if (is.character(.at)) {
         names(.x) %in% .at
     } else if (is.numeric(.at)) {
         seq_along(.x) %in% as.integer(.at)
     } else {
-        stop("`.at` must be character (names) or a numeric (positions)")
+        stop("`.at` must be character (names) or numeric (positions)")
     }
-    
-    purrr::discard(.x, .p)
 }

@@ -11,10 +11,11 @@ pull_with_names(.data, var = -1, name_col)
 
 \item{var}{The name of the column of interest,
 or a positive integer, giving the position counting from the left,
-or a negative integer, giving the position counting from the right.}
+or a negative integer, giving the position counting from the right.
+This argument supports tidyeval.}
 
 \item{name_col}{The column whose values will be used to
-name the pulled column.}
+name the pulled column. This argument supports tidyeval.}
 }
 \value{
 A named vector.
