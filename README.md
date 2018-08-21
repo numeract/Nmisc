@@ -29,6 +29,8 @@ install.packages("Nmisc")
 devtools::install_github("numeract/Nmisc")
 ```
 
+**Please note that the GitHub version requires GitHub versions of `glue` and `tidyselect`**
+
 
 ## Functions
 

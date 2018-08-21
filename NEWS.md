@@ -1,7 +1,6 @@
 # Nmisc 0.3.4
 
-- improve `purrr` related functions
-- tidyeval for `dplyr` related function
+- support tidyeval for `dplyr` and `purrr` related function
 
 
 # Nmisc 0.3.3

@@ -29,6 +29,7 @@ Imports:
     rappdirs,
     rlang,
     tibble,
+    tidyselect,
     stringr
 Suggests:
     lubridate,
