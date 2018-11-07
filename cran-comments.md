@@ -1,11 +1,13 @@
 ## Test environments
 
 - Windows 10  : local         : R 3.5.1
-- Windows     : winbuilder    : R-devel
+- Windows     : winbuilder    : devtools::check_win_release, devtools::check_win_devel
+- Windows     : rhub          : R-devel
 - Windows     : appveyor
 - Ubuntu      : travis-ci     : R-oldrel, R-release, R-devel
-- Ubuntu      : r-hub builder : R-release
-- macOS 10.11 : r-hub builder : R-release
+- Ubuntu      : rhub          : R-release
+- Fedora      : rhub          : R-devel
+- macOS 10.11 : rhub          : R-release
 
 
 ## R CMD check results

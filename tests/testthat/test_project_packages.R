@@ -3,13 +3,8 @@ context("Testing project_package.R")
 setup({
     
     prj_path <- "../.."
-    if (dir.exists(file.path(prj_path, "00_pkg_src"))) {
-        # local R CMD check
-        prj_path <- "../../00_pkg_src/Nmisc"
-    }
-    if (!dir.exists(prj_path) || 
-        !file.exists(file.path(prj_path, "DESCRIPTION"))
-    ) {
+    if (!file.exists(file.path(prj_path, "cran-comments.md"))) {
+        # this test takes place only in the local setup, e.g. devtools::test()
         skip("Package source not found")
     }
     
