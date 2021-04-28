@@ -1,4 +1,4 @@
-# Nmisc 0.3.6
+# Nmisc 0.3.7
 
 - fixed tests to address CRAN requirements.
 

@@ -1,6 +1,7 @@
 ## Resubmission
 
-- Resubmitted to remove bindings in base environment and its namespace while testing
+- 0.3.6 -> 0.3.7: Resubmitted to remove life stage badge link (fix NOTE)
+- 0.3.5 -> 0.3.6: Resubmitted to remove bindings in base environment and its namespace while testing
 
 
 ## Test environments
@@ -9,7 +10,7 @@
 - Windows       : winbuilder    : devtools::check_win_release, devtools::check_win_devel
 - Windows       : rhub          : R-devel, R-release
 - Ubuntu        : travis-ci     : R-oldrel, R-release, R-devel
-- Ubuntu        : rhub          : rhub broken ('502 Bad Gateway')
+- Ubuntu        : rhub          : R-release (R-devel broken)
 - macOS 10.13.6 : rhub          : R-release
 
 

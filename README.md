@@ -2,7 +2,6 @@
 [![Travis build status](https://travis-ci.org/numeract/Nmisc.svg?branch=master)](https://travis-ci.org/numeract/Nmisc)
 [![Coverage status](https://codecov.io/gh/numeract/Nmisc/branch/master/graph/badge.svg)](https://codecov.io/github/numeract/Nmisc?branch=master)
 [![CRAN status](https://www.r-pkg.org/badges/version/Nmisc)](https://cran.r-project.org/package=Nmisc)
-[![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 
 
 Contains functions useful for debugging, set operations on vectors,
