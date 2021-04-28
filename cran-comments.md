@@ -1,9 +1,13 @@
+## Resubmission
+
+- Resubmitted to remove bindings in base environment and its namespace while testing
+
+
 ## Test environments
 
 - Windows 10    : local         : R 4.0.5
 - Windows       : winbuilder    : devtools::check_win_release, devtools::check_win_devel
 - Windows       : rhub          : R-devel, R-release
-- Windows       : appveyor
 - Ubuntu        : travis-ci     : R-oldrel, R-release, R-devel
 - Ubuntu        : rhub          : rhub broken ('502 Bad Gateway')
 - macOS 10.13.6 : rhub          : R-release
@@ -17,3 +21,4 @@
 ## Downstream dependencies
 
 - no downstream dependencies on CRAN
+- checked with revdepcheck::revdep_check
