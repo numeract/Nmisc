@@ -4,8 +4,11 @@
 \alias{generate_install_file}
 \title{Generates an R file to install packages used by the project.}
 \usage{
-generate_install_file(file, package_df = get_packages(),
-  include_core_package = FALSE)
+generate_install_file(
+  file,
+  package_df = get_packages(),
+  include_core_package = FALSE
+)
 }
 \arguments{
 \item{file}{The name of the file to be created.}

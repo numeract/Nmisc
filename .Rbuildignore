@@ -1,3 +1,4 @@
+^CRAN-RELEASE$
 ^appveyor\.yml$
 ^.*\.Rproj$
 ^\.Rproj\.user$
@@ -7,3 +8,4 @@
 ^\.lintr$
 ^cran-comments\.md$
 ^LICENSE$
+^revdep$

@@ -1,3 +1,8 @@
+# Nmisc 0.3.6
+
+- fixed tests to address CRAN requirements.
+
+
 # Nmisc 0.3.5
 
 - fixed tests to address issue #9 and `tidyselect` updates
